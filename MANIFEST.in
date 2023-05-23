@@ -1,0 +1,1 @@
+recursive-include adata/common/js *.js
