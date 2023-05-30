@@ -21,7 +21,15 @@
 | name         | string | 名称     | 物联网                                              |
 | index_code   | string | 指数代码 | 同花顺的概念指数代码是：8开头；例：885312           |
 | concept_code | string | 概念代码 | 同花顺的概念代码是：3开头；例：309061；注意不要混淆 |
-| soruce       | string | 来源     |                                                     |
+| source       | string | 来源     |                                                     |
+
+#### 3. 指数代码信息（index）
+
+| 字段       | 类型   | 注释     | 说明   |
+| ---------- | ------ | -------- | ------ |
+| short_name | string | 指数简称 |        |
+| index_code | string | 指数代码 |        |
+| source     | string | 来源     | 同花顺 |
 
 #### 11. 交易日历
 

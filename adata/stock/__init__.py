@@ -5,6 +5,7 @@
 @time: 2023/3/29
 @log: change log
 """
+from .index import index
 from .info import info
 from .market import market
 
@@ -13,6 +14,7 @@ class Stock(object):
 
     def __init__(self) -> None:
         self.info = info
+        self.index = index
         self.market = market
 
 

@@ -10,6 +10,7 @@ http://q.10jqka.com.cn/gn
 @date: 2023/3/30 16:17
 """
 import copy
+import json
 import math
 
 import pandas as pd
@@ -97,21 +98,24 @@ class StockConcept(object):
                                                                                           ignore_index=True)
         return data_df
 
-    def concept_constituent_ths(self, concept_code=None, name=None):
+    def concept_constituent_ths(self, concept_code=None, name=None, index_code=None):
         """
         获取同花顺概念成分，推荐使用概念名称进行查询，名称查询来自问财，概念代码来自网页
         :param concept_code: 概念代码，3开头
+        :param index_code: 指数代码，8开头
         :param name: 概念名称
         :return: 概念的成分股
         """
         if concept_code:
-            return self.__concept_constituent_ths_by_code(concept_code=concept_code)
+            return self.__index_constituent_ths_by_concept_code(concept_code=concept_code)
         elif name:
             return self.__index_constituent_ths_by_name(name=name)
+        elif index_code:
+            return self.__index_constituent_ths_by_index_code(index_code=index_code)
         else:
             return pd.DataFrame(data=[], columns=self.CONCEPT_CONSTITUENT_COLUMNS)
 
-    def __concept_constituent_ths_by_code(self, concept_code=None):
+    def __index_constituent_ths_by_concept_code(self, concept_code=None):
         """
         同花顺概念成分股
         web_url :http://q.10jqka.com.cn/gn/detail/field/199112/order/desc/page/1/ajax/1/code/301539
@@ -154,6 +158,47 @@ class StockConcept(object):
             return pd.DataFrame(data=data, columns=self.CONCEPT_CONSTITUENT_COLUMNS)
         result_df = pd.DataFrame(data=data)
         data.clear()
+        return result_df[self.CONCEPT_CONSTITUENT_COLUMNS]
+
+    def __index_constituent_ths_by_index_code(self, index_code=None):
+        """
+        根据概念指数代码获取成分股
+        web_url： https://d.10jqka.com.cn/v2/blockrank/885338/8/d3000.js
+        :param index_code: 指数代码，ths 8开头
+        :return: ['stock_code', 'short_name']
+        """
+        # 1.接口 url
+        api_url = f"https://d.10jqka.com.cn/v2/blockrank/{index_code}/8/d15.js"
+        headers = copy.deepcopy(ths_headers.text_headers)
+        headers['Host'] = 'd.10jqka.com.cn'
+        res = requests.request(method='get', url=api_url, headers=headers, proxies={})
+        # 同花顺可能ip限制，降低请求次数
+        text = res.text
+        if '<h1>Nginx forbidden.</h1>' in text:
+            raise Exception('ip被限制了：请降低频率或更换ip')
+        # 2. 解析总数
+        result_json = json.loads(text[text.index('{'):-1])
+        total_count = float(result_json['block']['subcodeCount'])
+        if total_count < 2500:
+            total_num = math.ceil(total_count / 15) * 15
+            apis = f"https://d.10jqka.com.cn/v2/blockrank/{index_code}/8/d{total_num}.js"
+        else:
+            apis = [f"https://d.10jqka.com.cn/v2/blockrank/{index_code}/8/a2500.js",
+                    f"https://d.10jqka.com.cn/v2/blockrank/{index_code}/8/d2500.js"]
+        data_list = []
+
+        # 3. 请求所有数据
+        for api_url in apis:
+            res = requests.request(method='get', url=api_url, headers=headers, proxies={})
+            text = res.text
+            result_json = json.loads(text[text.index('{'):-1])
+            items = result_json['items']
+            data_list.extend(items)
+
+        # 4. 数据封装，去重
+        rename = {'5': 'stock_code', '55': 'short_name'}
+        result_df = pd.DataFrame(data=data_list).rename(columns=rename)
+        result_df = result_df.drop_duplicates(subset=['stock_code'], keep='last', ignore_index=True)
         return result_df[self.CONCEPT_CONSTITUENT_COLUMNS]
 
     def __index_constituent_ths_by_name(self, name=None):
@@ -203,5 +248,5 @@ class StockConcept(object):
 
 
 if __name__ == '__main__':
-    print(StockConcept().all_concept_code_ths())
-    print(StockConcept().concept_constituent_ths(name='东数西算（算力）'))
+    # print(StockConcept().all_concept_code_ths())
+    print(StockConcept().concept_constituent_ths(index_code="885338"))
