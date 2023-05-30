@@ -34,7 +34,7 @@ build/
 .vscode/
 
 ### python ##
-
+__pycache__
 
 #Mac
 .DS_Store
