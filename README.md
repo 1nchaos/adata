@@ -4,11 +4,7 @@
 
 
 ## 0、介绍
-免费开源A股数据库；
-
-专注A股，专注量化，向阳而生；
-
-开放、纯净、持续、为Ai(爱)发电。
+> 专注A股，专注量化，向阳而生；开放、纯净、持续、为Ai(爱)发电。
 
 ## 一、快速开始
 
@@ -19,7 +15,6 @@
 ~~~python
 # 首次安装
 pip install adata
-
 # 升级版本
 pip install -U adata
 ~~~
@@ -29,7 +24,6 @@ pip install -U adata
 ~~~
 # 首次安装
 pip install adata -i http://mirrors.aliyun.com/pypi/simple/
-
 # 升级版本
 pip install -U adata -i http://mirrors.aliyun.com/pypi/simple/
 ~~~
@@ -38,15 +32,11 @@ pip install -U adata -i http://mirrors.aliyun.com/pypi/simple/
 
 #### 3.推荐镜像源列表
 
-国内镜像源
-
 阿里云【推荐】：http://mirrors.aliyun.com/pypi/simple/ 
 
 清华大学：https://pypi.tuna.tsinghua.edu.cn/simple 
 
-官方镜像源
-
-官方：https://pypi.org/simple
+官方镜像源：https://pypi.org/simple
 
 ### （2）使用示例
 
@@ -202,7 +192,14 @@ print(res_df)
 | 3.x.x  | 债券 | 排期中       | 场内可交易债券：可转债         |
 | 4.x.x  | 舆情 | 排期中       | 挖掘新闻、网络文章和政策事件等 |
 
+## 六、理念
 
+​		关于AData，我们只关注交易产生的数据。在A股只有交易数据是真实的，对于量化和AI训练，也只需要关心交易相关的行情数据，做到真正的专注。当然，你可能会说财务数据等也非常有用，但财务数据相对滞后，而且可能ZJ，甚至有XL可能，最终对于普通交易者可能就成了接盘侠。财务数据在我们这里，只做股票池筛选作用，不做实时交易指标推荐。
+
+**注：**
+
+- 永久免费开源A股数据库，只有交易相关的数据，专注量化交易。
+- 送给A股的各位朋友一首歌：[谢天笑-向阳花](./docs/向阳花.md)，愿你我向阳而生。
 
 ## 参与贡献
 
