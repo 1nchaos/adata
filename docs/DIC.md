@@ -148,6 +148,22 @@
 
 ## 债券-Bond
 
+### 一、基本信息-Info
+
+#### 1.  可转换债券代码信息（info）
+
+| 字段          | 类型    | 注释         | 说明            |
+| ------------- | ------- | ------------ | --------------- |
+| bond_code     | string  | 债券代码     | 123197          |
+| bond_name     | string  | 债券名称     | 光力转债        |
+| stock_code    | string  | 股票代码     | 300480          |
+| short_name    | string  | 股票简称     | 光力科技        |
+| sub_date      | date    | 申购日期     | 2023-05-08      |
+| issue_amount  | decimal | 发行金额(元) | 400000000.00000 |
+| listing_date  | date    | 上市日期     | 2023-05-29      |
+| expire_date   | date    | 到期日期     | 2029-05-08      |
+| convert_price | decimal | 转换价格(元) | 21.460          |
+
 ## 基金-ETF
 
 ## 舆情

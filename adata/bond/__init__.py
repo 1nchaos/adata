@@ -5,3 +5,12 @@
 @time: 2023/3/29
 @log: change log
 """
+
+
+class Bond(object):
+
+    def __init__(self) -> None:
+        self.info = info
+
+
+bond = Bond()
