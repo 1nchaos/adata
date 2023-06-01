@@ -30,7 +30,7 @@ class StockMarketConcept(object):
 
     def get_market_concept_ths(self, index_code: str = '886013', k_type: int = 1, adjust_type: int = 1):
         """
-        获取同花顺的概率的行情
+        获取同花顺的概念的行情
         web: http://q.10jqka.com.cn/gn/
         pc: http://d.10jqka.com.cn/v4/line/bk_885772/21/last.js
         app: http://d.10jqka.com.cn/v6/line/48_886013/01/last1800.js

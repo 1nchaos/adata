@@ -7,10 +7,11 @@
 """
 from .stock_code import StockCode
 from .stock_concept import StockConcept
+from .stock_index import StockIndex
 from .trade_calendar import TradeCalendar
 
 
-class Info(StockCode, StockConcept, TradeCalendar):
+class Info(StockCode, StockConcept, TradeCalendar, StockIndex):
 
     def __init__(self) -> None:
         super().__init__()
