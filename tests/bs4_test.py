@@ -5,7 +5,6 @@
 @time: 2023/5/8
 @log: change log
 """
-import re
 
 from bs4 import BeautifulSoup
 
@@ -21,3 +20,13 @@ if __name__ == '__main__':
     total_pages = int(page_info.split("/")[1])
 
     print(total_pages)  # 输出: 10
+
+if __name__ == '__main__':
+    html_str = '<td><a href="http://q.10jqka.com.cn/zs/detail/code/1A0002/" target="_blank">Ａ股指数</a></td>'
+
+    soup = BeautifulSoup(html_str, 'html.parser')
+    a_tag = soup.find('a')
+    href = a_tag['href']
+    code = href.split('/')[-2]
+
+    print(code)

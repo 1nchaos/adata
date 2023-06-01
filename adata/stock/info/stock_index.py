@@ -19,6 +19,7 @@ class StockIndex(object):
     A股指数
     """
     __INDEX_CONSTITUENT_COLUMN = ['index_code', 'stock_code', 'short_name']
+    __INDEX_CODE_COLUMN = ['index_code', 'concept_code', 'name', 'source']
 
     def __init__(self) -> None:
         super().__init__()
@@ -26,8 +27,9 @@ class StockIndex(object):
     def all_index_code(self):
         """
         获取所有A股市场的指数的代码
-        目前主要来源：同花顺
-        :return: 指数信息[name,index_code，source]
+        目前主要来源：同花顺,
+        concept_code为同花顺的概念代码
+        :return: 指数信息[name,index_code,concept_code,source]
         """
         return self.__all_index_code_ths()
 
@@ -35,7 +37,7 @@ class StockIndex(object):
         """
         获取同花顺所有行情中心的指数代码
         http://q.10jqka.com.cn/zs/
-        :return: 指数信息[name,index_code，concept_code]
+        :return: 指数信息[name,index_code，concept_code,source]
         """
         # 1. url拼接页码等参数
         data = []
@@ -62,15 +64,17 @@ class StockIndex(object):
             for idx, tr in enumerate(soup.find_all('tr')):
                 if idx != 0:
                     tds = tr.find_all('td')
-                    page_data.append(
-                        {'index_code': tds[1].contents[0].text, 'name': tds[2].contents[0].text, 'source': '同花顺'})
+                    a_href = tds[1].find('a')
+                    page_data.append({'index_code': tds[1].contents[0].text,
+                                      'concept_code': a_href['href'].split('/')[-2],
+                                      'name': tds[2].contents[0].text, 'source': '同花顺'})
             data.extend(page_data)
         # 5. 封装数据
         if not data:
-            return pd.DataFrame(data=data, columns=['source', 'index_code', 'name'])
+            return pd.DataFrame(data=data, columns=self.__INDEX_CODE_COLUMN)
         result_df = pd.DataFrame(data=data)
         data.clear()
-        return result_df[['index_code', 'name', 'source']]
+        return result_df[self.__INDEX_CODE_COLUMN]
 
     def index_constituent(self, index_code=None):
         """

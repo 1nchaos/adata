@@ -5,10 +5,10 @@
 @time:2022/9/19
 @log: 
 """
-from adata.stock.index.stock_index import StockIndex
+from adata.stock.index.cal_index import CalIndex
 
 
-class Index(StockIndex):
+class Index(CalIndex):
 
     def __init__(self) -> None:
         super().__init__()
