@@ -8,9 +8,10 @@
 from .stock_dividend import StockDividend
 from .stock_market import StockMarket
 from .stock_market_concept import StockMarketConcept
+from .stock_market_index import StockMarketIndex
 
 
-class Market(StockMarket, StockMarketConcept, StockDividend):
+class Market(StockMarket, StockMarketConcept, StockDividend, StockMarketIndex):
 
     def __init__(self) -> None:
         super().__init__()

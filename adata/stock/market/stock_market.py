@@ -18,10 +18,10 @@ class StockMarket(object):
     """
     股票行情 TODO 数据返回类型转换
     """
-    MARKET_COLUMNS = ['trade_time', 'open', 'close', 'volume', 'high', 'low', 'amount', 'change', 'change_pct',
+    __MARKET_COLUMNS = ['trade_time', 'open', 'close', 'volume', 'high', 'low', 'amount', 'change', 'change_pct',
                       'turnover_ratio', 'pre_close']
-    MARKET_MIN_COLUMNS = ['stock_code', 'trade_time', 'price', 'change', 'change_pct', 'volume', 'avg_price', 'amount']
-    MARKET_CURRENT_COLUMNS = ['stock_code', 'short_name', 'price', 'change', 'change_pct', 'volume', 'amount']
+    __MARKET_MIN_COLUMNS = ['stock_code', 'trade_time', 'price', 'change', 'change_pct', 'volume', 'avg_price', 'amount']
+    __MARKET_CURRENT_COLUMNS = ['stock_code', 'short_name', 'price', 'change', 'change_pct', 'volume', 'amount']
 
     def __init__(self) -> None:
         super().__init__()
@@ -92,7 +92,7 @@ class StockMarket(object):
         # 3.1 空数据时返回为空
         result = res_json['Result']
         if not result:
-            return pd.DataFrame(data=[], columns=self.MARKET_COLUMNS)
+            return pd.DataFrame(data=[], columns=self.__MARKET_COLUMNS)
 
         # 3.2. 正常解析数据
         keys = res_json['Result']['newMarketData']['keys']
@@ -105,7 +105,7 @@ class StockMarket(object):
         # 4. 封装数据
         rename_columns = {'turnoverratio': 'turnover_ratio', 'preClose': 'pre_close', 'range': 'change',
                           'ratio': 'change_pct', 'time': 'trade_time'}
-        result_df = pd.DataFrame(data=data, columns=keys).rename(columns=rename_columns)[self.MARKET_COLUMNS]
+        result_df = pd.DataFrame(data=data, columns=keys).rename(columns=rename_columns)[self.__MARKET_COLUMNS]
         result_df['stock_code'] = stock_code
         result_df['trade_date'] = result_df['trade_time']
         result_df['trade_time'] = pd.to_datetime(result_df['trade_time']).dt.strftime('%Y-%m-%d %H:%M:%S')
@@ -150,7 +150,7 @@ class StockMarket(object):
         # 3.1 空数据时返回为空
         result = res_json['Result']
         if not result:
-            return pd.DataFrame(data=[], columns=self.MARKET_MIN_COLUMNS)
+            return pd.DataFrame(data=[], columns=self.__MARKET_MIN_COLUMNS)
 
         # 3.2. 正常解析数据
         market_data_list = res_json['Result']['priceinfo']
@@ -171,7 +171,7 @@ class StockMarket(object):
         result_df['trade_date'] = result_df['trade_time'].str[:10]
         result_df['change'] = result_df['change'].str.replace('+', '', regex=True).astype(float)
         result_df['change_pct'] = result_df['change_pct'].str.replace('+', '', regex=True).astype(float)
-        return result_df[self.MARKET_MIN_COLUMNS]
+        return result_df[self.__MARKET_MIN_COLUMNS]
 
     def __market_sina_current(self, code_list):
         """
@@ -195,7 +195,7 @@ class StockMarket(object):
 
         # 2. 判断结果是否正确
         if len(res.text) < 1 or res.status_code != 200:
-            return pd.DataFrame(data=[], columns=self.MARKET_CURRENT_COLUMNS)
+            return pd.DataFrame(data=[], columns=self.__MARKET_CURRENT_COLUMNS)
         # 3.解析数据
 
         # 正常解析数据 var hq_str_s_bj872925="平安银行,14.840,0.480,3.343,374847,5483780.180";
@@ -211,7 +211,7 @@ class StockMarket(object):
                 data.append(code)
 
         # 4. 封装数据
-        result_df = pd.DataFrame(data=data, columns=self.MARKET_CURRENT_COLUMNS)
+        result_df = pd.DataFrame(data=data, columns=self.__MARKET_CURRENT_COLUMNS)
         # 北京的单位是股和万元
         mask = result_df['stock_code'].str.startswith(('0', '3', '6', '9'))
         result_df.loc[mask, 'volume'] = result_df['volume'].astype(int) * 100

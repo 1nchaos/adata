@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-VERSION = (0, 0, 19)
+VERSION = (0, 0, 21)
 # PRERELEASE = None  # alpha, beta or rc
 PRERELEASE = 'beta'  # alpha, beta or rc
 REVISION = None
@@ -16,7 +16,7 @@ def generate_version(version, prerelease=None, revision=None):
 
 __title__ = "adata"
 __description__ = "A Data,A Stock,ETF,Bond,Quant"
-__url__ = "https://gitee.com/inchaos/adata"
+__url__ = "https://github.com/1nchaos/adata"
 __version__ = generate_version(VERSION, prerelease=PRERELEASE, revision=REVISION)
 __author__ = "1nchaos"
 __author_email__ = "9527@1nchaos.com"
