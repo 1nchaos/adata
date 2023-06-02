@@ -15,7 +15,7 @@ class TradeCalendar(object):
     """
     交易日历
     """
-    COLUMNS = ['trade_date', 'trade_status', 'day_week']
+    __COLUMNS = ['trade_date', 'trade_status', 'day_week']
 
     def __init__(self) -> None:
         super().__init__()
@@ -55,8 +55,8 @@ class TradeCalendar(object):
         # 4. 封装数据
         rename = {'jyrq': 'trade_date', 'jybz': 'trade_status', 'zrxh': 'day_week'}
         if not data:
-            return pd.DataFrame(data=data, columns=self.COLUMNS)
-        return pd.DataFrame(data=data).rename(columns=rename)[self.COLUMNS]
+            return pd.DataFrame(data=data, columns=self.__COLUMNS)
+        return pd.DataFrame(data=data).rename(columns=rename)[self.__COLUMNS]
 
 
 if __name__ == '__main__':

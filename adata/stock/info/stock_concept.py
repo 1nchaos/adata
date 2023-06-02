@@ -25,8 +25,8 @@ class StockConcept(object):
     """
     股票概念
     """
-    CONCEPT_CONSTITUENT_COLUMNS = ['stock_code', 'short_name']
-    CONCEPT_CODE_COLUMNS = ['concept_code', 'index_code', 'name', 'source']
+    __CONCEPT_CONSTITUENT_COLUMNS = ['stock_code', 'short_name']
+    __CONCEPT_CODE_COLUMNS = ['concept_code', 'index_code', 'name', 'source']
 
     def __init__(self) -> None:
         super().__init__()
@@ -100,7 +100,10 @@ class StockConcept(object):
 
     def concept_constituent_ths(self, concept_code=None, name=None, index_code=None):
         """
-        获取同花顺概念成分，推荐使用概念名称进行查询，名称查询来自问财，概念代码来自网页
+        获取同花顺概念成分
+        优先级
+        index_code >  name > concept_code: 三选其一
+        指数代码来自app，名称查询来自问财，概念代码来自网页；
         :param concept_code: 概念代码，3开头
         :param index_code: 指数代码，8开头
         :param name: 概念名称
@@ -113,7 +116,7 @@ class StockConcept(object):
         elif index_code:
             return self.__index_constituent_ths_by_index_code(index_code=index_code)
         else:
-            return pd.DataFrame(data=[], columns=self.CONCEPT_CONSTITUENT_COLUMNS)
+            return pd.DataFrame(data=[], columns=self.__CONCEPT_CONSTITUENT_COLUMNS)
 
     def __index_constituent_ths_by_concept_code(self, concept_code=None):
         """
@@ -155,10 +158,10 @@ class StockConcept(object):
             data.extend(page_data)
         # 5. 封装数据
         if not data:
-            return pd.DataFrame(data=data, columns=self.CONCEPT_CONSTITUENT_COLUMNS)
+            return pd.DataFrame(data=data, columns=self.__CONCEPT_CONSTITUENT_COLUMNS)
         result_df = pd.DataFrame(data=data)
         data.clear()
-        return result_df[self.CONCEPT_CONSTITUENT_COLUMNS]
+        return result_df[self.__CONCEPT_CONSTITUENT_COLUMNS]
 
     def __index_constituent_ths_by_index_code(self, index_code=None):
         """
@@ -199,7 +202,7 @@ class StockConcept(object):
         rename = {'5': 'stock_code', '55': 'short_name'}
         result_df = pd.DataFrame(data=data_list).rename(columns=rename)
         result_df = result_df.drop_duplicates(subset=['stock_code'], keep='last', ignore_index=True)
-        return result_df[self.CONCEPT_CONSTITUENT_COLUMNS]
+        return result_df[self.__CONCEPT_CONSTITUENT_COLUMNS]
 
     def __index_constituent_ths_by_name(self, name=None):
         """
@@ -241,10 +244,10 @@ class StockConcept(object):
             data.extend(page_data)
         # 5. 封装数据
         if not data:
-            return pd.DataFrame(data=data, columns=self.CONCEPT_CONSTITUENT_COLUMNS)
+            return pd.DataFrame(data=data, columns=self.__CONCEPT_CONSTITUENT_COLUMNS)
         result_df = pd.DataFrame(data=data)
         data.clear()
-        return result_df[self.CONCEPT_CONSTITUENT_COLUMNS]
+        return result_df[self.__CONCEPT_CONSTITUENT_COLUMNS]
 
 
 if __name__ == '__main__':

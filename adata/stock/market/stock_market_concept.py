@@ -23,7 +23,7 @@ class StockMarketConcept(object):
     """
     股票概念 行情
     """
-    COLUMNS = ['trade_date', 'open', 'high', 'low', 'close', 'volume', 'amount']
+    __COLUMNS = ['trade_date', 'open', 'high', 'low', 'close', 'volume', 'amount']
 
     def __init__(self) -> None:
         super().__init__()
@@ -57,13 +57,17 @@ class StockMarketConcept(object):
         data = []
         for d in data_list:
             data.append(str(d).split(',')[0:7])
-        result_df = pd.DataFrame(data=data, columns=self.COLUMNS)
+        result_df = pd.DataFrame(data=data, columns=self.__COLUMNS)
         result_df['index_code'] = index_code
         result_df['trade_time'] = pd.to_datetime(result_df['trade_date']).dt.strftime('%Y-%m-%d %H:%M:%S')
         result_df['trade_date'] = pd.to_datetime(result_df['trade_date'], format='%Y%m%d').dt.strftime('%Y-%m-%d')
         result_df['close'] = result_df['close'].astype(float)
         result_df['change'] = result_df['close'] - result_df['close'].shift(1)
         result_df['change_pct'] = result_df['change'] / result_df['close'].shift(1) * 100
+
+        # 3. 清洗数据
+        result_df = result_df.round(2)
+        result_df['close'] = result_df['close'].apply(lambda x: format(x, '.2f'))
         result_df.replace('--', None, inplace=True)
         result_df.replace('', None, inplace=True)
         result_df.replace(np.nan, None, inplace=True)
@@ -106,7 +110,7 @@ class StockMarketConcept(object):
         result_df.replace(np.nan, None, inplace=True)
         return result_df
 
-    def get_market_concept_today_ths(self, index_code: str = '886013', k_type: int = 1, adjust_type: int = 1):
+    def get_market_concept_current_ths(self, index_code: str = '886013', k_type: int = 1):
         """
         获取同花顺当前的概念行情
         web: http://q.10jqka.com.cn/gn/
@@ -117,7 +121,6 @@ class StockMarketConcept(object):
 
         :param index_code: 同花顺概念指数代码
         :param k_type: k线类型：1.日；2.周；3.月 默认：1 日k
-        :param adjust_type: k线复权类型：0.不复权；1.前复权；2.后复权 默认：1 前复权
         :return: k线行情数据 [概念代码,交易时间，交易日期，开，高，低，当前价格,成交量，成交额]
         ;20230419,958.901,981.118,958.449,961.107,521143220,20442229000.000,存储芯片
         k:   1,      7,      8,       9,      11,      13,         19,        name
@@ -125,7 +128,7 @@ class StockMarketConcept(object):
         成交额：元 16959251000.000 169.6亿
         """
         # 1.接口 url
-        api_url = f"http://d.10jqka.com.cn/v6/line/48_{index_code}/{k_type - 1}{adjust_type}/today.js"
+        api_url = f"http://d.10jqka.com.cn/v6/line/48_{index_code}/{k_type - 1}1/today.js"
         headers = copy.deepcopy(ths_headers.text_headers)
         headers['Host'] = 'd.10jqka.com.cn'
         # 同花顺可能ip限制，降低请求次数
@@ -169,4 +172,4 @@ class StockMarketConcept(object):
 if __name__ == '__main__':
     print(StockMarketConcept().get_market_concept_ths(index_code='886041'))
     print(StockMarketConcept().get_market_concept_min_ths(index_code='886041'))
-    print(StockMarketConcept().get_market_concept_today_ths(index_code='886041'))
+    print(StockMarketConcept().get_market_concept_current_ths(index_code='886041'))
