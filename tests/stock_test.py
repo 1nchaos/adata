@@ -5,7 +5,7 @@
 @date: 2023/3/30 10:00
 """
 
-from adata import *
+import adata
 from adata.stock.market import *
 
 # from adata.stock import dividend
@@ -19,3 +19,5 @@ if __name__ == '__main__':
     # print(sd.stock.market.gn_market.get_market_gn_ths())
     # print(stock.market.stock_market.get_market())
     print(market.get_market())
+    adata.fund.info.all_etf_exchange_traded_info()
+    adata.bond.info.all_convert_code()
