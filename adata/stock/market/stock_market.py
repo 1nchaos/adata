@@ -19,8 +19,9 @@ class StockMarket(object):
     股票行情 TODO 数据返回类型转换
     """
     __MARKET_COLUMNS = ['trade_time', 'open', 'close', 'volume', 'high', 'low', 'amount', 'change', 'change_pct',
-                      'turnover_ratio', 'pre_close']
-    __MARKET_MIN_COLUMNS = ['stock_code', 'trade_time', 'price', 'change', 'change_pct', 'volume', 'avg_price', 'amount']
+                        'turnover_ratio', 'pre_close']
+    __MARKET_MIN_COLUMNS = ['stock_code', 'trade_time', 'price', 'change', 'change_pct', 'volume', 'avg_price',
+                            'amount']
     __MARKET_CURRENT_COLUMNS = ['stock_code', 'short_name', 'price', 'change', 'change_pct', 'volume', 'amount']
 
     def __init__(self) -> None:

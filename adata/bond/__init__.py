@@ -5,6 +5,7 @@
 @time: 2023/3/29
 @log: change log
 """
+from adata.bond.info import info
 
 
 class Bond(object):

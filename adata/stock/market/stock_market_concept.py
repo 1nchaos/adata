@@ -10,23 +10,19 @@ http://search.10jqka.com.cn/gateway/urp/v7/landing/getDataList?query=%E6%89%80%E
 """
 import copy
 import json
-import time
 
 import numpy as np
 import pandas as pd
 
+from adata.common.base.base_ths import BaseThs
 from adata.common.headers import ths_headers
-from adata.common.utils import requests, cookie
 
 
-class StockMarketConcept(object):
+class StockMarketConcept(BaseThs):
     """
     股票概念 行情
     """
     __COLUMNS = ['trade_date', 'open', 'high', 'low', 'close', 'volume', 'amount']
-
-    def __init__(self) -> None:
-        super().__init__()
 
     def get_market_concept_ths(self, index_code: str = '886013', k_type: int = 1, adjust_type: int = 1):
         """
@@ -49,7 +45,7 @@ class StockMarketConcept(object):
         # 1.接口 url
         api_url = f"http://d.10jqka.com.cn/v6/line/48_{index_code}/{k_type - 1}{adjust_type}/last1800.js"
         # 同花顺可能ip限制，降低请求次数
-        text = self.__get_text(api_url, index_code)
+        text = self._get_text(api_url, index_code)
         if '<h1>Nginx forbidden.</h1>' in text:
             raise Exception('ip被限制了：请降低频率或更换ip')
         result_text = text[text.index('{'):-1]
@@ -84,7 +80,7 @@ class StockMarketConcept(object):
         """
         # 1.接口 url
         api_url = f"http://d.10jqka.com.cn/v6/time/48_{index_code}/last.js"
-        text = self.__get_text(api_url, index_code)
+        text = self._get_text(api_url, index_code)
         if '<h1>Nginx forbidden.</h1>' in text:
             raise Exception('ip被限制了：请降低频率或更换ip')
         # 2. 解析数据
@@ -132,7 +128,7 @@ class StockMarketConcept(object):
         headers = copy.deepcopy(ths_headers.text_headers)
         headers['Host'] = 'd.10jqka.com.cn'
         # 同花顺可能ip限制，降低请求次数
-        text = self.__get_text(api_url, index_code)
+        text = self._get_text(api_url, index_code)
         if '<h1>Nginx forbidden.</h1>' in text:
             raise Exception('ip被限制了：请降低频率或更换ip')
         result_text = text[text.index('{'):-1]
@@ -148,25 +144,6 @@ class StockMarketConcept(object):
         result_df['index_code'] = index_code
         result_df['trade_date'] = pd.to_datetime(result_df['trade_date'], format='%Y%m%d').dt.strftime('%Y-%m-%d')
         return result_df
-
-    def __get_text(self, api_url, code):
-        """
-        获取同花顺的请求 text
-        :param api_url: url
-        :param code: 代码
-        :return:
-        """
-        headers = copy.deepcopy(ths_headers.text_headers)
-        headers['Host'] = 'd.10jqka.com.cn'
-        headers['Cookie'] = cookie.ths_cookie()
-        text = ''
-        for i in range(2):
-            res = requests.request('get', api_url, headers=headers, proxies={})
-            text = res.text
-            if code in text:
-                break
-            time.sleep(2)
-        return text
 
 
 if __name__ == '__main__':
