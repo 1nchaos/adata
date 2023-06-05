@@ -5,19 +5,17 @@
 @date: 2023/06/01 16:17
 """
 import copy
-import datetime
 import json
-import time
 
 import numpy as np
 import pandas as pd
 
+from adata.common.base.base_ths import BaseThs
 from adata.common.headers import ths_headers
-from adata.common.utils import requests, cookie
 from adata.stock.cache.index_code_rel_ths import rel
 
 
-class StockMarketIndex(object):
+class StockMarketIndex(BaseThs):
     """
     股票指数 行情
     """
@@ -42,14 +40,14 @@ class StockMarketIndex(object):
         :return: ['trade_date', 'open', 'high', 'low', 'close', 'volume', 'amount']
         """
         # 0. 时间范围处理
-        years = self.__get_years_by_start_date(start_date)
+        years = self._get_years_by_start_date(start_date)
         concept_code = rel[index_code]
         data = []
         for year in years:
             # 1.接口 url
             api_url = f"http://d.10jqka.com.cn/v4/line/zs_{concept_code}/{k_type - 1}1/{year}.js"
             # 同花顺可能ip限制，降低请求次数
-            text = self.__get_text(api_url, concept_code)
+            text = self._get_text(api_url, concept_code)
             if '<h1>Nginx forbidden.</h1>' in text:
                 raise Exception('ip被限制了：请降低频率或更换ip')
 
@@ -101,7 +99,7 @@ class StockMarketIndex(object):
         concept_code = rel[index_code]
         # 1.接口 url
         api_url = f"http://d.10jqka.com.cn/v4/time/zs_{concept_code}/last.js"
-        text = self.__get_text(api_url, concept_code)
+        text = self._get_text(api_url, concept_code)
         if '<h1>Nginx forbidden.</h1>' in text:
             raise Exception('ip被限制了：请降低频率或更换ip')
         # 2. 解析数据
@@ -161,7 +159,7 @@ class StockMarketIndex(object):
         headers = copy.deepcopy(ths_headers.text_headers)
         headers['Host'] = 'd.10jqka.com.cn'
         # 同花顺可能ip限制，降低请求次数
-        text = self.__get_text(api_url, concept_code)
+        text = self._get_text(api_url, concept_code)
         if '<h1>Nginx forbidden.</h1>' in text:
             raise Exception('ip被限制了：请降低频率或更换ip')
         result_text = text[text.index('{'):-1]
@@ -177,44 +175,6 @@ class StockMarketIndex(object):
         result_df['index_code'] = index_code
         result_df['trade_date'] = pd.to_datetime(result_df['trade_date'], format='%Y%m%d').dt.strftime('%Y-%m-%d')
         return result_df
-
-    def __get_text(self, api_url, code):
-        """
-        获取同花顺的请求 text
-        :param api_url: url
-        :param code: 代码
-        :return:
-        """
-        headers = copy.deepcopy(ths_headers.text_headers)
-        headers['Host'] = 'd.10jqka.com.cn'
-        headers['Cookie'] = cookie.ths_cookie()
-        text = ''
-        for i in range(2):
-            res = requests.request('get', api_url, headers=headers, proxies={})
-            text = res.text
-            if code in text:
-                break
-            time.sleep(2)
-        return text
-
-    def __get_years_by_start_date(self, start_date):
-        """
-        根据开始时间获取年份
-        :param start_date: 开始时间
-        :return: 年份
-        """
-        years = []
-        if not start_date:
-            years.append('last')
-        else:
-            current_year = datetime.datetime.now().year
-            start_year = datetime.datetime.strptime(start_date, "%Y-%m-%d").year
-            while start_year <= current_year:
-                years.append(start_year - 1)
-                start_year += 1
-            if current_year not in years:
-                years.append(current_year)
-        return years
 
 
 if __name__ == '__main__':
