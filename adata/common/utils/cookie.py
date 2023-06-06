@@ -15,7 +15,7 @@ def ths_cookie():
     js_code = py_mini_racer.MiniRacer()
     js_content = _get_file_content_ths(file_path="ths.js")
     js_code.eval(js_content)
-    return 'v='+js_code.call("v")
+    return 'v=' + js_code.call("v")
 
 
 def _get_file_content_ths(file_path: str = None) -> str:
@@ -28,3 +28,7 @@ def _get_file_content_ths(file_path: str = None) -> str:
         with open(f_path) as f:
             file_data = f.read()
         return file_data
+
+
+if __name__ == '__main__':
+    print(ths_cookie())

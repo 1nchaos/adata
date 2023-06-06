@@ -184,7 +184,7 @@ class StockConcept(object):
         total_count = float(result_json['block']['subcodeCount'])
         if total_count < 2500:
             total_num = math.ceil(total_count / 15) * 15
-            apis = f"https://d.10jqka.com.cn/v2/blockrank/{index_code}/8/d{total_num}.js"
+            apis = [f"https://d.10jqka.com.cn/v2/blockrank/{index_code}/8/d{total_num}.js"]
         else:
             apis = [f"https://d.10jqka.com.cn/v2/blockrank/{index_code}/8/a2500.js",
                     f"https://d.10jqka.com.cn/v2/blockrank/{index_code}/8/d2500.js"]
@@ -251,5 +251,7 @@ class StockConcept(object):
 
 
 if __name__ == '__main__':
-    # print(StockConcept().all_concept_code_ths())
-    print(StockConcept().concept_constituent_ths(index_code="885338"))
+    print(StockConcept().all_concept_code_ths())
+    print(StockConcept().concept_constituent_ths(index_code="885556"))
+    print(StockConcept().concept_constituent_ths(concept_code="300843"))
+    print(StockConcept().concept_constituent_ths(name="5G"))
