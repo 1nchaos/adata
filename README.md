@@ -15,16 +15,12 @@
 ~~~python
 # 首次安装
 pip install adata
+# 指定镜像源
+pip install adata -i http://mirrors.aliyun.com/pypi/simple/
+
 # 升级版本
 pip install -U adata
-~~~
-
-#### 2. 指定镜像源安装
-
-~~~
-# 首次安装
-pip install adata -i http://mirrors.aliyun.com/pypi/simple/
-# 升级版本
+# 指定镜像源
 pip install -U adata -i http://mirrors.aliyun.com/pypi/simple/
 ~~~
 
@@ -74,7 +70,7 @@ print(res_df)
 
 #### 2. 获取股票的行情
 
-获取到股票代码，传入对应的stock_code,查询对应的股票行情
+获取到股票代码，传入对应的stock_code参数，查询对应的股票行情信息。
 
 ```python
 import adata
