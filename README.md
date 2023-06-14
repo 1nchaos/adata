@@ -10,27 +10,21 @@
 
 ### （1）安装sdk
 
-#### 1. 简单安装
-
 ~~~python
 # 首次安装
 pip install adata
+# 指定镜像源
+pip install adata -i http://mirrors.aliyun.com/pypi/simple/
+
 # 升级版本
 pip install -U adata
-~~~
-
-#### 2. 指定镜像源安装
-
-~~~
-# 首次安装
-pip install adata -i http://mirrors.aliyun.com/pypi/simple/
-# 升级版本
+# 指定镜像源
 pip install -U adata -i http://mirrors.aliyun.com/pypi/simple/
 ~~~
 
 **注：国内镜像可能存在同步延迟，可使用官方镜像源**
 
-#### 3.推荐镜像源列表
+**推荐镜像源列表：**
 
 阿里云【推荐】：http://mirrors.aliyun.com/pypi/simple/ 
 
@@ -40,7 +34,7 @@ pip install -U adata -i http://mirrors.aliyun.com/pypi/simple/
 
 ### （2）使用示例
 
-#### 1. 获取股票代码信息
+#### 1. 获取股票代码
 
 所有股票代码
 
@@ -70,11 +64,9 @@ print(res_df)
 [5493 rows x 3 columns]
 ~~~
 
-
-
 #### 2. 获取股票的行情
 
-获取到股票代码，传入对应的stock_code,查询对应的股票行情
+获取到股票代码，传入对应的stock_code参数，查询对应的股票行情信息。
 
 ```python
 import adata
@@ -102,8 +94,6 @@ print(res_df)
 
 [576 rows :x 13 columns]
 ~~~
-
-
 
 #### 3. 其它数据使用
 
@@ -170,15 +160,13 @@ print(res_df)
 
 ## 三、数据源
 
-感谢各位大厂提供的数据
-
 | 数据源     | 板块                                                         | 描述             |
 | ---------- | ------------------------------------------------------------ | ---------------- |
 | 同花顺     | [数据中心](http://data.10jqka.com.cn/)，[行情中心](http://q.10jqka.com.cn/)，[问财](http://www.iwencai.com/unifiedwap/home/index) | 让投资变的更简单 |
 | 百度股市通 | [股市通](https://gushitong.baidu.com/)                       | 科技让投资更简单 |
 | 东方财富   | [数据中心](https://data.eastmoney.com/center/)，[行情中心](http://quote.eastmoney.com/center/) | 财经门户         |
 
-
+***--------------------------------------------------------------感谢各位大厂提供的数据-------------------------------------------------***
 
 ## 四、 其它参考
 
