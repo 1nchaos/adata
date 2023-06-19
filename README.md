@@ -8,7 +8,7 @@
 >
 > 专注股票行情数据，为了保证数据的高可用性，采用多数据源融合切换。
 >
-> 目标：支持个人量化行情的需要；众人拾柴火焰高。
+> 目标：支持个人量化行情的需要；众人拾柴火焰高，欢迎加入。
 
 ## 一、快速开始
 
@@ -130,7 +130,7 @@ print(res_df)
 | 分红信息 | stock.market.get_dividend()                   | 获取单只股票的分红信息                |                                                              |
 | 股票行情 | stock.market.get_market()                     | 获取单只股票的行情信息-日、周、月 k线 |                                                              |
 |          | stock.market.get_market_min()                 | 获取单个股票的今日分时行情            | 只能获取当天                                                 |
-|          | stock.market.list_market_current()            | 获取多个股票最新行情信息              | 实时行情                                                     |
+|          | stock.market.list_market_current()            | 获取多个股票最新行情信息              | 实时行情<br />数据源：2个，源新浪和腾讯                      |
 | 概念行情 | stock.market.get_market_concept_ths()         | 获取单个概念的行情信息-日、周、月 k线 | 目前只有同花顺相关概念行情，<br />获取概念行情时，<br />请注意传入参数是指数代码还是概念代码，<br />指数代码8开头，index_code |
 |          | stock.market.get_market_concept_min_ths()     | 获取同花顺概念行情-当日分时           | 只能获取当天                                                 |
 |          | stock.market.get_market_concept_current_ths() | 获取同花顺当前的概念行情              | 实时行情                                                     |
@@ -168,15 +168,16 @@ print(res_df)
 | 百度股市通 | [股市通](https://gushitong.baidu.com/)                       | 科技让投资更简单 |
 | 东方财富   | [数据中心](https://data.eastmoney.com/center/)，[行情中心](http://quote.eastmoney.com/center/) | 财经门户         |
 | 腾讯理财   | [行情中心](https://stockapp.finance.qq.com/mstats/#)         |                  |
+| 新浪财经   | [新浪财经](https://finance.sina.com.cn/stock/)               | 门户网站         |
 
-***--------------------------------------------------------------感谢各位大厂提供的数据-------------------------------------------------***
+***--------------------------------------------感谢各位大厂提供的数据----------------------------------------------***
 
 ## 四、 其它参考
 
 主要记录查阅过的项目和相关平台，并对此项目产生了深远印象，特此鸣谢。
 
-| [akshare](https://gitee.com/mirrors/akshare) | [聚宽量化](https://www.joinquant.com/) | [baostock](http://baostock.com/baostock/index.php/Python%E5%BC%80%E5%8F%91%E8%B5%84%E6%BA%90) | [MyData](http://api.mairui.club/hsdata.html) |      |
-| -------------------------------------------- | -------------------------------------- | ------------------------------------------------------------ | -------------------------------------------- | ---- |
+| [akshare](https://gitee.com/mirrors/akshare) | [聚宽量化](https://www.joinquant.com/) | [baostock](http://baostock.com/baostock/index.php/Python%E5%BC%80%E5%8F%91%E8%B5%84%E6%BA%90) | [MyData](http://api.mairui.club/hsdata.html) |
+| -------------------------------------------- | -------------------------------------- | ------------------------------------------------------------ | -------------------------------------------- |
 
 ## 五、发布计划
 
