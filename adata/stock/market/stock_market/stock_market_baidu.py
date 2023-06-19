@@ -14,7 +14,7 @@ import pandas as pd
 
 from adata.common.headers import baidu_headers
 from adata.common.utils import requests
-from stock_market_template import StockMarketTemplate
+from adata.stock.market.stock_market.stock_market_template import StockMarketTemplate
 
 
 class StockMarketBaiDu(StockMarketTemplate):
@@ -24,14 +24,6 @@ class StockMarketBaiDu(StockMarketTemplate):
 
     def __init__(self) -> None:
         super().__init__()
-
-    def get_market_min(self, stock_code: str = '000001'):
-        """
-        获取单个股票的今日分时行情
-        :param stock_code: 股票代码
-        :return: 当日分钟行情数据
-        """
-        return self.__market_baidu_today_min(stock_code)
 
     def get_market(self, stock_code: str = '000001', start_date='1990-01-01', k_type=1, adjust_type: int = 1):
         """
@@ -100,7 +92,7 @@ class StockMarketBaiDu(StockMarketTemplate):
         result_df['change_pct'] = result_df['change_pct'].str.replace('+', '', regex=True).astype(float)
         return result_df
 
-    def __market_baidu_today_min(self, stock_code):
+    def get_market_min(self, stock_code: str = '000001'):
         """
         获取百度的股票行情数据
         web： https://gushitong.baidu.com/stock/ab-002926
@@ -143,15 +135,15 @@ class StockMarketBaiDu(StockMarketTemplate):
         result_df['stock_code'] = stock_code
         # 这里是分钟均价，数据存在四舍五入的情况
         result_df['volume'] = result_df['volume'].astype(int) * 100
-        result_df['trade_time'] = pd.to_datetime(result_df['time'], unit='s', utc=True).dt.tz_convert(
-            'Asia/Shanghai')
+        result_df['trade_time'] = pd.to_datetime(result_df['time'], unit='s', utc=True).dt.tz_convert('Asia/Shanghai')
         result_df['trade_time'] = pd.to_datetime(result_df['trade_time']).dt.strftime("%Y-%m-%d %H:%M:%S")
         result_df['trade_date'] = result_df['trade_time'].str[:10]
         result_df['change'] = result_df['change'].str.replace('+', '', regex=True).astype(float)
-        result_df['change_pct'] = result_df['change_pct'].str.replace('+', '', regex=True).astype(float)
+        result_df['change_pct'] = result_df['change_pct'].str.replace('+', '', regex=True) \
+            .str.replace('%', '', regex=True).astype(float)
         return result_df[self._MARKET_MIN_COLUMNS]
 
 
 if __name__ == '__main__':
     print(StockMarketBaiDu().get_market(stock_code='000001', start_date='2021-01-01', k_type=1))
-    # print(StockMarketBaiDu().get_market_min(stock_code='000001'))
+    print(StockMarketBaiDu().get_market_min(stock_code='000001'))

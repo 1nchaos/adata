@@ -12,13 +12,14 @@ import pandas as pd
 
 from adata.common.headers import sina_headers
 from adata.common.utils import requests
-from .stock_market_template import StockMarketTemplate
+from adata.stock.market.stock_market.stock_market_template import StockMarketTemplate
 
 
 class StockMarketSina(StockMarketTemplate):
     """
     新浪股票行情
     """
+
     def __init__(self) -> None:
         super().__init__()
 
