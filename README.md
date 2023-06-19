@@ -5,6 +5,10 @@
 
 ## 0、介绍
 > 专注A股，专注量化，向阳而生；开放、纯净、持续、为Ai(爱)发电。
+>
+> 专注股票行情数据，为了保证数据的高可用性，采用多数据源融合切换。
+>
+> 目标：支持个人量化行情的需要；众人拾柴火焰高。
 
 ## 一、快速开始
 
@@ -22,9 +26,7 @@ pip install -U adata
 pip install -U adata -i http://mirrors.aliyun.com/pypi/simple/
 ~~~
 
-**注：国内镜像可能存在同步延迟，可使用官方镜像源**
-
-**推荐镜像源列表：**
+**注：国内镜像可能存在同步延迟，可使用官方镜像源，以下是镜像源**
 
 阿里云【推荐】：http://mirrors.aliyun.com/pypi/simple/ 
 
@@ -36,7 +38,7 @@ pip install -U adata -i http://mirrors.aliyun.com/pypi/simple/
 
 #### 1. 获取股票代码
 
-所有股票代码
+获取所有的股票代码
 
 ~~~python
 import adata
@@ -66,7 +68,7 @@ print(res_df)
 
 #### 2. 获取股票的行情
 
-获取到股票代码，传入对应的stock_code参数，查询对应的股票行情信息。
+获取到股票代码后，传入对应的stock_code参数，查询对应股票的行情信息。
 
 ```python
 import adata
@@ -165,6 +167,7 @@ print(res_df)
 | 同花顺     | [数据中心](http://data.10jqka.com.cn/)，[行情中心](http://q.10jqka.com.cn/)，[问财](http://www.iwencai.com/unifiedwap/home/index) | 让投资变的更简单 |
 | 百度股市通 | [股市通](https://gushitong.baidu.com/)                       | 科技让投资更简单 |
 | 东方财富   | [数据中心](https://data.eastmoney.com/center/)，[行情中心](http://quote.eastmoney.com/center/) | 财经门户         |
+| 腾讯理财   | [行情中心](https://stockapp.finance.qq.com/mstats/#)         |                  |
 
 ***--------------------------------------------------------------感谢各位大厂提供的数据-------------------------------------------------***
 
@@ -208,6 +211,6 @@ print(res_df)
 
 > 对于项目有支持，包括但不仅限：内容贡献，bug提交，思想交流等等，对项目有影响的个人和机构
 
-| Simon |      |
-| ----- | ---- |
+| Simon |
+| ----- |
 
