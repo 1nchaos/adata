@@ -139,7 +139,8 @@ class StockMarketBaiDu(StockMarketTemplate):
         result_df['trade_time'] = pd.to_datetime(result_df['trade_time']).dt.strftime("%Y-%m-%d %H:%M:%S")
         result_df['trade_date'] = result_df['trade_time'].str[:10]
         result_df['change'] = result_df['change'].str.replace('+', '', regex=True).astype(float)
-        result_df['change_pct'] = result_df['change_pct'].str.replace('+', '') .str.replace('%', '').astype(float)
+        result_df['change_pct'] = result_df['change_pct'].str.replace('+', '', regex=True) \
+            .str.replace('%', '', regex=True).astype(float)
         return result_df[self._MARKET_MIN_COLUMNS]
 
 
