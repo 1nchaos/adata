@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@desc: TODO
+@desc:
 股票解禁：大概率大额解禁的票房风险较大，可以加入短线交易的因子数据
 解禁数据：来源同花顺行情中心
 http://data.10jqka.com.cn/market/xsjj/field/enddate/order/desc/ajax/1/free/1/
@@ -17,10 +17,11 @@ from bs4 import BeautifulSoup
 
 from adata.common import requests
 from adata.common.headers import ths_headers
+from adata.common.utils import cookie
 
 
 class StockLifting(object):
-    __STOCK_LIFTING_COLUMN = ['stock_code', 'short_name', 'lift_date', 'volume', 'ratio', 'price', 'amount']
+    __STOCK_LIFTING_COLUMN = ['stock_code', 'short_name', 'lift_date', 'volume', 'amount', 'ratio', 'price']
 
     def __init__(self) -> None:
         super().__init__()
@@ -49,13 +50,14 @@ class StockLifting(object):
                 api_url = api_url + f"page/{curr_page}/free/1/"
             headers = copy.deepcopy(ths_headers.text_headers)
             headers['Host'] = 'data.10jqka.com.cn'
+            headers['hexin-v'] = cookie.ths_cookie()[2:]
             res = requests.request(method='get', url=api_url, headers=headers, proxies={})
             curr_page += 1
             # 2. 判断请求是否成功
             if res.status_code != 200:
                 continue
             text = res.text
-            if '解禁日期' in text or '解禁股' in text:
+            if not ('解禁日期' in text or '解禁股' in text):
                 break
             soup = BeautifulSoup(text, 'html.parser')
             # 3 .获取总的页数
@@ -78,6 +80,15 @@ class StockLifting(object):
             return pd.DataFrame(data=data, columns=self.__STOCK_LIFTING_COLUMN)
         result_df = pd.DataFrame(data=data)
         data.clear()
+        # 6. 单位换算
+        result_df['volume'] = result_df['volume'].apply(lambda x: str(float(x[:-1]) * 10000) if '万' in x else x)
+        result_df['volume'] = result_df['volume'].apply(
+            lambda x: round(float(x[:-1]) * 100000000) if '亿' in x else round(float(x)))
+
+        # convert amount to yuan
+        result_df['amount'] = result_df['amount'].apply(lambda x: str(float(x[:-1]) * 10000) if '万' in x else x)
+        result_df['amount'] = result_df['amount'].apply(
+            lambda x: round(float(x[:-1]) * 100000000) if '亿' in x else round(float(x)))
         return result_df[self.__STOCK_LIFTING_COLUMN]
 
 
