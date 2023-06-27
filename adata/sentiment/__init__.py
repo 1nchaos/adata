@@ -14,4 +14,4 @@ class Sentiment(StockLifting):
         super().__init__()
 
 
-stock = Sentiment()
+sentiment = Sentiment()

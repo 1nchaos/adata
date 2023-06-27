@@ -12,6 +12,7 @@ from .__version__ import __version__
 from .stock import stock
 from .fund import fund
 from .bond import bond
+from .sentiment import sentiment
 
 # set up logging
 logger = logging.getLogger("adata")
