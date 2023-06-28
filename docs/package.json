@@ -1,0 +1,10 @@
+{
+  "name": "adata",
+  "version": "1.x.x",
+  "description": "adada专注量化数据，向阳而生",
+  "license": "Apache License",
+  "scripts": {
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
+  }
+}

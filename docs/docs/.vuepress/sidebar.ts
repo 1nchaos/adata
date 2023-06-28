@@ -1,3 +1,4 @@
+// @ts-ignore
 import {SidebarConfig} from "@vuepress/theme-default/lib/shared/nav";
 
 export default [
