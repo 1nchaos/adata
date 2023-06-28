@@ -1,0 +1,18 @@
+{
+  "name": "adata",
+  "version": "1.x.x",
+  "description": "adada专注量化数据，向阳而生",
+  "license": "Apache License",
+  "scripts": {
+    "docs:dev": "vuepress dev .",
+    "docs:build": "vuepress build ."
+  },
+  "devDependencies": {
+    "@vuepress/plugin-search": "^2.0.0-beta.48",
+    "vuepress": "^2.0.0-beta.48",
+    "vuepress-plugin-china-search-console": "^2.1.1",
+    "vuepress-plugin-clipboard": "^2.1.1",
+    "vuepress-plugin-seo2": "^2.0.0-beta.83",
+    "vuepress-plugin-sitemap2": "^2.0.0-beta.84"
+  }
+}
