@@ -3,9 +3,12 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
-.vuepress
 ### node js ###
 node_modules
+.temp
+.cache
+!.vuepress
+docs/.vuepress/dist
 
 ### STS ###
 .apt_generated

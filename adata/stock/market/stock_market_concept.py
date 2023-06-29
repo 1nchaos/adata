@@ -22,7 +22,7 @@ class StockMarketConcept(BaseThs):
     """
     股票概念 行情
     """
-    __COLUMNS = ['trade_date', 'open', 'high', 'low', 'close', 'volume', 'amount']
+    __MARKET_COLUMNS = ['trade_date', 'open', 'high', 'low', 'close', 'volume', 'amount']
 
     def get_market_concept_ths(self, index_code: str = '886013', k_type: int = 1, adjust_type: int = 1):
         """
@@ -53,7 +53,7 @@ class StockMarketConcept(BaseThs):
         data = []
         for d in data_list:
             data.append(str(d).split(',')[0:7])
-        result_df = pd.DataFrame(data=data, columns=self.__COLUMNS)
+        result_df = pd.DataFrame(data=data, columns=self.__MARKET_COLUMNS)
         result_df['index_code'] = index_code
         result_df['trade_time'] = pd.to_datetime(result_df['trade_date']).dt.strftime('%Y-%m-%d %H:%M:%S')
         result_df['trade_date'] = pd.to_datetime(result_df['trade_date'], format='%Y%m%d').dt.strftime('%Y-%m-%d')

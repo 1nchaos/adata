@@ -191,7 +191,7 @@
 | lift_date  | date    | 解禁日期         | 1.1234           |
 | volume     | decimal | 解禁股数(股)     | 2023-06-05       |
 | amount     | decimal | 当前解禁市值(元) | 根据当前价格计算 |
-| ratio      | string  | 占总股本比例(%)  | 0.36             |
+| ratio      | decimal  | 占总股本比例(%)  | 0.36             |
 | price      | decimal | 当前价格(元)     | 13.14            |
 
 ### 更新记录
