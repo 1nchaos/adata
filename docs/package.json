@@ -1,10 +1,20 @@
 {
-  "name": "adata",
-  "version": "1.x.x",
-  "description": "adada专注量化数据，向阳而生",
+  "name": "AData",
+  "version": "1.0.0",
+  "description": "专注股票量化数据，为Ai(爱)发电，向阳而生。",
   "license": "Apache License",
   "scripts": {
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs"
+    "docs:dev": "vuepress dev .",
+    "docs:build": "vuepress build ."
+  },
+  "devDependencies": {
+    "@vuepress/plugin-search": "^2.0.0-beta.63",
+    "anywhere": "^1.6.0",
+    "sass-loader": "^13.3.1",
+    "vue": "^3.3.4",
+    "vuepress": "^2.0.0-beta.63",
+    "vuepress-plugin-clipboard": "^2.1.1",
+    "vuepress-plugin-seo2": "^2.0.0-beta.83",
+    "vuepress-plugin-sitemap2": "^2.0.0-beta.84"
   }
 }

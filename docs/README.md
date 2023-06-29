@@ -1,4 +1,4 @@
-# A Data
+# AData
 
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/adata?color=d)](https://pypi.org/project/adata/)[![Licence](https://img.shields.io/hexpm/l/apa?color=d)](https://gitee.com/inchaos/adata/blob/master/LICENSE)
 
