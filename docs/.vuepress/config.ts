@@ -4,6 +4,8 @@ import navbar from "./navbar";
 import {searchPlugin} from "@vuepress/plugin-search";
 import {seoPlugin} from "vuepress-plugin-seo2";
 import clipboardPlugin from "vuepress-plugin-clipboard";
+// 右侧目录
+import vuepressPluginAnchorRight from 'vuepress-plugin-anchor-right';
 
 export default defineUserConfig({
     lang: 'zh-CN',
@@ -31,11 +33,14 @@ export default defineUserConfig({
     theme: defaultTheme({
         logo: "logo.png",
         repo: "1nchaos/adata",
+        home:"/",
         sidebar,
         navbar,
         editLink: false,
         contributors: false,
-        lastUpdated: false
+        lastUpdated: true,
+        lastUpdatedText:"最新更新时间",
+        colorModeSwitch:true
     }),
     plugins: [
         searchPlugin({
@@ -52,6 +57,7 @@ export default defineUserConfig({
         seoPlugin({
             hostname: "https://github.com/1nchaos/adata",
             author: "1nchaos"
-        })
+        }),
+        vuepressPluginAnchorRight(),
     ]
 })
