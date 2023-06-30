@@ -68,7 +68,11 @@ export default defineUserConfig({
             staticIcon: true
         }),
         seoPlugin({
-            hostname: "https://github.com/1nchaos/adata",
+            hostname: "https://adata.1nchaos.com",
+            author: "1nchaos"
+        }),
+        seoPlugin({
+            hostname: "https://gitee.com/inchaos/adata",
             author: "1nchaos"
         }),
         vuepressPluginAnchorRight({

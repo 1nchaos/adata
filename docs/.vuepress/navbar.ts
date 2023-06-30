@@ -1,7 +1,6 @@
 import { NavbarConfig } from "@vuepress/theme-default/lib/shared/nav";
 
 export default [
-    {text: '向阳花', link: '/向阳花.md'},
     {text: '数据源',
      collapsible: true,
           children: [
