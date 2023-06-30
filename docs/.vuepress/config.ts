@@ -4,6 +4,7 @@ import navbar from "./navbar";
 import {searchPlugin} from "@vuepress/plugin-search";
 import {seoPlugin} from "vuepress-plugin-seo2";
 import clipboardPlugin from "vuepress-plugin-clipboard";
+import {searchConsolePlugin} from "vuepress-plugin-china-search-console";
 // 右侧目录
 import vuepressPluginAnchorRight from 'vuepress-plugin-anchor-right';
 
@@ -28,6 +29,17 @@ export default defineUserConfig({
                 name: "description",
                 content: descStr
             }
+        ], [
+            "script", {},
+            `
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?b43925e6271a6ce5fcba28ecd1e6203e";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+            })();
+            `
         ]
     ],
     theme: defaultTheme({
@@ -40,7 +52,8 @@ export default defineUserConfig({
         contributors: false,
         lastUpdated: true,
         lastUpdatedText: "最新更新时间",
-        colorModeSwitch: true
+        colorModeSwitch: true,
+        sidebarDepth: 4
     }),
     plugins: [
         searchPlugin({
@@ -58,6 +71,12 @@ export default defineUserConfig({
             hostname: "https://github.com/1nchaos/adata",
             author: "1nchaos"
         }),
-        vuepressPluginAnchorRight(),
+        vuepressPluginAnchorRight({
+            showDepth: 4,
+        }),
+        searchConsolePlugin({
+            // 改成自己的百度统计 id：https://tongji.baidu.com/
+            baiduId: "b43925e6271a6ce5fcba28ecd1e6203e"
+        })
     ]
 })
