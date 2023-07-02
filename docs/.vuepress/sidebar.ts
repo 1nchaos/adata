@@ -6,11 +6,13 @@ export default [
         link: '/',
     },
     {
-        text: '字典表',
-        link: '/DIC.md',
+        text: '数据字典',
+        link: '/dataDic.md',
+        collapsible: true,
     },
-     {
-        text: '向阳花-谢天笑',
+    {
+        text: '向阳花-谢天笑.mp3',
         link: '/向阳花.md',
+        collapsible: true,
     },
 ] as SidebarConfig;

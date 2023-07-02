@@ -9,7 +9,9 @@ TODO 数据返回类型转换
 
 import pandas as pd
 
-from adata.stock.market.stock_market import *
+from .stock_market_baidu import StockMarketBaiDu
+from .stock_market_qq import StockMarketQQ
+from .stock_market_sina import StockMarketSina
 
 
 class StockMarket(object):
