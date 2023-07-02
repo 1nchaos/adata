@@ -213,6 +213,6 @@ print(res_df)
 
 > 对于项目有支持，包括但不仅限：内容贡献，bug提交，思想交流等等，对项目有影响的个人和机构
 
-| Simon |
-| ----- |
+| Simon | [bigbigbigfish](https://github.com/bigbigbigfish) |
+| ----- | ------------------------------------------------- |
 

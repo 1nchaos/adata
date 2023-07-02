@@ -12,7 +12,7 @@ import pandas as pd
 
 from adata.common.headers import sina_headers
 from adata.common.utils import requests
-from adata.stock.market.stock_market.stock_market_template import StockMarketTemplate
+from .stock_market_template import StockMarketTemplate
 
 
 class StockMarketSina(StockMarketTemplate):
