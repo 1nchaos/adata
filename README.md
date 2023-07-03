@@ -1,4 +1,4 @@
-# AData
+# [AData](https://adata.1nchaos.com)
 
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/adata?color=d)](https://pypi.org/project/adata/)[![Licence](https://img.shields.io/hexpm/l/apa?color=d)](https://gitee.com/inchaos/adata/blob/master/LICENSE)
 
@@ -101,7 +101,7 @@ print(res_df)
 
 请参考下面数据列表和相关字典文档，找到对应的函数并查看对应的函数注释，进行正确使用。
 
-- [字典DIC](docs/dataDic.md) 
+- [数据字典](https://adata.1nchaos.com/dic/stock.html) 
 
 ## 二、数据列表
 
