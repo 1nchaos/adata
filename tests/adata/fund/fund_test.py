@@ -23,7 +23,7 @@ class FundTestCase(unittest.TestCase):
         print("开始测试：all_etf_exchange_traded_info")
         df = adata.fund.info.all_etf_exchange_traded_info()
         print(df)
-        self.assertEqual(True, len(df) > 1)
+        self.assertEqual(True, len(df) > 200)
 
 
 if __name__ == '__main__':

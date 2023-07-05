@@ -30,7 +30,7 @@ class BondTestCase(unittest.TestCase):
         print("开始测试：all_convert_code")
         df = adata.bond.info.all_convert_code()
         print(df)
-        self.assertEqual(True, len(df) > 1)
+        self.assertEqual(True, len(df) > 200)
 
 
 if __name__ == '__main__':
