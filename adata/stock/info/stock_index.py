@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup
 
 from adata.common.headers import ths_headers
 from adata.common.utils import cookie, requests
+from adata.stock.cache.index_code_rel_ths import rel
 
 
 class StockIndex(object):
@@ -90,13 +91,17 @@ class StockIndex(object):
         :param index_code: 指数代码 399282
         :return:['index_code', 'stock_code', 'short_name']
         """
+        # 转换抓取的code,
+        catch_code = rel[index_code] if index_code.startswith('0') else index_code
+        # 转换指数代码
+        index_code = rel[index_code] if ('A' in index_code or 'B' in index_code or 'C' in index_code) else index_code
         # 1. url拼接页码等参数
         data = []
         total_pages = 1
         curr_page = 1
         while curr_page <= total_pages:
             api_url = f"http://q.10jqka.com.cn/zs/detail/field/199112/order/desc/page/" \
-                      f"{curr_page}/ajax/1/code/{index_code}"
+                      f"{curr_page}/ajax/1/code/{catch_code}"
             headers = copy.deepcopy(ths_headers.text_headers)
             headers['Cookie'] = cookie.ths_cookie()
             res = requests.request(method='get', url=api_url, headers=headers, proxies={})
@@ -131,4 +136,4 @@ class StockIndex(object):
 
 if __name__ == '__main__':
     print(StockIndex().all_index_code())
-    print(StockIndex().index_constituent(index_code='1A0001'))
+    print(StockIndex().index_constituent(index_code='000823'))
