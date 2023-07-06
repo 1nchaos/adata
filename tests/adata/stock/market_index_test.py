@@ -26,21 +26,21 @@ class MarketIndexTestCase(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_get_market_concept_ths(self):
+    def test_get_market_index(self):
         print("开始测试：get_market_index")
-        df = adata.stock.market.get_market_index(index_code='886041')
+        df = adata.stock.market.get_market_index(index_code='000001')
         print(df)
         self.assertEqual(True, len(df) > 30)
 
     def test_get_market_index_min(self):
         print("开始测试：get_market_index_min")
-        df = adata.stock.market.get_market_index_min(index_code='886041')
+        df = adata.stock.market.get_market_index_min(index_code='000001')
         print(df)
         self.assertEqual(True, len(df) > 2)
 
     def test_get_market_index_current(self):
         print("开始测试：get_market_index_current")
-        df = adata.stock.market.get_market_index_current(index_code='886041')
+        df = adata.stock.market.get_market_index_current(index_code='000001')
         print(df)
         self.assertEqual(True, len(df) > 0)
 

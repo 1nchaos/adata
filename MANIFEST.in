@@ -1,1 +1,2 @@
 recursive-include adata/common/js *.js
+recursive-include adata/stock/cache/* *.csv

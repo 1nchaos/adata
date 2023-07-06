@@ -22,7 +22,12 @@ class StockMarketConcept(BaseThs):
     """
     股票概念 行情
     """
-    __MARKET_COLUMNS = ['trade_date', 'open', 'high', 'low', 'close', 'volume', 'amount']
+    __MARKET_COLUMNS = ['index_code', 'trade_time', 'trade_date', 'open', 'high', 'low', 'close', 'volume',
+                        'amount', 'change', 'change_pct']
+    __MARKET_CONCEPT_MIN_COLUMNS = ['index_code', 'trade_time', 'trade_date', 'price', 'avg_price', 'volume',
+                                    'amount', 'change', 'change_pct']
+    __MARKET_CONCEPT_CURRENT_COLUMNS = ['index_code', 'trade_time', 'trade_date', 'open', 'high', 'low', 'price',
+                                        'volume', 'amount']
 
     def get_market_concept_ths(self, index_code: str = '886013', k_type: int = 1, adjust_type: int = 1):
         """
@@ -53,7 +58,7 @@ class StockMarketConcept(BaseThs):
         data = []
         for d in data_list:
             data.append(str(d).split(',')[0:7])
-        result_df = pd.DataFrame(data=data, columns=self.__MARKET_COLUMNS)
+        result_df = pd.DataFrame(data=data, columns=['trade_date', 'open', 'high', 'low', 'close', 'volume', 'amount'])
         result_df['index_code'] = index_code
         result_df['trade_time'] = pd.to_datetime(result_df['trade_date']).dt.strftime('%Y-%m-%d %H:%M:%S')
         result_df['trade_date'] = pd.to_datetime(result_df['trade_date'], format='%Y%m%d').dt.strftime('%Y-%m-%d')
@@ -67,7 +72,7 @@ class StockMarketConcept(BaseThs):
         result_df.replace('--', None, inplace=True)
         result_df.replace('', None, inplace=True)
         result_df.replace(np.nan, None, inplace=True)
-        return result_df
+        return result_df[self.__MARKET_COLUMNS]
 
     def get_market_concept_min_ths(self, index_code='886041'):
         """
@@ -78,6 +83,9 @@ class StockMarketConcept(BaseThs):
         :return 时间，现价，成交额（元），均价，成交量（股） 涨跌额，涨跌幅
         'index_code', 'trade_time', 'price', 'change', 'change_pct', 'volume', 'avg_price', 'amount'
         """
+        # 0.参数校验
+        if not index_code.startswith('8'):
+            raise RuntimeError('index_code错误，是8开头的指数代码,')
         # 1.接口 url
         api_url = f"http://d.10jqka.com.cn/v6/time/48_{index_code}/last.js"
         text = self._get_text(api_url, index_code)
@@ -104,7 +112,7 @@ class StockMarketConcept(BaseThs):
         result_df.replace('--', None, inplace=True)
         result_df.replace('', None, inplace=True)
         result_df.replace(np.nan, None, inplace=True)
-        return result_df
+        return result_df[self.__MARKET_CONCEPT_MIN_COLUMNS]
 
     def get_market_concept_current_ths(self, index_code: str = '886013', k_type: int = 1):
         """
@@ -123,6 +131,9 @@ class StockMarketConcept(BaseThs):
         成交量：股 820953530  821万手
         成交额：元 16959251000.000 169.6亿
         """
+        # 0.参数校验
+        if not index_code.startswith('8'):
+            raise RuntimeError('index_code错误，是8开头的指数代码,')
         # 1.接口 url
         api_url = f"http://d.10jqka.com.cn/v6/line/48_{index_code}/{k_type - 1}1/today.js"
         headers = copy.deepcopy(ths_headers.text_headers)
@@ -143,7 +154,7 @@ class StockMarketConcept(BaseThs):
         result_df = result_df[columns]
         result_df['index_code'] = index_code
         result_df['trade_date'] = pd.to_datetime(result_df['trade_date'], format='%Y%m%d').dt.strftime('%Y-%m-%d')
-        return result_df
+        return result_df[self.__MARKET_CONCEPT_CURRENT_COLUMNS]
 
 
 if __name__ == '__main__':
