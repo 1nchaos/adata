@@ -14,6 +14,7 @@ def generate_version(version, prerelease=None, revision=None):
         version_parts.append(f".{revision}")
     return "".join(version_parts)
 
+
 __title__ = "adata"
 __description__ = "A Data,A Stock,ETF,Bond,Quant,Stock Market,K Line"
 __url__ = "https://github.com/1nchaos/adata"
