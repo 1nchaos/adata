@@ -9,10 +9,15 @@
 import logging
 
 from .__version__ import __version__
-from .stock import stock
-from .fund import fund
 from .bond import bond
+from .fund import fund
 from .sentiment import sentiment
+from .stock import stock
+
+
+def version():
+    return __version__
+
 
 # set up logging
 logger = logging.getLogger("adata")

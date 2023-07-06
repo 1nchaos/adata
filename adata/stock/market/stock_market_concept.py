@@ -69,7 +69,7 @@ class StockMarketConcept(BaseThs):
         result_df.replace(np.nan, None, inplace=True)
         return result_df
 
-    def get_market_concept_min_ths(self, index_code):
+    def get_market_concept_min_ths(self, index_code='886041'):
         """
         获取概念行情当日分时
         web： http://d.10jqka.com.cn/v6/time/48_886013/last.js

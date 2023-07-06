@@ -41,7 +41,7 @@ class StockMarketIndex(BaseThs):
         """
         # 0. 时间范围处理
         years = self._get_years_by_start_date(start_date)
-        concept_code = rel[index_code]
+        concept_code = rel[index_code] if index_code in rel.keys() else index_code
         data = []
         for year in years:
             # 1.接口 url
@@ -96,7 +96,7 @@ class StockMarketIndex(BaseThs):
         ['index_code', 'trade_time', 'price', 'change', 'change_pct', 'volume', 'avg_price', 'amount']
         """
         # 0. 指数代码转换
-        concept_code = rel[index_code]
+        concept_code = rel[index_code] if index_code in rel.keys() else index_code
         # 1.接口 url
         api_url = f"http://d.10jqka.com.cn/v4/time/zs_{concept_code}/last.js"
         text = self._get_text(api_url, concept_code)
@@ -153,7 +153,7 @@ class StockMarketIndex(BaseThs):
         ['trade_time', 'trade_date', 'open', 'high', 'low', 'price', 'volume', 'amount']
         """
         # 0. 指数代码转换
-        concept_code = rel[index_code]
+        concept_code = rel[index_code] if index_code in rel.keys() else index_code
         # 1.接口 url
         api_url = f"http://d.10jqka.com.cn/v4/line/zs_{concept_code}/{k_type - 1}1/today.js"
         headers = copy.deepcopy(ths_headers.text_headers)
