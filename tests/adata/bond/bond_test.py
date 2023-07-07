@@ -14,11 +14,11 @@ class BondTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        print("----STAR执行:債券:函数测试用例STAR----")
+        print("----STAR执行:债券:函数测试用例STAR----")
 
     @classmethod
     def tearDownClass(cls) -> None:
-        print("----END执行:債券:函数测试用例END----")
+        print("----END执行:债券:函数测试用例END----")
 
     def setUp(self):
         pass

@@ -19,12 +19,17 @@ class StockMarketIndex(BaseThs):
     """
     股票指数 行情
     """
-    __MARKET_INDEX_COLUMNS = ['trade_date', 'open', 'high', 'low', 'close', 'volume', 'amount']
+    __MARKET_INDEX_COLUMNS = ['index_code', 'trade_time', 'trade_date', 'open', 'high', 'low', 'close', 'volume',
+                              'amount', 'change', 'change_pct']
+    __MARKET_INDEX_MIN_COLUMNS = ['index_code', 'trade_time', 'trade_date', 'price', 'avg_price',
+                                  'volume', 'amount', 'change', 'change_pct']
+    __MARKET_INDEX_CURRENT_COLUMNS = ['index_code', 'trade_time', 'trade_date', 'open', 'high', 'low', 'price',
+                                      'volume', 'amount']
 
     def __init__(self) -> None:
         super().__init__()
 
-    def get_market_index(self, index_code: str = '886013', start_date='2020-01-01', k_type: int = 1):
+    def get_market_index(self, index_code: str = '000001', start_date='2020-01-01', k_type: int = 1):
         """
         获取指数行情
         """
@@ -41,7 +46,7 @@ class StockMarketIndex(BaseThs):
         """
         # 0. 时间范围处理
         years = self._get_years_by_start_date(start_date)
-        concept_code = rel[index_code]
+        concept_code = rel[index_code] if index_code in rel.keys() else index_code
         data = []
         for year in years:
             # 1.接口 url
@@ -50,14 +55,16 @@ class StockMarketIndex(BaseThs):
             text = self._get_text(api_url, concept_code)
             if '<h1>Nginx forbidden.</h1>' in text:
                 raise Exception('ip被限制了：请降低频率或更换ip')
-
+            # 为空继续
+            if not text:
+                continue
             # 2. 解析数据
             result_text = text[text.index('{'):-1]
             data_list = json.loads(result_text)['data'].split(';')
             for d in data_list:
                 data.append(str(d).split(',')[0:7])
         # 3. 数据etl
-        result_df = pd.DataFrame(data=data, columns=self.__MARKET_INDEX_COLUMNS)
+        result_df = pd.DataFrame(data=data, columns=['trade_date', 'open', 'high', 'low', 'close', 'volume', 'amount'])
         result_df.drop_duplicates(subset=['trade_date'], inplace=True)
         result_df = result_df.sort_values(by='trade_date', ascending=True)
         # 去重，日期升序
@@ -75,7 +82,7 @@ class StockMarketIndex(BaseThs):
         # 4. 筛选时间范围
         if start_date:
             result_df = result_df[result_df['trade_date'] >= start_date]
-        return result_df
+        return result_df[self.__MARKET_INDEX_COLUMNS]
 
     def get_market_index_min(self, index_code='000001'):
         """
@@ -96,12 +103,14 @@ class StockMarketIndex(BaseThs):
         ['index_code', 'trade_time', 'price', 'change', 'change_pct', 'volume', 'avg_price', 'amount']
         """
         # 0. 指数代码转换
-        concept_code = rel[index_code]
+        concept_code = rel[index_code] if index_code in rel.keys() else index_code
         # 1.接口 url
         api_url = f"http://d.10jqka.com.cn/v4/time/zs_{concept_code}/last.js"
         text = self._get_text(api_url, concept_code)
         if '<h1>Nginx forbidden.</h1>' in text:
             raise Exception('ip被限制了：请降低频率或更换ip')
+        if not text:
+            return pd.DataFrame(data=[], columns=self.__MARKET_INDEX_MIN_COLUMNS)
         # 2. 解析数据
         result_json = json.loads(text[text.index('{'):-1])[f"zs_{concept_code}"]
         pre_price = result_json['pre']
@@ -126,7 +135,7 @@ class StockMarketIndex(BaseThs):
         result_df.replace('--', None, inplace=True)
         result_df.replace('', None, inplace=True)
         result_df.replace(np.nan, None, inplace=True)
-        return result_df
+        return result_df[self.__MARKET_INDEX_MIN_COLUMNS]
 
     def get_market_index_current(self, index_code: str = '000001', k_type: int = 1):
         """
@@ -153,7 +162,7 @@ class StockMarketIndex(BaseThs):
         ['trade_time', 'trade_date', 'open', 'high', 'low', 'price', 'volume', 'amount']
         """
         # 0. 指数代码转换
-        concept_code = rel[index_code]
+        concept_code = rel[index_code] if index_code in rel.keys() else index_code
         # 1.接口 url
         api_url = f"http://d.10jqka.com.cn/v4/line/zs_{concept_code}/{k_type - 1}1/today.js"
         headers = copy.deepcopy(ths_headers.text_headers)
@@ -174,7 +183,7 @@ class StockMarketIndex(BaseThs):
         result_df = result_df[columns]
         result_df['index_code'] = index_code
         result_df['trade_date'] = pd.to_datetime(result_df['trade_date'], format='%Y%m%d').dt.strftime('%Y-%m-%d')
-        return result_df
+        return result_df[self.__MARKET_INDEX_CURRENT_COLUMNS]
 
 
 if __name__ == '__main__':

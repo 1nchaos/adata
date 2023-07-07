@@ -9,6 +9,7 @@ import pandas as pd
 from tqdm import tqdm
 
 from adata.common import requests
+from adata.stock.cache.calendar import years, get_csv_path
 
 
 class TradeCalendar(object):
@@ -28,6 +29,9 @@ class TradeCalendar(object):
         day_week: 一周的第几天，从星期日开始;
         trade_status: 交易状态:1，交易日；0，非交易日
         """
+        # 先获取缓存数据
+        if year in years:
+            return pd.read_csv(get_csv_path(year), header=0)
         return self.__calendar_szse(year=year)
 
     def __calendar_szse(self, year=None):
@@ -60,4 +64,4 @@ class TradeCalendar(object):
 
 
 if __name__ == '__main__':
-    print(TradeCalendar().trade_calendar(year=2024))
+    print(TradeCalendar().trade_calendar(year=2004))
