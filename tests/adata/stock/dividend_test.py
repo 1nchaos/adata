@@ -10,7 +10,7 @@ import unittest
 import adata
 
 
-class SentimentTestCase(unittest.TestCase):
+class DividendTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:

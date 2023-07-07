@@ -10,7 +10,7 @@ https://stockapp.finance.qq.com/mstats/#
 import pandas as pd
 
 from adata.common import requests
-from .stock_market_template import StockMarketTemplate
+from adata.stock.market.stock_market.stock_market_template import StockMarketTemplate
 
 
 class StockMarketQQ(StockMarketTemplate):
