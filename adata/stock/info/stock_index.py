@@ -83,6 +83,10 @@ class StockIndex(object):
         :param index_code: 指数代码
         :return: ['index_code', 'stock_code', 'short_name']
         """
+        # res = self.__index_constituent_ths(index_code=index_code)
+        # if not res.empty:
+        #     return res
+        # return self.__index_constituent_baidu(index_code=index_code)
         return self.__index_constituent_ths(index_code=index_code)
 
     def __index_constituent_ths(self, index_code=None):
@@ -133,7 +137,46 @@ class StockIndex(object):
         data.clear()
         return result_df[self.__INDEX_CONSTITUENT_COLUMN]
 
+    def __index_constituent_baidu(self, index_code=None):
+        """
+        https://gushitong.baidu.com/opendata?resource_id=5352&query=000133&code=000133&market=ab&group=asyn_ranking&pn=100&rn=50&pc_web=1&finClientType=pc
+        百度指数成分股
+        :param index_code: 指数代码 399282
+        :return:['index_code', 'stock_code', 'short_name']
+        """
+        # 1.请求接口 url
+        data = []
+        for page in range(100):
+            api_url = f"https://gushitong.baidu.com/opendata?resource_id=5352&query={index_code}&code={index_code}&" \
+                      f"market=ab&group=asyn_ranking&pn={page * 50}&rn=100&pc_web=1&finClientType=pc"
+            res = requests.request('get', api_url, headers={})
+
+            # 2. 判断结果是否正确
+            if len(res.text) < 1 or res.status_code != 200:
+                break
+            res_json = res.json()
+            if res_json['ResultCode'] != '0':
+                break
+            # 3.解析数据
+            # 3.1 空数据时返回为空
+            result = res_json['Result']
+            if not result:
+                break
+
+            # 3.2 正常解析数据
+            try:
+                result_list = result[-1]['DisplayData']['resultData']['tplData']['result']['list']
+                data.extend(result_list)
+            except KeyError:
+                break
+
+        # 4. 封装数据
+        result_df = pd.DataFrame(data=data).rename(columns={'code': 'stock_code', 'name': 'short_name'})
+        result_df['index_code'] = index_code
+        data.clear()
+        return result_df[self.__INDEX_CONSTITUENT_COLUMN]
+
 
 if __name__ == '__main__':
     print(StockIndex().all_index_code())
-    print(StockIndex().index_constituent(index_code='000823'))
+    print(StockIndex().index_constituent(index_code='000033'))
