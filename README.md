@@ -1,6 +1,12 @@
 # [AData](https://adata.1nchaos.com)
 
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/adata?color=d)](https://pypi.org/project/adata/)[![Licence](https://img.shields.io/hexpm/l/apa?color=d)](https://gitee.com/inchaos/adata/blob/master/LICENSE)
+<p align="center">
+  <a href="https://adata.1nchaos.com/" target="_blank">
+    <img width="180" src="./docs/AData200x200.png" alt="logo">
+  </a>
+</p>
+
+![GitHub language count](https://img.shields.io/github/languages/count/1nchaos/adata)![GitHub top language](https://img.shields.io/github/languages/top/1nchaos/adata)[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/adata?color=d)](https://pypi.org/project/adata/)[![Licence](https://img.shields.io/hexpm/l/apa?color=d)](https://gitee.com/inchaos/adata/blob/main/LICENSE)![PyPI - Downloads](https://img.shields.io/pypi/dm/adata)![GitHub Repo stars](https://img.shields.io/github/stars/1nchaos/adata)![GitHub issues](https://img.shields.io/github/issues/1nchaos/adata)![GitHub contributors](https://img.shields.io/github/contributors/1nchaos/adata)![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/1nchaos/adata)
 
 
 ## 0、介绍
@@ -28,9 +34,9 @@ pip install -U adata -i http://mirrors.aliyun.com/pypi/simple/
 
 **注：国内镜像可能存在同步延迟，可使用官方镜像源，以下是镜像源**
 
-阿里云【推荐】：http://mirrors.aliyun.com/pypi/simple/ 
+阿里云【推荐】：http://mirrors.aliyun.com/pypi/simple/  
 
-清华大学：https://pypi.tuna.tsinghua.edu.cn/simple 
+清华大学：https://pypi.tuna.tsinghua.edu.cn/simple  
 
 官方镜像源：https://pypi.org/simple
 
@@ -54,11 +60,7 @@ print(res_df)
 0        001324       N长青科       SZ
 1        301361       众智科技       SZ
 2        300514        友讯达       SZ
-3        300880       迦南智能       SZ
-4        301368       丰立智能       SZ
 ...         ...        ...      ...
-5488     300325        德威退       SZ
-5489     300362        天翔退       SZ
 5490     300367        网力退       SZ
 5491     300372        欣泰退       SZ
 5492     300431        暴风退       SZ
@@ -80,16 +82,12 @@ print(res_df)
 
 示例结果：
 
-~~~
+~~~python
             trade_time   open  close  ... pre_close stock_code  trade_date
 0    2021-01-04 00:00:00  18.69  18.19  ...     18.93     000001  2021-01-04
 1    2021-01-05 00:00:00  17.99  17.76  ...     18.19     000001  2021-01-05
 2    2021-01-06 00:00:00  17.67  19.15  ...     17.76     000001  2021-01-06
-3    2021-01-07 00:00:00  19.11  19.49  ...     19.15     000001  2021-01-07
-4    2021-01-08 00:00:00  19.49  19.44  ...     19.49     000001  2021-01-08
 ..                   ...    ...    ...  ...       ...        ...         ...
-571  2023-05-16 00:00:00  12.80  12.62  ...     12.83     000001  2023-05-16
-572  2023-05-17 00:00:00  12.58  12.49  ...     12.62     000001  2023-05-17
 573  2023-05-18 00:00:00  12.57  12.49  ...     12.49     000001  2023-05-18
 574  2023-05-19 00:00:00  12.43  12.34  ...     12.49     000001  2023-05-19
 575  2023-05-22 00:00:00  12.31  12.38  ...     12.34     000001  2023-05-22
@@ -196,10 +194,12 @@ print(res_df)
 
 2. 根据多年的数据治理经验，函数和字典在设计上面，符合标准的数据存储，可根据数据字典建表落地到数据库。
 
+3. 距离15年已过8年，时光匆匆，**抓住底部机会**。
+
 **注：**
 
 - 永久免费开源A股数据库，只有交易相关的数据，专注量化交易。
-- 送给A股的各位朋友一首歌：[谢天笑-向阳花](./docs/向阳花.md)，愿你我向阳而生。
+- 送给A股的各位朋友一首歌：[谢天笑-向阳花](./向阳花.md)，愿你我向阳而生。
 
 ## 参与贡献
 
