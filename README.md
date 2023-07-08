@@ -101,6 +101,25 @@ print(res_df)
 
 - [数据字典](https://adata.1nchaos.com/dic/stockInfo.html) 
 
+####  4. 代理设置
+
+项目是基于公开接口，可能存在限制等，因此增加代理设置功能
+
+~~~
+import adata
+
+# 设置代理,代理是全局设置,代理失效后可从新设置。
+adata.proxy(is_proxy=True, ip='60.167.21.27:1133')
+res_df = adata.stock.info.all_code()
+print(res_df)
+~~~
+
+**注：**
+
+- v0.0.027b 及以上版本支持；
+- proxy_url: 获取代理Ip的链接；ip和proxy_url方式选择其一；
+- 每次请求获取一次，为节省ip资源建议使用自建的代理池。
+
 ## 二、数据列表
 
 整理了最新版本的数据列表和相关使用Api，详细内容和相关使用参数，请参考数据字典文档。
