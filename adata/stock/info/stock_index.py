@@ -10,6 +10,7 @@ import copy
 import pandas as pd
 from bs4 import BeautifulSoup
 
+from adata.common.exception.exception_msg import *
 from adata.common.headers import ths_headers
 from adata.common.utils import cookie, requests
 from adata.stock.cache.index_code_rel_ths import rel
@@ -114,6 +115,8 @@ class StockIndex(object):
             if res.status_code != 200:
                 continue
             text = res.text
+            if THS_IP_LIMIT_RES in res:
+                raise Exception(THS_IP_LIMIT_MSG)
             if '暂无成份股数据' in text or '概念板块' in text or '概念时间表' in text:
                 break
             soup = BeautifulSoup(text, 'html.parser')

@@ -6,8 +6,6 @@
 @log: change log
 """
 from .snowflake import worker
-from .sunrequests import SunRequests
-
-requests = SunRequests()
+from .sunrequests import sun_requests as requests
 
 

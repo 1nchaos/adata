@@ -16,6 +16,7 @@ import math
 import pandas as pd
 from bs4 import BeautifulSoup
 
+from adata.common.exception.exception_msg import *
 from adata.common.headers import ths_headers
 from adata.common.utils import cookie
 from adata.common.utils import requests
@@ -177,8 +178,8 @@ class StockConcept(object):
         res = requests.request(method='get', url=api_url, headers=headers, proxies={})
         # 同花顺可能ip限制，降低请求次数
         text = res.text
-        if '<h1>Nginx forbidden.</h1>' in text:
-            raise Exception('ip被限制了：请降低频率或更换ip')
+        if THS_IP_LIMIT_RES in text:
+            return Exception(THS_IP_LIMIT_MSG)
         # 2. 解析总数
         result_json = json.loads(text[text.index('{'):-1])
         total_count = float(result_json['block']['subcodeCount'])

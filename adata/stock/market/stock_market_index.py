@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 
 from adata.common.base.base_ths import BaseThs
+from adata.common.exception.exception_msg import *
 from adata.common.headers import ths_headers
 from adata.stock.cache.index_code_rel_ths import rel
 
@@ -53,8 +54,8 @@ class StockMarketIndex(BaseThs):
             api_url = f"http://d.10jqka.com.cn/v4/line/zs_{concept_code}/{k_type - 1}1/{year}.js"
             # 同花顺可能ip限制，降低请求次数
             text = self._get_text(api_url, concept_code)
-            if '<h1>Nginx forbidden.</h1>' in text:
-                raise Exception('ip被限制了：请降低频率或更换ip')
+            if THS_IP_LIMIT_RES in text:
+                return Exception(THS_IP_LIMIT_MSG)
             # 为空继续
             if not text:
                 continue
@@ -107,8 +108,8 @@ class StockMarketIndex(BaseThs):
         # 1.接口 url
         api_url = f"http://d.10jqka.com.cn/v4/time/zs_{concept_code}/last.js"
         text = self._get_text(api_url, concept_code)
-        if '<h1>Nginx forbidden.</h1>' in text:
-            raise Exception('ip被限制了：请降低频率或更换ip')
+        if THS_IP_LIMIT_RES in text:
+            return Exception(THS_IP_LIMIT_MSG)
         if not text:
             return pd.DataFrame(data=[], columns=self.__MARKET_INDEX_MIN_COLUMNS)
         # 2. 解析数据
@@ -169,8 +170,8 @@ class StockMarketIndex(BaseThs):
         headers['Host'] = 'd.10jqka.com.cn'
         # 同花顺可能ip限制，降低请求次数
         text = self._get_text(api_url, concept_code)
-        if '<h1>Nginx forbidden.</h1>' in text:
-            raise Exception('ip被限制了：请降低频率或更换ip')
+        if THS_IP_LIMIT_RES in text:
+            return Exception(THS_IP_LIMIT_MSG)
         result_text = text[text.index('{'):-1]
         data_list = [json.loads(result_text)[f"zs_{concept_code}"]]
         rename = {'1': 'trade_date', '7': 'open', '8': 'high', '9': 'low', '11': 'price', '13': 'volume',
