@@ -63,7 +63,7 @@ class SunRequests(object):
         is_proxy = SunProxy.get('is_proxy')
         ip = SunProxy.get('ip')
         proxy_url = SunProxy.get('proxy_url')
-        if is_proxy and proxy_url:
+        if not ip and is_proxy and proxy_url:
             ip = requests.get(url=proxy_url).text.replace('\r\n', '')
         if is_proxy and ip:
             proxies = {'https': f"http://{ip}", 'http': f"http://{ip}"}
