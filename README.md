@@ -8,7 +8,7 @@
 
 ![GitHub language count](https://img.shields.io/github/languages/count/1nchaos/adata)![GitHub top language](https://img.shields.io/github/languages/top/1nchaos/adata)[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/adata?color=d)](https://pypi.org/project/adata/)[![Licence](https://img.shields.io/hexpm/l/apa?color=d)](https://gitee.com/inchaos/adata/blob/main/LICENSE)![PyPI - Downloads](https://img.shields.io/pypi/dm/adata)![GitHub Repo stars](https://img.shields.io/github/stars/1nchaos/adata)![GitHub issues](https://img.shields.io/github/issues/1nchaos/adata)![GitHub contributors](https://img.shields.io/github/contributors/1nchaos/adata)![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/1nchaos/adata)
 
-
+---
 ## 0、介绍
 > 专注A股，专注量化，向阳而生；开放、纯净、持续、为Ai(爱)发电。
 >
@@ -100,6 +100,25 @@ print(res_df)
 请参考下面数据列表和相关字典文档，找到对应的函数并查看对应的函数注释，进行正确使用。
 
 - [数据字典](https://adata.1nchaos.com/dic/stockInfo.html) 
+
+####  4. 代理设置
+
+项目是基于公开接口，可能存在限制等，因此增加代理设置功能
+
+~~~
+import adata
+
+# 设置代理,代理是全局设置,代理失效后可从新设置。
+adata.proxy(is_proxy=True, ip='60.167.21.27:1133')
+res_df = adata.stock.info.all_code()
+print(res_df)
+~~~
+
+**注：**
+
+- v0.0.027b 及以上版本支持；
+- proxy_url: 获取代理Ip的链接；ip和proxy_url方式选择其一；
+- 每次请求获取一次，为节省ip资源建议使用自建的代理池。
 
 ## 二、数据列表
 

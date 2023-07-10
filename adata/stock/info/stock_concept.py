@@ -12,10 +12,12 @@ http://q.10jqka.com.cn/gn
 import copy
 import json
 import math
+import time
 
 import pandas as pd
 from bs4 import BeautifulSoup
 
+from adata.common.exception.exception_msg import *
 from adata.common.headers import ths_headers
 from adata.common.utils import cookie
 from adata.common.utils import requests
@@ -98,32 +100,34 @@ class StockConcept(object):
                                                                                           ignore_index=True)
         return data_df
 
-    def concept_constituent_ths(self, concept_code=None, name=None, index_code=None):
+    def concept_constituent_ths(self, concept_code=None, name=None, index_code=None, wait_time=None):
         """
         获取同花顺概念成分
         优先级
         index_code >  name > concept_code: 三选其一
         指数代码来自app，名称查询来自问财，概念代码来自网页；
+        :param wait_time: 等待时间：毫秒；表示每个请求的间隔时间，主要用于防止请求太频繁的限制。
         :param concept_code: 概念代码，3开头
         :param index_code: 指数代码，8开头
         :param name: 概念名称
         :return: 概念的成分股
         """
         if concept_code:
-            return self.__index_constituent_ths_by_concept_code(concept_code=concept_code)
+            return self.__index_constituent_ths_by_concept_code(concept_code=concept_code, wait_time=wait_time)
         elif name:
-            return self.__index_constituent_ths_by_name(name=name)
+            return self.__index_constituent_ths_by_name(name=name, wait_time=wait_time)
         elif index_code:
-            return self.__index_constituent_ths_by_index_code(index_code=index_code)
+            return self.__index_constituent_ths_by_index_code(index_code=index_code, wait_time=wait_time)
         else:
             return pd.DataFrame(data=[], columns=self.__CONCEPT_CONSTITUENT_COLUMNS)
 
-    def __index_constituent_ths_by_concept_code(self, concept_code=None):
+    def __index_constituent_ths_by_concept_code(self, concept_code=None, wait_time=None):
         """
         同花顺概念成分股
         web_url :http://q.10jqka.com.cn/gn/detail/field/199112/order/desc/page/1/ajax/1/code/301539
         answer: http://www.iwencai.com/gateway/urp/v7/landing/getDataList?query=chatgpt%20%E6%A6%82%E5%BF%B5%E6%88%90%E5%88%86&page=1&perpage=100&query_type=stock&comp_id=6734520&uuid=24087
         :param concept_code: 概念代码： 301539
+        :param wait_time: 等待时间：表示每个请求的间隔时间，主要用于防止请求太频繁的限制。
         :return:['concept_code', 'stock_code', 'short_name']
         """
         # 1. url拼接页码等参数
@@ -131,6 +135,8 @@ class StockConcept(object):
         total_pages = 1
         curr_page = 1
         while curr_page <= total_pages:
+            if curr_page != 1 and wait_time:
+                time.sleep(wait_time / 1000)
             api_url = f"http://q.10jqka.com.cn/gn/detail/field/199112/order/desc/page/" \
                       f"{curr_page}/ajax/1/code/{concept_code}"
             headers = copy.deepcopy(ths_headers.text_headers)
@@ -141,6 +147,8 @@ class StockConcept(object):
             if res.status_code != 200:
                 continue
             text = res.text
+            if THS_IP_LIMIT_RES in text:
+                return Exception(THS_IP_LIMIT_MSG)
             if '暂无成份股数据' in text or '概念板块' in text or '概念时间表' in text:
                 break
             soup = BeautifulSoup(text, 'html.parser')
@@ -163,11 +171,12 @@ class StockConcept(object):
         data.clear()
         return result_df[self.__CONCEPT_CONSTITUENT_COLUMNS]
 
-    def __index_constituent_ths_by_index_code(self, index_code=None):
+    def __index_constituent_ths_by_index_code(self, index_code=None, wait_time=None):
         """
         根据概念指数代码获取成分股
         web_url： https://d.10jqka.com.cn/v2/blockrank/885338/8/d3000.js
         :param index_code: 指数代码，ths 8开头
+        :param wait_time: 等待时间：表示每个请求的间隔时间，主要用于防止请求太频繁的限制。
         :return: ['stock_code', 'short_name']
         """
         # 1.接口 url
@@ -177,8 +186,8 @@ class StockConcept(object):
         res = requests.request(method='get', url=api_url, headers=headers, proxies={})
         # 同花顺可能ip限制，降低请求次数
         text = res.text
-        if '<h1>Nginx forbidden.</h1>' in text:
-            raise Exception('ip被限制了：请降低频率或更换ip')
+        if THS_IP_LIMIT_RES in text:
+            return Exception(THS_IP_LIMIT_MSG)
         # 2. 解析总数
         result_json = json.loads(text[text.index('{'):-1])
         total_count = float(result_json['block']['subcodeCount'])
@@ -204,11 +213,12 @@ class StockConcept(object):
         result_df = result_df.drop_duplicates(subset=['stock_code'], keep='last', ignore_index=True)
         return result_df[self.__CONCEPT_CONSTITUENT_COLUMNS]
 
-    def __index_constituent_ths_by_name(self, name=None):
+    def __index_constituent_ths_by_name(self, name=None, wait_time=None):
         """
         同花顺概念成分股，通过问财询问
         answer: http://www.iwencai.com/gateway/urp/v7/landing/getDataList?query=chatgpt%20%E6%A6%82%E5%BF%B5%E6%88%90%E5%88%86&page=1&perpage=100&query_type=stock&comp_id=6734520&uuid=24087
         :param name: 概念名称
+        :param wait_time: 等待时间：表示每个请求的间隔时间，主要用于防止请求太频繁的限制。
         :return:['concept_code', 'stock_code', 'short_name']
         """
         # 1. url拼接页码等参数
@@ -216,6 +226,8 @@ class StockConcept(object):
         total_pages = 1
         curr_page = 1
         while curr_page <= total_pages:
+            if curr_page != 1 and wait_time:
+                time.sleep(wait_time / 1000)
             api_url = f"https://www.iwencai.com/gateway/urp/v7/landing/getDataList?query={name} 概念成分&" \
                       f"page={curr_page}&perpage=100&query_type=stock&comp_id=6734520&uuid=24087"
             headers = copy.deepcopy(ths_headers.json_headers)
@@ -227,6 +239,8 @@ class StockConcept(object):
             if res.status_code != 200:
                 continue
             text = res.text.encode('utf-8').decode('unicode escape')
+            if THS_IP_LIMIT_RES in text:
+                return Exception(THS_IP_LIMIT_MSG)
             if name not in text:
                 break
             res_json = res.json()

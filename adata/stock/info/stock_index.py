@@ -6,10 +6,12 @@
 @log: change log
 """
 import copy
+import time
 
 import pandas as pd
 from bs4 import BeautifulSoup
 
+from adata.common.exception.exception_msg import *
 from adata.common.headers import ths_headers
 from adata.common.utils import cookie, requests
 from adata.stock.cache.index_code_rel_ths import rel
@@ -77,18 +79,24 @@ class StockIndex(object):
         data.clear()
         return result_df[self.__INDEX_CODE_COLUMN]
 
-    def index_constituent(self, index_code=None):
+    def index_constituent(self, index_code=None, wait_time=None):
         """
         获取对应指数的成分股
         :param index_code: 指数代码
+        :param wait_time: 等待时间：毫秒；表示每个请求的间隔时间，主要用于防止请求太频繁的限制。
         :return: ['index_code', 'stock_code', 'short_name']
         """
-        return self.__index_constituent_ths(index_code=index_code)
+        # res = self.__index_constituent_ths(index_code=index_code)
+        # if not res.empty:
+        #     return res
+        # return self.__index_constituent_baidu(index_code=index_code)
+        return self.__index_constituent_ths(index_code=index_code, wait_time=wait_time)
 
-    def __index_constituent_ths(self, index_code=None):
+    def __index_constituent_ths(self, index_code=None, wait_time=None):
         """
         同花顺指数成分股
         :param index_code: 指数代码 399282
+        :param wait_time: 等待时间：毫秒；表示每个请求的间隔时间，主要用于防止请求太频繁的限制。
         :return:['index_code', 'stock_code', 'short_name']
         """
         # 转换抓取的code,
@@ -100,6 +108,8 @@ class StockIndex(object):
         total_pages = 1
         curr_page = 1
         while curr_page <= total_pages:
+            if curr_page != 1 and wait_time:
+                time.sleep(wait_time / 1000)
             api_url = f"http://q.10jqka.com.cn/zs/detail/field/199112/order/desc/page/" \
                       f"{curr_page}/ajax/1/code/{catch_code}"
             headers = copy.deepcopy(ths_headers.text_headers)
@@ -110,6 +120,8 @@ class StockIndex(object):
             if res.status_code != 200:
                 continue
             text = res.text
+            if THS_IP_LIMIT_RES in res:
+                raise Exception(THS_IP_LIMIT_MSG)
             if '暂无成份股数据' in text or '概念板块' in text or '概念时间表' in text:
                 break
             soup = BeautifulSoup(text, 'html.parser')
@@ -133,7 +145,46 @@ class StockIndex(object):
         data.clear()
         return result_df[self.__INDEX_CONSTITUENT_COLUMN]
 
+    def __index_constituent_baidu(self, index_code=None):
+        """
+        https://gushitong.baidu.com/opendata?resource_id=5352&query=000133&code=000133&market=ab&group=asyn_ranking&pn=100&rn=50&pc_web=1&finClientType=pc
+        百度指数成分股
+        :param index_code: 指数代码 399282
+        :return:['index_code', 'stock_code', 'short_name']
+        """
+        # 1.请求接口 url
+        data = []
+        for page in range(100):
+            api_url = f"https://gushitong.baidu.com/opendata?resource_id=5352&query={index_code}&code={index_code}&" \
+                      f"market=ab&group=asyn_ranking&pn={page * 50}&rn=100&pc_web=1&finClientType=pc"
+            res = requests.request('get', api_url, headers={})
+
+            # 2. 判断结果是否正确
+            if len(res.text) < 1 or res.status_code != 200:
+                break
+            res_json = res.json()
+            if res_json['ResultCode'] != '0':
+                break
+            # 3.解析数据
+            # 3.1 空数据时返回为空
+            result = res_json['Result']
+            if not result:
+                break
+
+            # 3.2 正常解析数据
+            try:
+                result_list = result[-1]['DisplayData']['resultData']['tplData']['result']['list']
+                data.extend(result_list)
+            except KeyError:
+                break
+
+        # 4. 封装数据
+        result_df = pd.DataFrame(data=data).rename(columns={'code': 'stock_code', 'name': 'short_name'})
+        result_df['index_code'] = index_code
+        data.clear()
+        return result_df[self.__INDEX_CONSTITUENT_COLUMN]
+
 
 if __name__ == '__main__':
     print(StockIndex().all_index_code())
-    print(StockIndex().index_constituent(index_code='000823'))
+    print(StockIndex().index_constituent(index_code='000033'))
