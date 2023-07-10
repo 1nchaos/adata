@@ -6,6 +6,7 @@
 @log: change log
 """
 import copy
+import time
 
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -78,22 +79,24 @@ class StockIndex(object):
         data.clear()
         return result_df[self.__INDEX_CODE_COLUMN]
 
-    def index_constituent(self, index_code=None):
+    def index_constituent(self, index_code=None, wait_time=None):
         """
         获取对应指数的成分股
         :param index_code: 指数代码
+        :param wait_time: 等待时间：毫秒；表示每个请求的间隔时间，主要用于防止请求太频繁的限制。
         :return: ['index_code', 'stock_code', 'short_name']
         """
         # res = self.__index_constituent_ths(index_code=index_code)
         # if not res.empty:
         #     return res
         # return self.__index_constituent_baidu(index_code=index_code)
-        return self.__index_constituent_ths(index_code=index_code)
+        return self.__index_constituent_ths(index_code=index_code, wait_time=wait_time)
 
-    def __index_constituent_ths(self, index_code=None):
+    def __index_constituent_ths(self, index_code=None, wait_time=None):
         """
         同花顺指数成分股
         :param index_code: 指数代码 399282
+        :param wait_time: 等待时间：毫秒；表示每个请求的间隔时间，主要用于防止请求太频繁的限制。
         :return:['index_code', 'stock_code', 'short_name']
         """
         # 转换抓取的code,
@@ -105,6 +108,8 @@ class StockIndex(object):
         total_pages = 1
         curr_page = 1
         while curr_page <= total_pages:
+            if curr_page != 1 and wait_time:
+                time.sleep(wait_time / 1000)
             api_url = f"http://q.10jqka.com.cn/zs/detail/field/199112/order/desc/page/" \
                       f"{curr_page}/ajax/1/code/{catch_code}"
             headers = copy.deepcopy(ths_headers.text_headers)
