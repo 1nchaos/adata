@@ -8,13 +8,15 @@
 
 ![GitHub language count](https://img.shields.io/github/languages/count/1nchaos/adata)![GitHub top language](https://img.shields.io/github/languages/top/1nchaos/adata)[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/adata?color=d)](https://pypi.org/project/adata/)[![Licence](https://img.shields.io/hexpm/l/apa?color=d)](https://gitee.com/inchaos/adata/blob/main/LICENSE)![PyPI - Downloads](https://img.shields.io/pypi/dm/adata)![GitHub Repo stars](https://img.shields.io/github/stars/1nchaos/adata)![GitHub issues](https://img.shields.io/github/issues/1nchaos/adata)![GitHub contributors](https://img.shields.io/github/contributors/1nchaos/adata)![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/1nchaos/adata)
 
----
+
 ## 0、介绍
 > 专注A股，专注量化，向阳而生；开放、纯净、持续、为Ai(爱)发电。
 >
 > 专注股票行情数据，为了保证数据的高可用性，采用多数据源融合切换。
 >
 > 目标：支持个人量化行情的需要；众人拾柴火焰高，欢迎加入。
+
+**市场寒冷，发热不易，坚持更难；如有帮助到你，右上角点 ⭐Star 一键三连，谢谢支持和收藏^_^**
 
 ## 一、快速开始
 
@@ -235,3 +237,6 @@ print(res_df)
 | Simon | [bigbigbigfish](https://github.com/bigbigbigfish) |
 | ----- | ------------------------------------------------- |
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=1nchaos/adata&type=Date)](https://star-history.com/#1nchaos/adata&Date)
