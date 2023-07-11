@@ -239,11 +239,4 @@ print(res_df)
 
 ## Star History
 
-<a href="https://star-history.com/#1nchaos/adata&Date">
-
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=1nchaos/adata&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=1nchaos/adata&type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=1nchaos/adata&type=Date" />
-  </picture>
-</a>
+[![Star History Chart](https://api.star-history.com/svg?repos=1nchaos/adata&type=Date)](https://star-history.com/#1nchaos/adata&Date)
