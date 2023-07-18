@@ -110,7 +110,7 @@ print(res_df)
 ~~~
 import adata
 
-# 设置代理,代理是全局设置,代理失效后可从新设置。
+# 设置代理,代理是全局设置,代理失效后可重新设置。参数:ip,proxy_url
 adata.proxy(is_proxy=True, ip='60.167.21.27:1133')
 res_df = adata.stock.info.all_code()
 print(res_df)
@@ -118,7 +118,7 @@ print(res_df)
 
 **注：**
 
-- v0.0.027b 及以上版本支持；
+- v0.0.027b0 及以上版本支持；
 - proxy_url: 获取代理Ip的链接；ip和proxy_url方式选择其一；
 - 每次请求获取一次，为节省ip资源建议使用自建的代理池。
 
