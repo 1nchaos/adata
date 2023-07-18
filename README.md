@@ -6,7 +6,7 @@
   </a>
 </p>
 
-![GitHub language count](https://img.shields.io/github/languages/count/1nchaos/adata)![GitHub top language](https://img.shields.io/github/languages/top/1nchaos/adata)[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/adata?color=d)](https://pypi.org/project/adata/)[![Licence](https://img.shields.io/hexpm/l/apa?color=d)](https://gitee.com/inchaos/adata/blob/main/LICENSE)![PyPI - Downloads](https://img.shields.io/pypi/dm/adata)![GitHub Repo stars](https://img.shields.io/github/stars/1nchaos/adata)![GitHub issues](https://img.shields.io/github/issues/1nchaos/adata)![GitHub contributors](https://img.shields.io/github/contributors/1nchaos/adata)![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/1nchaos/adata)
+![GitHub language count](https://img.shields.io/github/languages/count/1nchaos/adata)![GitHub top language](https://img.shields.io/github/languages/top/1nchaos/adata)[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/adata?color=d)](https://pypi.org/project/adata/)[![Licence](https://img.shields.io/hexpm/l/apa?color=d)](https://gitee.com/inchaos/adata/blob/main/LICENSE)[![Downloads](https://static.pepy.tech/badge/adata/week)](https://pepy.tech/project/adata)![GitHub Repo stars](https://img.shields.io/github/stars/1nchaos/adata)![GitHub issues](https://img.shields.io/github/issues/1nchaos/adata)![GitHub contributors](https://img.shields.io/github/contributors/1nchaos/adata)![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/1nchaos/adata)[![Downloads](https://static.pepy.tech/badge/adata)](https://pepy.tech/project/adata)
 
 
 ## 0、介绍
@@ -110,7 +110,7 @@ print(res_df)
 ~~~
 import adata
 
-# 设置代理,代理是全局设置,代理失效后可从新设置。
+# 设置代理,代理是全局设置,代理失效后可重新设置。参数:ip,proxy_url
 adata.proxy(is_proxy=True, ip='60.167.21.27:1133')
 res_df = adata.stock.info.all_code()
 print(res_df)
@@ -118,7 +118,7 @@ print(res_df)
 
 **注：**
 
-- v0.0.027b 及以上版本支持；
+- v0.0.027b0 及以上版本支持；
 - proxy_url: 获取代理Ip的链接；ip和proxy_url方式选择其一；
 - 每次请求获取一次，为节省ip资源建议使用自建的代理池。
 
@@ -201,13 +201,13 @@ print(res_df)
 
 ## 五、发布计划
 
-| 版本号 | 内容 | 发布日期     | 备注                           |
-| ------ | ---- | ------------ | ------------------------------ |
-| 0.x.x  | 股票 | 2023-04-05 ~ | 预览版本                       |
-| 1.x.x  | 股票 | 2023-10-01   | 中国Ai股                       |
-| 2.x.x  | 基金 | 排期中       | 场内可交易基金：ETF            |
-| 3.x.x  | 债券 | 排期中       | 场内可交易债券：可转债         |
-| 4.x.x  | 舆情 | 排期中       | 挖掘新闻、网络文章和政策事件等 |
+|      | 版本号 | 内容 | 发布日期     | 备注                           |
+| ---- | ------ | ---- | ------------ | ------------------------------ |
+| ✅    | 0.x.x  | 股票 | 2023-04-05 ~ | 预览版本                       |
+| ☑️    | 1.x.x  | 股票 | 2023-10-01   | 中国Ai股                       |
+| ☑️    | 2.x.x  | 基金 | 排期中       | 场内可交易基金：ETF            |
+| ☑️    | 3.x.x  | 债券 | 排期中       | 场内可交易债券：可转债         |
+| ☑️    | 4.x.x  | 舆情 | 排期中       | 挖掘新闻、网络文章和政策事件等 |
 
 ## 六、理念
 
