@@ -135,13 +135,11 @@ class StockConcept(object):
         total_pages = 1
         curr_page = 1
         while curr_page <= total_pages:
-            if curr_page != 1 and wait_time:
-                time.sleep(wait_time / 1000)
             api_url = f"http://q.10jqka.com.cn/gn/detail/field/199112/order/desc/page/" \
                       f"{curr_page}/ajax/1/code/{concept_code}"
             headers = copy.deepcopy(ths_headers.text_headers)
             headers['Cookie'] = cookie.ths_cookie()
-            res = requests.request(method='get', url=api_url, headers=headers, proxies={})
+            res = requests.request(method='get', url=api_url, headers=headers, proxies={}, wait_time=wait_time)
             curr_page += 1
             # 2. 判断请求是否成功
             if res.status_code != 200:
@@ -183,7 +181,7 @@ class StockConcept(object):
         api_url = f"https://d.10jqka.com.cn/v2/blockrank/{index_code}/8/d15.js"
         headers = copy.deepcopy(ths_headers.text_headers)
         headers['Host'] = 'd.10jqka.com.cn'
-        res = requests.request(method='get', url=api_url, headers=headers, proxies={})
+        res = requests.request(method='get', url=api_url, headers=headers, proxies={}, wait_time=wait_time)
         # 同花顺可能ip限制，降低请求次数
         text = res.text
         if THS_IP_LIMIT_RES in text:
@@ -201,7 +199,7 @@ class StockConcept(object):
 
         # 3. 请求所有数据
         for api_url in apis:
-            res = requests.request(method='get', url=api_url, headers=headers, proxies={})
+            res = requests.request(method='get', url=api_url, headers=headers, proxies={}, wait_time=wait_time)
             text = res.text
             result_json = json.loads(text[text.index('{'):-1])
             items = result_json['items']
@@ -226,14 +224,12 @@ class StockConcept(object):
         total_pages = 1
         curr_page = 1
         while curr_page <= total_pages:
-            if curr_page != 1 and wait_time:
-                time.sleep(wait_time / 1000)
             api_url = f"https://www.iwencai.com/gateway/urp/v7/landing/getDataList?query={name} 概念成分&" \
                       f"page={curr_page}&perpage=100&query_type=stock&comp_id=6734520&uuid=24087"
             headers = copy.deepcopy(ths_headers.json_headers)
             headers['Host'] = 'www.iwencai.com'
             headers['Sec-Fetch-Mode'] = 'navigate'
-            res = requests.request(method='get', url=api_url, headers=headers, proxies={})
+            res = requests.request(method='get', url=api_url, headers=headers, proxies={}, wait_time=wait_time)
             curr_page += 1
             # 2. 判断请求是否成功
             if res.status_code != 200:
