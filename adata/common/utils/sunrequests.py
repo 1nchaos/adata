@@ -46,18 +46,37 @@ class SunRequests(object):
         super().__init__()
         self.sun_proxy = sun_proxy
 
-    def request(self, method='get', url=None, times=3, sleep_time=1588, proxies=None, **kwargs):
+    def request(self, method='get', url=None, times=3, retry_wait_time=1588, proxies=None, wait_time=None, **kwargs):
         """
         简单封装的请求，参考requests，增加循环次数和次数之间的等待时间
         :param proxies: 代理配置
         :param method: 请求方法： get；post
         :param url: url
         :param times: 次数，int
-        :param sleep_time: 循环的等待时间，毫秒
+        :param retry_wait_time: 重试等待时间，毫秒
+        :param wait_time: 等待时间：毫秒；表示每个请求的间隔时间，在请求之前等待sleep，主要用于防止请求太频繁的限制。
         :param kwargs: 其它 requests 参数，用法相同
         :return: res
         """
         # 1. 获取设置代理
+        proxies = self.__get_proxies(proxies)
+        # 2. 请求数据结果
+        res = None
+        for i in range(times):
+            if wait_time:
+                time.sleep(wait_time / 1000)
+            res = requests.request(method=method, url=url, proxies=proxies, **kwargs)
+            if res.status_code in (200, 404):
+                return res
+            time.sleep(retry_wait_time / 1000)
+            if i == times - 1:
+                return res
+        return res
+
+    def __get_proxies(self, proxies):
+        """
+        获取代理配置
+        """
         if proxies is None:
             proxies = {}
         is_proxy = SunProxy.get('is_proxy')
@@ -67,16 +86,7 @@ class SunRequests(object):
             ip = requests.get(url=proxy_url).text.replace('\r\n', '')
         if is_proxy and ip:
             proxies = {'https': f"http://{ip}", 'http': f"http://{ip}"}
-        # 2. 请求数据结果
-        res = None
-        for i in range(times):
-            res = requests.request(method=method, url=url, proxies=proxies, **kwargs)
-            if res.status_code in (200, 404):
-                return res
-            time.sleep(sleep_time / 1000)
-            if i == times - 1:
-                return res
-        return res
+        return proxies
 
 
 sun_requests = SunRequests()
