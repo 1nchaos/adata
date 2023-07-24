@@ -25,6 +25,12 @@ class SentimentTestCase(unittest.TestCase):
         print(df)
         self.assertEqual(True, len(df) > 1)
 
+    def test_securities_margin(self):
+        print("开始测试：test_securities_margin")
+        df = adata.sentiment.securities_margin(start_date='2020-01-01')
+        print(df)
+        self.assertEqual(True, len(df) > 250)
+
 
 if __name__ == '__main__':
     unittest.main()
