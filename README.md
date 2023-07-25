@@ -178,7 +178,7 @@ print(res_df)
 | 数据                     | API                                  | 说明                           | 备注                                                      |
 | ------------------------ | ------------------------------------ | ------------------------------ | --------------------------------------------------------- |
 | 最近一个月的股票解禁列表 | sentiment.stock_lifting_last_month() | 查询最近一个月的股票解禁列表   | 来源：1. [同花顺](http://data.10jqka.com.cn/market/xsjj/) |
-| 全市场融资融券余额列表   | sentiment.securities_margin          | 查询全市场融资融券余额列表     | 来源：1. [东方财富](https://data.eastmoney.com/rzrq/)     |
+| 全市场融资融券余额列表   | sentiment.securities_margin()          | 查询全市场融资融券余额列表     | 来源：1. [东方财富](https://data.eastmoney.com/rzrq/)     |
 | 其它数据排期中           | TODO                                 | 若您有相关资源可以一起参与贡献 |                                                           |
 
 ## 三、数据源
