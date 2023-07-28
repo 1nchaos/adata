@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 """
-@desc: a股指数
+@desc:
+a股指数
+上交所
+http://www.sse.com.cn/market/sseindex/indexlist/
+深交所
+http://www.szse.cn/market/exponent/sample/index.html
+
 @author: 1nchaos
 @time: 2023/5/23
 @log: change log
 """
 import copy
-import time
 
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -82,14 +87,14 @@ class StockIndex(object):
     def index_constituent(self, index_code=None, wait_time=None):
         """
         获取对应指数的成分股
+        ps:百度和新浪的数据有问题，丢弃这两个数据源，优先使用同花顺
         :param index_code: 指数代码
         :param wait_time: 等待时间：毫秒；表示每个请求的间隔时间，主要用于防止请求太频繁的限制。
         :return: ['index_code', 'stock_code', 'short_name']
         """
-        # res = self.__index_constituent_ths(index_code=index_code)
+        # res = self.__index_constituent_sina(index_code=index_code)
         # if not res.empty:
         #     return res
-        # return self.__index_constituent_baidu(index_code=index_code)
         return self.__index_constituent_ths(index_code=index_code, wait_time=wait_time)
 
     def __index_constituent_ths(self, index_code=None, wait_time=None):
@@ -108,13 +113,11 @@ class StockIndex(object):
         total_pages = 1
         curr_page = 1
         while curr_page <= total_pages:
-            if curr_page != 1 and wait_time:
-                time.sleep(wait_time / 1000)
             api_url = f"http://q.10jqka.com.cn/zs/detail/field/199112/order/desc/page/" \
                       f"{curr_page}/ajax/1/code/{catch_code}"
             headers = copy.deepcopy(ths_headers.text_headers)
             headers['Cookie'] = cookie.ths_cookie()
-            res = requests.request(method='get', url=api_url, headers=headers, proxies={})
+            res = requests.request(method='get', url=api_url, headers=headers, proxies={}, wait_time=wait_time)
             curr_page += 1
             # 2. 判断请求是否成功
             if res.status_code != 200:
@@ -184,7 +187,54 @@ class StockIndex(object):
         data.clear()
         return result_df[self.__INDEX_CONSTITUENT_COLUMN]
 
+    def __index_constituent_sina(self, index_code=None, wait_time=None):
+        """
+        http://vip.stock.finance.sina.com.cn/corp/view/vII_NewestComponent.php?page=1&indexid=000099
+        新浪指数成分
+        :param index_code: 指数代码 399282
+        :return:['index_code', 'stock_code', 'short_name']
+        """
+        # 1. url拼接页码等参数
+        data = []
+        total_pages = 1
+        curr_page = 1
+        while curr_page <= total_pages:
+            api_url = f"http://vip.stock.finance.sina.com.cn/corp/view/vII_NewestComponent.php?" \
+                      f"page={curr_page}&indexid={index_code}"
+
+            res = requests.request(method='get', url=api_url, proxies={}, wait_time=wait_time)
+            curr_page += 1
+            # 2. 判断请求是否成功
+            if res.status_code != 200:
+                continue
+            text = res.text
+            if 'NewStockTable' not in text or '最新成分' not in text:
+                break
+            soup = BeautifulSoup(text, 'html.parser')
+            # 3 .获取总的页数
+            if total_pages == 1:
+                page_info = soup.find('table', {'class': 'table2'}).text
+                if page_info and '共' in page_info and '页' in page_info:
+                    # Extract the total number of pages from the page_info string
+                    total_pages = int(page_info.split('共')[1].split('页')[0])
+            # 4. 解析数据
+            page_data = []
+            table = soup.find('table', {'id': 'NewStockTable'})
+            for row in table.find_all('tr')[2:]:
+                cells = row.find_all('td')
+                if len(cells) == 3:
+                    page_data.append({'index_code': index_code, 'stock_code': cells[0].div.text.strip(),
+                                      'short_name': cells[1].div.text.strip()})
+            data.extend(page_data)
+        # 5. 封装数据
+        if not data:
+            return pd.DataFrame(data=data, columns=self.__INDEX_CONSTITUENT_COLUMN)
+        result_df = pd.DataFrame(data=data)
+        data.clear()
+        return result_df[self.__INDEX_CONSTITUENT_COLUMN]
+
 
 if __name__ == '__main__':
-    print(StockIndex().all_index_code())
-    print(StockIndex().index_constituent(index_code='000033'))
+    # print(StockIndex().all_index_code())
+    # print(StockIndex().index_constituent(index_code='000033'))
+    print(StockIndex().index_constituent(index_code='399387', wait_time=2000))
