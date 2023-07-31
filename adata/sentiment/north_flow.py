@@ -6,6 +6,9 @@
 https://data.eastmoney.com/hsgt/index.html
 https://datacenter-web.eastmoney.com/api/data/v1/get?callback=jQuery112304138107938255364_1690533543847&sortColumns=TRADE_DATE&sortTypes=-1&pageSize=1000&pageNumber=1&reportName=RPT_MUTUAL_DEAL_HISTORY&columns=ALL&source=WEB&client=WEB&filter=(MUTUAL_TYPE%3D%22001%22)
 
+同花顺
+https://data.hexin.cn/market/hsgtApi/method/hsgtData/
+
 @author: 1nchaos
 @time: 2023/7/28
 @log: change log
