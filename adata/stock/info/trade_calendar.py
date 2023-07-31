@@ -5,6 +5,8 @@
 @time: 2023/3/28
 @log: change log
 """
+import datetime
+
 import pandas as pd
 from tqdm import tqdm
 
@@ -30,6 +32,8 @@ class TradeCalendar(object):
         trade_status: 交易状态:1，交易日；0，非交易日
         """
         # 先获取缓存数据
+        if not year:
+            year = datetime.datetime.now().year
         if year in years:
             return pd.read_csv(get_csv_path(year), header=0)
         return self.__calendar_szse(year=year)
@@ -65,3 +69,4 @@ class TradeCalendar(object):
 
 if __name__ == '__main__':
     print(TradeCalendar().trade_calendar(year=2004))
+    print(TradeCalendar().trade_calendar())
