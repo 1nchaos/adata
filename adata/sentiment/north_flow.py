@@ -74,6 +74,8 @@ class NorthFlow(BaseThs):
 
             sgt = requests.request('get', sgt_url, headers={}, proxies={}).text.replace('null', '0')
             hgt = requests.request('get', hgt_url, headers={}, proxies={}).text.replace('null', '0')
+
+            # 2. 解析数据
             sgt_json = json.loads(sgt[sgt.index('{'):-2])
             hgt_json = json.loads(hgt[hgt.index('{'):-2])
             sgt_data = sgt_json["result"]["data"]
@@ -110,7 +112,7 @@ class NorthFlow(BaseThs):
                 break
             curr_page += 1
 
-        # 封装数据
+        # 3.封装数据
         result_df = pd.DataFrame(data=data, columns=self.__NORTH_FLOW_COLUMNS)
         result_df['trade_date'] = pd.to_datetime(result_df['trade_date']).dt.strftime('%Y-%m-%d')
 
@@ -121,7 +123,11 @@ class NorthFlow(BaseThs):
         获取北向的分时数据，最新交易日的
         https://data.hexin.cn/market/hsgtApi/method/dayChart/
         """
-        return self.__north_flow_min_ths()
+        res = self.__north_flow_min_east()
+        # res = pd.DataFrame()
+        if res.empty:
+            res = self.__north_flow_min_ths()
+        return res
 
     def north_flow_current(self):
         """
@@ -151,7 +157,7 @@ class NorthFlow(BaseThs):
                    math.ceil((hgt_list[i] + sgt_list[i]) * 100000000)]
             data.append(row)
         # 3. 封装数据
-        result_df = pd.DataFrame(data=data, columns=self.__NORTH_FLOW_CURRENT_COLUMNS)
+        result_df = pd.DataFrame(data=data, columns=self.__NORTH_FLOW_MIN_COLUMNS)
         import adata
         trade_year = adata.stock.info.trade_calendar()
         # 获取当前日期
@@ -165,7 +171,38 @@ class NorthFlow(BaseThs):
 
         # 将 trade_time 字符串转换为日期时间类型
         result_df['trade_time'] = pd.to_datetime(result_df['trade_time'])
-        return result_df[self.__NORTH_FLOW_CURRENT_COLUMNS]
+        return result_df[self.__NORTH_FLOW_MIN_COLUMNS]
+
+    def __north_flow_min_east(self):
+        """
+        https://push2.eastmoney.com/api/qt/kamt.rtmin/get?fields1=f1,f3&fields2=f51,f52,f54,f56&ut=b2884a393a59ad64002292a3e90d46a5&cb=jQuery1123041654203412972746_1690859251791&_=1690859251792
+        :return:
+        """
+        # 1. 请求数据
+        url = "https://push2.eastmoney.com/api/qt/kamt.rtmin/get?fields1=f1,f3&fields2=f51,f52,f54,f56&ut=b2884a393a59ad64002292a3e90d46a5&cb=jQuery112308613678156517719_1690861908580&_=1690861908581"
+        data = []
+        try:
+            gt = requests.request('get', url, headers={}, proxies={}).text
+
+            # 2. 解析数据
+            gt_json = json.loads(gt[gt.index('{'):-2])
+            gt_date = gt_json["data"]["s2nDate"]
+            gt_data = gt_json["data"]["s2n"]
+            for _ in gt_data:
+                row = str(_).split(',')
+                if row[1] != '-':
+                    data.append([row[0], math.ceil(float(row[1]) * 10000),
+                                 math.ceil(float(row[2]) * 10000), math.ceil(float(row[3]) * 10000)])
+        except Exception as e:
+            print("north_flow_min_east is ERROR!!!")
+            return pd.DataFrame(data=data, columns=self.__NORTH_FLOW_MIN_COLUMNS)
+        result_df = pd.DataFrame(data=data, columns=self.__NORTH_FLOW_MIN_COLUMNS)
+
+        # 3. 封装数据
+        result_df['trade_time'] = str(datetime.datetime.now().year) + '-' + gt_date + ' ' + result_df['trade_time']
+        result_df['trade_time'] = pd.to_datetime(result_df['trade_time'])
+        result_df = result_df.dropna()
+        return result_df[self.__NORTH_FLOW_MIN_COLUMNS]
 
 
 if __name__ == '__main__':
