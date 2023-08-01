@@ -5,6 +5,7 @@
 @time:2023/04/06
 @log: 
 """
+from adata.sentiment.north_flow import NorthFlow
 from adata.sentiment.securities_margin import SecuritiesMargin
 from adata.sentiment.stock_lifting import StockLifting
 
@@ -13,6 +14,7 @@ class Sentiment(StockLifting, SecuritiesMargin):
 
     def __init__(self) -> None:
         super().__init__()
+        self.north = NorthFlow()
 
 
 sentiment = Sentiment()

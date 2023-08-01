@@ -175,11 +175,15 @@ print(res_df)
 
 ### （4）舆情
 
-| 数据                     | API                                  | 说明                           | 备注                                                      |
-| ------------------------ | ------------------------------------ | ------------------------------ | --------------------------------------------------------- |
-| 最近一个月的股票解禁列表 | sentiment.stock_lifting_last_month() | 查询最近一个月的股票解禁列表   | 来源：1. [同花顺](http://data.10jqka.com.cn/market/xsjj/) |
-| 全市场融资融券余额列表   | sentiment.securities_margin()        | 查询全市场融资融券余额列表     | 来源：1. [东方财富](https://data.eastmoney.com/rzrq/)     |
-| 其它数据排期中           | TODO                                 | 若您有相关资源可以一起参与贡献 |                                                           |
+| 数据                     | API                                  | 说明                                       | 备注                                                         |
+| ------------------------ | ------------------------------------ | ------------------------------------------ | ------------------------------------------------------------ |
+| 最近一个月的股票解禁列表 | sentiment.stock_lifting_last_month() | 查询最近一个月的股票解禁列表               | 来源：1. [同花顺](http://data.10jqka.com.cn/market/xsjj/)    |
+| 全市场融资融券余额列表   | sentiment.securities_margin()        | 查询全市场融资融券余额列表                 | 来源：1. [东方财富](https://data.eastmoney.com/rzrq/)        |
+| **北向资金-行情**        |                                      |                                            |                                                              |
+|                          | sentiment.north.north_flow_current() | 获取北向资金（沪深港通）当前流入资金的行情 | 来源：1.[东方财富](https://data.eastmoney.com/hsgt/index.html) |
+|                          | sentiment.north.north_flow_min()     | 获取北向资金分时行情                       |                                                              |
+|                          | sentiment.north.north_flow()         | 获取北向资金历史流入行情                   |                                                              |
+| 其它数据排期中           | TODO                                 | 若您有相关资源可以一起参与贡献             |                                                              |
 
 ## 三、数据源
 
