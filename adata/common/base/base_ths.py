@@ -7,10 +7,15 @@
 """
 import copy
 import datetime
+import re
 import time
+
+from bs4 import BeautifulSoup
+from py_mini_racer import py_mini_racer
 
 from adata.common import requests
 from adata.common.headers import ths_headers
+from adata.common.utils.cookie import get_file_content_ths
 
 
 class BaseThs(object):
@@ -55,3 +60,34 @@ class BaseThs(object):
             if current_year not in years:
                 years.append(current_year)
         return years
+
+    def get_wencai_server_time(self):
+        """
+        获取问财服务时间
+        :return: time
+        """
+        url = 'http://www.iwencai.com/unifiedwap/home/index'
+        resp = requests.request(method='get', url=url)
+        resp_text = resp.text
+        soup = BeautifulSoup(resp_text, 'html.parser')
+        js_url = "http:" + soup.find('script')['src']
+        js_resp = requests.request(method='get', url=js_url)
+        js_text = js_resp.text
+        obj = re.compile(r'var TOKEN_SERVER_TIME=(?P<time>.*?);!function')
+        server_time = obj.search(js_text).group('time')
+        return server_time
+
+    def wencai_hexin_v(self, js_path="hexin.js"):
+        """
+        wencai_hexin
+        """
+        js_code = py_mini_racer.MiniRacer()
+        js_content = get_file_content_ths(file_path=js_path)
+        js_content = 'var TOKEN_SERVER_TIME=' + str(self.get_wencai_server_time()) + ";\n" + js_content
+        js_code.eval(js_content)
+        v = js_code.call("rt.updata")
+        return v
+
+
+if __name__ == '__main__':
+    print(BaseThs().wencai_hexin_v())
