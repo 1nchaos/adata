@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-@desc: 基金信息
+@desc: 基金信息 etf
+
+http://quote.eastmoney.com/center/gridlist.html#fund_etf
+
 @author: 1nchaos
 @time: 2023/5/31
 @log: change log
