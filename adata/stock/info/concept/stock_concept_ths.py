@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 @summary: 股票概念
-同花顺概念更及时和完整，所以目前暂只基于同花顺的股票概念抓取
+同花顺概念更及时和完整，同花顺的股票概念抓取
 
 概念，指数成分
 来源于同花顺
@@ -12,7 +12,6 @@ http://q.10jqka.com.cn/gn
 import copy
 import json
 import math
-import time
 
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -21,14 +20,10 @@ from adata.common.exception.exception_msg import *
 from adata.common.headers import ths_headers
 from adata.common.utils import cookie
 from adata.common.utils import requests
+from adata.stock.info.concept.stock_concept_template import StockConceptTemplate
 
 
-class StockConcept(object):
-    """
-    股票概念
-    """
-    __CONCEPT_CONSTITUENT_COLUMNS = ['stock_code', 'short_name']
-    __CONCEPT_CODE_COLUMNS = ['concept_code', 'index_code', 'name', 'source']
+class StockConceptThs(StockConceptTemplate):
 
     def __init__(self) -> None:
         super().__init__()
@@ -46,7 +41,8 @@ class StockConcept(object):
         code_df = self.__concept_code_ths()
         result_df_l = pd.merge(index_df, code_df, how='left', on='name')
         result_df_r = pd.merge(index_df, code_df, how='right', on='name')
-        result_df = result_df_l.append(result_df_r).drop_duplicates(keep='first', inplace=False, ignore_index=True)
+        result_df = pd.concat([result_df_l, result_df_r]).drop_duplicates(keep='first', inplace=False,
+                                                                          ignore_index=True)
 
         index_df.drop(index_df.index, inplace=True)
         code_df.drop(code_df.index, inplace=True)
@@ -119,7 +115,7 @@ class StockConcept(object):
         elif index_code:
             return self.__index_constituent_ths_by_index_code(index_code=index_code, wait_time=wait_time)
         else:
-            return pd.DataFrame(data=[], columns=self.__CONCEPT_CONSTITUENT_COLUMNS)
+            return pd.DataFrame(data=[], columns=self._CONCEPT_CONSTITUENT_COLUMNS)
 
     def __index_constituent_ths_by_concept_code(self, concept_code=None, wait_time=None):
         """
@@ -164,10 +160,10 @@ class StockConcept(object):
             data.extend(page_data)
         # 5. 封装数据
         if not data:
-            return pd.DataFrame(data=data, columns=self.__CONCEPT_CONSTITUENT_COLUMNS)
+            return pd.DataFrame(data=data, columns=self._CONCEPT_CONSTITUENT_COLUMNS)
         result_df = pd.DataFrame(data=data)
         data.clear()
-        return result_df[self.__CONCEPT_CONSTITUENT_COLUMNS]
+        return result_df[self._CONCEPT_CONSTITUENT_COLUMNS]
 
     def __index_constituent_ths_by_index_code(self, index_code=None, wait_time=None):
         """
@@ -209,7 +205,7 @@ class StockConcept(object):
         rename = {'5': 'stock_code', '55': 'short_name'}
         result_df = pd.DataFrame(data=data_list).rename(columns=rename)
         result_df = result_df.drop_duplicates(subset=['stock_code'], keep='last', ignore_index=True)
-        return result_df[self.__CONCEPT_CONSTITUENT_COLUMNS]
+        return result_df[self._CONCEPT_CONSTITUENT_COLUMNS]
 
     def __index_constituent_ths_by_name(self, name=None, wait_time=None):
         """
@@ -254,14 +250,11 @@ class StockConcept(object):
             data.extend(page_data)
         # 5. 封装数据
         if not data:
-            return pd.DataFrame(data=data, columns=self.__CONCEPT_CONSTITUENT_COLUMNS)
+            return pd.DataFrame(data=data, columns=self._CONCEPT_CONSTITUENT_COLUMNS)
         result_df = pd.DataFrame(data=data)
         data.clear()
-        return result_df[self.__CONCEPT_CONSTITUENT_COLUMNS]
+        return result_df[self._CONCEPT_CONSTITUENT_COLUMNS]
 
 
 if __name__ == '__main__':
-    print(StockConcept().all_concept_code_ths())
-    print(StockConcept().concept_constituent_ths(index_code="885556"))
-    print(StockConcept().concept_constituent_ths(concept_code="300843"))
-    print(StockConcept().concept_constituent_ths(name="5G"))
+    print(StockConceptThs().all_concept_code_ths())

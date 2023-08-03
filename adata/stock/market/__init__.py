@@ -7,7 +7,7 @@
 """
 from .stock_dividend import StockDividend
 from .stock_market import StockMarket
-from .stock_market_concept import StockMarketConcept
+from adata.stock.market.concepth_market.stock_market_concept import StockMarketConcept
 from .stock_market_index import StockMarketIndex
 
 

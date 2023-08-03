@@ -6,7 +6,7 @@
 @log: change log
 """
 from .stock_code import StockCode
-from .stock_concept import StockConcept
+from adata.stock.info.concept.stock_concept import StockConcept
 from .stock_index import StockIndex
 from .trade_calendar import TradeCalendar
 
