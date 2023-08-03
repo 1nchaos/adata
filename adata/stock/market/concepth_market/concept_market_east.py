@@ -2,6 +2,8 @@
 """
 @summary: 股票概念 行情
 https://quote.eastmoney.com/bk/90.BK0612.html
+TODO 概念板块当日涨跌幅排名
+https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=1000&po=1&fid=f3&fields=f1,f2,f3,f4,f12,f13,f14&fs=b:BK0900&ut=fa5fd1943c7b386f172d6893dbfba10b&cb=jQuery35109553587682356608_1691083378045&_=1691083378046
 @author: 1nchaos
 @date: 2023/08/03 23:17
 """
@@ -124,6 +126,6 @@ class ConceptMarketEase(object):
 
 
 if __name__ == '__main__':
-    # print(ConceptMarketEase().get_market_concept_east(index_code='BK0612'))
-    # print(ConceptMarketEase().get_market_concept_min_east(index_code='BK0612'))
+    print(ConceptMarketEase().get_market_concept_east(index_code='BK0612'))
+    print(ConceptMarketEase().get_market_concept_min_east(index_code='BK0612'))
     print(ConceptMarketEase().get_market_concept_current_east(index_code='BK0900'))
