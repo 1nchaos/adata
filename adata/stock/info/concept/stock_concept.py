@@ -18,10 +18,3 @@ class StockConcept(StockConceptThs, StockConceptEast):
 
     def __init__(self) -> None:
         super().__init__()
-
-
-if __name__ == '__main__':
-    print(StockConcept().all_concept_code_ths())
-    print(StockConcept().concept_constituent_ths(index_code="885556"))
-    print(StockConcept().concept_constituent_ths(concept_code="300843"))
-    print(StockConcept().concept_constituent_ths(name="5G"))
