@@ -50,7 +50,8 @@ class StockLifting(object):
                 api_url = api_url + f"page/{curr_page}/free/1/"
             headers = copy.deepcopy(ths_headers.text_headers)
             headers['Host'] = 'data.10jqka.com.cn'
-            headers['hexin-v'] = cookie.ths_cookie()[2:]
+            headers['Referer'] = None
+            headers['Cookie'] = cookie.ths_cookie()
             res = requests.request(method='get', url=api_url, headers=headers, proxies={})
             curr_page += 1
             # 2. 判断请求是否成功

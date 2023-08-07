@@ -159,6 +159,6 @@ class ConceptMarketThs(BaseThs):
 
 
 if __name__ == '__main__':
-    print(StockMarketConcept().get_market_concept_ths(index_code='886041'))
-    print(StockMarketConcept().get_market_concept_min_ths(index_code='886041'))
-    print(StockMarketConcept().get_market_concept_current_ths(index_code='886041'))
+    print(ConceptMarketThs().get_market_concept_ths(index_code='886041'))
+    print(ConceptMarketThs().get_market_concept_min_ths(index_code='886041'))
+    print(ConceptMarketThs().get_market_concept_current_ths(index_code='886041'))
