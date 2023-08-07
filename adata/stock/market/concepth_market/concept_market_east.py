@@ -93,11 +93,10 @@ class ConceptMarketEase(object):
         result_df = result_df.round(2)
         return result_df
 
-    def get_market_concept_current_east(self, index_code: str = 'BK0900', k_type: int = 1):
+    def get_market_concept_current_east(self, index_code: str = 'BK0900'):
         """
         https://push2.eastmoney.com/api/qt/stock/get?secid=90.BK0612&fields=f57,f58,f106,f59,f43,f46,f60,f44,f45,f47,f48,f49,f113,f114,f115,f117,f85,f50,f119,f120,f121,f122,f135,f136,f137,f138,f139,f140,f141,f142,f143,f144,f145,f146,f147,f148,f149
         :param index_code: 东方财富指数代码
-        :param k_type: k线类型：1.日；2.周；3.月 默认：1 日k
         :return: k线行情数据 [概念代码,交易时间，交易日期，开，高，低，当前价格,成交量，成交额]
         """
         url = f"https://push2.eastmoney.com/api/qt/stock/get?secid=90.{index_code}&" \
@@ -126,6 +125,6 @@ class ConceptMarketEase(object):
 
 
 if __name__ == '__main__':
-    print(ConceptMarketEase().get_market_concept_east(index_code='BK0612'))
+    # print(ConceptMarketEase().get_market_concept_east(index_code='BK0612'))
     print(ConceptMarketEase().get_market_concept_min_east(index_code='BK0612'))
     print(ConceptMarketEase().get_market_concept_current_east(index_code='BK0900'))

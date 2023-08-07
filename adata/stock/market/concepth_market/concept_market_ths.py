@@ -19,7 +19,7 @@ from adata.common.exception.exception_msg import *
 from adata.common.headers import ths_headers
 
 
-class StockMarketConcept(BaseThs):
+class ConceptMarketThs(BaseThs):
     """
     股票概念 行情
     """

@@ -10,10 +10,10 @@ class StockMarketIndexTemplate(object):
     """
     股票指数 行情
     """
-    _MARKET_INDEX_COLUMNS = ['index_code', 'trade_time', 'trade_date', 'open', 'high', 'low', 'close', 'volume',
+    _MARKET_INDEX_COLUMNS = ['index_code', 'trade_date', 'trade_time', 'open', 'high', 'low', 'close', 'volume',
                              'amount', 'change', 'change_pct']
-    _MARKET_INDEX_MIN_COLUMNS = ['index_code', 'trade_time', 'trade_date', 'price', 'avg_price',
-                                 'volume', 'amount', 'change', 'change_pct']
+    _MARKET_INDEX_MIN_COLUMNS = ['index_code', 'trade_time', 'trade_date', 'open', 'high', 'low', 'close', 'volume',
+                                 'amount', 'change', 'change_pct', 'avg_price']
     _MARKET_INDEX_CURRENT_COLUMNS = ['index_code', 'trade_time', 'trade_date', 'open', 'high', 'low', 'price',
                                      'volume', 'amount']
 
@@ -35,11 +35,10 @@ class StockMarketIndexTemplate(object):
         """
         pass
 
-    def get_market_index_current(self, index_code: str = '000001', k_type: int = 1):
+    def get_market_index_current(self, index_code: str = '000001'):
         """
         获取当前的指数行情
         :param index_code: 指数代码
-        :param k_type: k线类型：1.日；2.周；3.月 默认：1 日k
         :return: [指数代码,交易时间，交易日期，开，高，低，当前价格,成交量，成交额]
         ['trade_time', 'trade_date', 'open', 'high', 'low', 'price', 'volume', 'amount']
         """

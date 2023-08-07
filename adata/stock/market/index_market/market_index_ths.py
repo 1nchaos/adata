@@ -14,9 +14,10 @@ from adata.common.base.base_ths import BaseThs
 from adata.common.exception.exception_msg import *
 from adata.common.headers import ths_headers
 from adata.stock.cache.index_code_rel_ths import rel
+from adata.stock.market.index_market.market_index_template import StockMarketIndexTemplate
 
 
-class StockMarketIndexThs(BaseThs):
+class StockMarketIndexThs(BaseThs, StockMarketIndexTemplate):
     """
     股票指数 行情
     """
@@ -123,7 +124,7 @@ class StockMarketIndexThs(BaseThs):
         result_df.replace(np.nan, None, inplace=True)
         return result_df[self.__MARKET_INDEX_MIN_COLUMNS]
 
-    def get_market_index_current(self, index_code: str = '000001', k_type: int = 1):
+    def get_market_index_current(self, index_code: str = '000001'):
         """
         获取当前的指数行情
         web: http://q.10jqka.com.cn/gn/
@@ -132,14 +133,13 @@ class StockMarketIndexThs(BaseThs):
         "11":"3230.07","13":60699786000,"19":"778489410000.00","74":"","1968584":"1.428","66":null,"open":1,"dt":"1755",
         "name":"\u4e0a\u8bc1\u6307\u6570","marketType":""}})
         :param index_code: 指数代码
-        :param k_type: k线类型：1.日；2.周；3.月 默认：1 日k
         :return: [指数代码,交易时间，交易日期，开，高，低，当前价格,成交量，成交额]
         ['trade_time', 'trade_date', 'open', 'high', 'low', 'price', 'volume', 'amount']
         """
         # 0. 指数代码转换
         concept_code = rel[index_code] if index_code in rel.keys() else index_code
         # 1.接口 url
-        api_url = f"http://d.10jqka.com.cn/v4/line/zs_{concept_code}/{k_type - 1}1/today.js"
+        api_url = f"http://d.10jqka.com.cn/v4/line/zs_{concept_code}/01/today.js"
         headers = copy.deepcopy(ths_headers.text_headers)
         headers['Host'] = 'd.10jqka.com.cn'
         # 同花顺可能ip限制，降低请求次数
