@@ -9,7 +9,6 @@ import time
 
 import pandas as pd
 import requests
-from tqdm import tqdm
 
 from adata.common.headers import baidu_headers
 
@@ -44,7 +43,7 @@ class StockCode(object):
         data = []
 
         # 2. 一直翻页请求数据，股票目前数据5000,50页一共1w只,后续增加了可以再加
-        for page_no in tqdm(range(49)):
+        for page_no in range(49):
             api_url = f"{api_url}&pn={page_no * max_page_size}&rn={max_page_size}"
             try:
                 res = requests.get(api_url, headers=baidu_headers.json_headers, proxies={})

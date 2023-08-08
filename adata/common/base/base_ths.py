@@ -15,6 +15,7 @@ from py_mini_racer import py_mini_racer
 
 from adata.common import requests
 from adata.common.headers import ths_headers
+from adata.common.utils import cookie
 from adata.common.utils.cookie import get_file_content_ths
 
 
@@ -33,6 +34,7 @@ class BaseThs(object):
         """
         headers = copy.deepcopy(ths_headers.text_headers)
         headers['Host'] = 'd.10jqka.com.cn'
+        headers['Cookie'] = cookie.ths_cookie()
         text = ''
         for i in range(2):
             res = requests.request('get', api_url, headers=headers, proxies={})

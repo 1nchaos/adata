@@ -48,3 +48,4 @@ __pycache__
 
 /adata.egg-info
 /venv
+.html

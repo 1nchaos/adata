@@ -7,6 +7,14 @@ http://www.sse.com.cn/market/sseindex/indexlist/
 深交所
 http://www.szse.cn/market/exponent/sample/index.html
 
+同花顺
+http://q.10jqka.com.cn/zs/
+
+东方财富
+http://quote.eastmoney.com/center/gridlist.html#index_sh
+http://quote.eastmoney.com/center/gridlist.html#index_sz
+
+指数成分：只用同花顺和东方财富，新浪和百度目前都不准确
 @author: 1nchaos
 @time: 2023/5/23
 @log: change log
@@ -45,6 +53,7 @@ class StockIndex(object):
         """
         获取同花顺所有行情中心的指数代码
         http://q.10jqka.com.cn/zs/
+        上面地址可不用翻页
         :return: 指数信息[name,index_code，concept_code,source]
         """
         # 1. url拼接页码等参数
@@ -151,7 +160,7 @@ class StockIndex(object):
     def __index_constituent_baidu(self, index_code=None):
         """
         https://gushitong.baidu.com/opendata?resource_id=5352&query=000133&code=000133&market=ab&group=asyn_ranking&pn=100&rn=50&pc_web=1&finClientType=pc
-        百度指数成分股
+        百度指数成分股，目前接口存在bug
         :param index_code: 指数代码 399282
         :return:['index_code', 'stock_code', 'short_name']
         """
@@ -190,7 +199,7 @@ class StockIndex(object):
     def __index_constituent_sina(self, index_code=None, wait_time=None):
         """
         http://vip.stock.finance.sina.com.cn/corp/view/vII_NewestComponent.php?page=1&indexid=000099
-        新浪指数成分
+        新浪指数成分：目前数据不准确
         :param index_code: 指数代码 399282
         :return:['index_code', 'stock_code', 'short_name']
         """
@@ -235,6 +244,6 @@ class StockIndex(object):
 
 
 if __name__ == '__main__':
-    # print(StockIndex().all_index_code())
-    # print(StockIndex().index_constituent(index_code='000033'))
-    print(StockIndex().index_constituent(index_code='399387', wait_time=2000))
+    print(StockIndex().all_index_code())
+    print(StockIndex().index_constituent(index_code='000033'))
+    print(StockIndex().index_constituent(index_code='399387', wait_time=158))

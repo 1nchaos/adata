@@ -14,33 +14,22 @@ from adata.common.base.base_ths import BaseThs
 from adata.common.exception.exception_msg import *
 from adata.common.headers import ths_headers
 from adata.stock.cache.index_code_rel_ths import rel
+from adata.stock.market.index_market.market_index_template import StockMarketIndexTemplate
 
 
-class StockMarketIndex(BaseThs):
+class StockMarketIndexThs(BaseThs, StockMarketIndexTemplate):
     """
     股票指数 行情
     """
-    __MARKET_INDEX_COLUMNS = ['index_code', 'trade_time', 'trade_date', 'open', 'high', 'low', 'close', 'volume',
-                              'amount', 'change', 'change_pct']
-    __MARKET_INDEX_MIN_COLUMNS = ['index_code', 'trade_time', 'trade_date', 'price', 'avg_price',
-                                  'volume', 'amount', 'change', 'change_pct']
-    __MARKET_INDEX_CURRENT_COLUMNS = ['index_code', 'trade_time', 'trade_date', 'open', 'high', 'low', 'price',
-                                      'volume', 'amount']
 
     def __init__(self) -> None:
         super().__init__()
 
     def get_market_index(self, index_code: str = '000001', start_date='2020-01-01', k_type: int = 1):
         """
-        获取指数行情
-        """
-        res_df = self.__get_market_index_ths(index_code=index_code, start_date=start_date, k_type=k_type)
-        return res_df
-
-    def __get_market_index_ths(self, index_code: str = '000001', start_date=None, k_type: int = 1):
-        """
         获取指数行情数据
         http://d.10jqka.com.cn/v4/line/zs_1A0001/01/2022.js
+        :param start_date: 开始时间
         :param index_code: 指数代码
         :param k_type:  k线类型：1.日；2.周；3.月 默认：1 日k
         :return: ['trade_date', 'open', 'high', 'low', 'close', 'volume', 'amount']
@@ -83,18 +72,9 @@ class StockMarketIndex(BaseThs):
         # 4. 筛选时间范围
         if start_date:
             result_df = result_df[result_df['trade_date'] >= start_date]
-        return result_df[self.__MARKET_INDEX_COLUMNS]
+        return result_df[self._MARKET_INDEX_COLUMNS]
 
     def get_market_index_min(self, index_code='000001'):
-        """
-        获取指数当日的分时行情
-        :param index_code: 指数代码
-        :return 时间，现价，成交额（元），均价，成交量（股） 涨跌额，涨跌幅
-        ['index_code', 'trade_time', 'price', 'change', 'change_pct', 'volume', 'avg_price', 'amount']
-        """
-        return self.__get_market_index_min_ths(index_code=index_code)
-
-    def __get_market_index_min_ths(self, index_code='000001'):
         """
         获取概念行情当日分时
         web： http://d.10jqka.com.cn/v4/time/zs_1A0001/last.js
@@ -111,7 +91,7 @@ class StockMarketIndex(BaseThs):
         if THS_IP_LIMIT_RES in text:
             return Exception(THS_IP_LIMIT_MSG)
         if not text:
-            return pd.DataFrame(data=[], columns=self.__MARKET_INDEX_MIN_COLUMNS)
+            return pd.DataFrame(data=[], columns=self._MARKET_INDEX_MIN_COLUMNS)
         # 2. 解析数据
         result_json = json.loads(text[text.index('{'):-1])[f"zs_{concept_code}"]
         pre_price = result_json['pre']
@@ -136,19 +116,9 @@ class StockMarketIndex(BaseThs):
         result_df.replace('--', None, inplace=True)
         result_df.replace('', None, inplace=True)
         result_df.replace(np.nan, None, inplace=True)
-        return result_df[self.__MARKET_INDEX_MIN_COLUMNS]
+        return result_df[self._MARKET_INDEX_MIN_COLUMNS]
 
-    def get_market_index_current(self, index_code: str = '000001', k_type: int = 1):
-        """
-        获取当前的指数行情
-        :param index_code: 指数代码
-        :param k_type: k线类型：1.日；2.周；3.月 默认：1 日k
-        :return: [指数代码,交易时间，交易日期，开，高，低，当前价格,成交量，成交额]
-        ['trade_time', 'trade_date', 'open', 'high', 'low', 'price', 'volume', 'amount']
-        """
-        return self.__get_market_index_current_ths(index_code=index_code, k_type=k_type)
-
-    def __get_market_index_current_ths(self, index_code: str = '000001', k_type: int = 1):
+    def get_market_index_current(self, index_code: str = '000001'):
         """
         获取当前的指数行情
         web: http://q.10jqka.com.cn/gn/
@@ -156,16 +126,14 @@ class StockMarketIndex(BaseThs):
         quotebridge_v4_line_zs_1A0001_21_today({"zs_1A0001":{"1":"20230602","7":"3196.15","8":"3233.99","9":"3189.52",
         "11":"3230.07","13":60699786000,"19":"778489410000.00","74":"","1968584":"1.428","66":null,"open":1,"dt":"1755",
         "name":"\u4e0a\u8bc1\u6307\u6570","marketType":""}})
-
         :param index_code: 指数代码
-        :param k_type: k线类型：1.日；2.周；3.月 默认：1 日k
         :return: [指数代码,交易时间，交易日期，开，高，低，当前价格,成交量，成交额]
         ['trade_time', 'trade_date', 'open', 'high', 'low', 'price', 'volume', 'amount']
         """
         # 0. 指数代码转换
         concept_code = rel[index_code] if index_code in rel.keys() else index_code
         # 1.接口 url
-        api_url = f"http://d.10jqka.com.cn/v4/line/zs_{concept_code}/{k_type - 1}1/today.js"
+        api_url = f"http://d.10jqka.com.cn/v4/line/zs_{concept_code}/01/today.js"
         headers = copy.deepcopy(ths_headers.text_headers)
         headers['Host'] = 'd.10jqka.com.cn'
         # 同花顺可能ip限制，降低请求次数
@@ -184,10 +152,10 @@ class StockMarketIndex(BaseThs):
         result_df = result_df[columns]
         result_df['index_code'] = index_code
         result_df['trade_date'] = pd.to_datetime(result_df['trade_date'], format='%Y%m%d').dt.strftime('%Y-%m-%d')
-        return result_df[self.__MARKET_INDEX_CURRENT_COLUMNS]
+        return result_df[self._MARKET_INDEX_CURRENT_COLUMNS]
 
 
 if __name__ == '__main__':
-    print(StockMarketIndex().get_market_index(index_code='000001', start_date='2022-12-01'))
-    print(StockMarketIndex().get_market_index_min(index_code='000001'))
-    print(StockMarketIndex().get_market_index_current(index_code='000001'))
+    print(StockMarketIndexThs().get_market_index(index_code='000001', start_date='2022-12-01'))
+    print(StockMarketIndexThs().get_market_index_min(index_code='000001'))
+    print(StockMarketIndexThs().get_market_index_current(index_code='000001'))
