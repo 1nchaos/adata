@@ -7,21 +7,18 @@ https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=1000&po=1&fid=f3&fields=f1,
 @author: 1nchaos
 @date: 2023/08/03 23:17
 """
+import datetime
+
 import pandas as pd
 
 from adata.common import requests
+from adata.stock.market.concepth_market.concept_market_template import ConceptMarketTemplate
 
 
-class ConceptMarketEase(object):
+class ConceptMarketEase(ConceptMarketTemplate):
     """
     股票概念 行情
     """
-    __MARKET_COLUMNS = ['index_code', 'trade_time', 'trade_date', 'open', 'high', 'low', 'close', 'volume',
-                        'amount', 'change', 'change_pct']
-    __MARKET_CONCEPT_MIN_COLUMNS = ['index_code', 'trade_time', 'trade_date', 'open', 'high', 'low', 'close', 'volume',
-                                    'amount', 'change', 'change_pct', 'avg_price']
-    __MARKET_CONCEPT_CURRENT_COLUMNS = ['index_code', 'trade_time', 'trade_date', 'open', 'high', 'low', 'price',
-                                        'volume', 'amount', 'change', 'change_pct']
 
     def get_market_concept_east(self, index_code: str = 'BK0612', k_type: int = 1):
         """
@@ -49,7 +46,7 @@ class ConceptMarketEase(object):
             data.append(
                 {'trade_date': row[0], 'open': row[1], 'close': row[2], 'high': row[3], 'low': row[4], 'volume': row[5],
                  'amount': row[6], 'change': row[9], 'change_pct': row[8], 'index_code': index_code})
-        result_df = pd.DataFrame(data=data, columns=self.__MARKET_COLUMNS)
+        result_df = pd.DataFrame(data=data, columns=self._MARKET_COLUMNS)
 
         # 清洗数据
         result_df[['open', 'high', 'low', 'close', 'volume', 'amount', 'change', 'change_pct']] = \
@@ -80,20 +77,21 @@ class ConceptMarketEase(object):
         for _ in res_data:
             row = str(_).split(',')
             data.append(
-                {'trade_date': row[0], 'open': row[1], 'close': row[2], 'high': row[3], 'low': row[4],
+                {'trade_date': row[0], 'open': row[1], 'price': row[2], 'high': row[3], 'low': row[4],
                  'volume': row[5], 'amount': row[6], 'avg_price': row[7], 'index_code': index_code})
-        result_df = pd.DataFrame(data=data, columns=self.__MARKET_CONCEPT_MIN_COLUMNS)
+        result_df = pd.DataFrame(data=data, columns=self._MARKET_CONCEPT_MIN_COLUMNS)
 
         # 清洗数据
-        result_df[['open', 'high', 'low', 'close', 'volume', 'amount', 'avg_price']] = \
-            result_df[['open', 'high', 'low', 'close', 'volume', 'amount', 'avg_price']].astype(float)
+        result_df[['price', 'volume', 'amount', 'avg_price']] = \
+            result_df[['price', 'volume', 'amount', 'avg_price']].astype(float)
         result_df['trade_time'] = pd.to_datetime(result_df['trade_date']).dt.strftime('%Y-%m-%d %H:%M:%S')
-        result_df['change'] = result_df['close'] - pre_price
+        result_df['trade_date'] = pd.to_datetime(result_df['trade_date']).dt.strftime('%Y-%m-%d')
+        result_df['change'] = result_df['price'] - pre_price
         result_df['change_pct'] = result_df['change'] / pre_price * 100
         result_df = result_df.round(2)
         return result_df
 
-    def get_market_concept_current_east(self, index_code: str = 'BK0900'):
+    def get_market_concept_current_east(self, index_code: str = 'BK0612'):
         """
         https://push2.eastmoney.com/api/qt/stock/get?secid=90.BK0612&fields=f57,f58,f106,f59,f43,f46,f60,f44,f45,f47,f48,f49,f113,f114,f115,f117,f85,f50,f119,f120,f121,f122,f135,f136,f137,f138,f139,f140,f141,f142,f143,f144,f145,f146,f147,f148,f149
         :param index_code: 东方财富指数代码
@@ -106,14 +104,14 @@ class ConceptMarketEase(object):
         # 解析数据
         j = res_json['data']
         if not j:
-            return pd.DataFrame(data=[], columns=self.__MARKET_CONCEPT_CURRENT_COLUMNS)
+            return pd.DataFrame(data=[], columns=self._MARKET_CONCEPT_CURRENT_COLUMNS)
         code = j['f57']
         if code != index_code:
-            return pd.DataFrame(data=[], columns=self.__MARKET_CONCEPT_CURRENT_COLUMNS)
+            return pd.DataFrame(data=[], columns=self._MARKET_CONCEPT_CURRENT_COLUMNS)
         pre_close = j['f60']
         data = [{'open': j['f46'], 'high': j['f44'], 'low': j['f45'], 'price': j['f43'], 'volume': j['f47'],
                  'amount': j['f48'], 'index_code': index_code}]
-        result_df = pd.DataFrame(data=data, columns=self.__MARKET_CONCEPT_CURRENT_COLUMNS)
+        result_df = pd.DataFrame(data=data, columns=self._MARKET_CONCEPT_CURRENT_COLUMNS)
 
         # 清洗数据
         result_df[['open', 'high', 'low', 'price', 'volume', 'amount']] = \
@@ -121,10 +119,11 @@ class ConceptMarketEase(object):
         result_df['change'] = result_df['price'] - pre_close
         result_df['change_pct'] = result_df['change'] / pre_close * 100
         result_df = result_df.round(2)
+        result_df['trade_time'] = datetime.datetime.now()
         return result_df
 
 
 if __name__ == '__main__':
-    # print(ConceptMarketEase().get_market_concept_east(index_code='BK0612'))
+    print(ConceptMarketEase().get_market_concept_east(index_code='BK0612'))
     print(ConceptMarketEase().get_market_concept_min_east(index_code='BK0612'))
-    print(ConceptMarketEase().get_market_concept_current_east(index_code='BK0900'))
+    print(ConceptMarketEase().get_market_concept_current_east(index_code='BK0612'))

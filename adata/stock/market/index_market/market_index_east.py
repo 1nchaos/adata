@@ -73,15 +73,16 @@ class StockMarketIndexEast(StockMarketIndexTemplate):
         for _ in res_data:
             row = str(_).split(',')
             data.append(
-                {'trade_date': row[0], 'open': row[1], 'close': row[2], 'high': row[3], 'low': row[4],
+                {'trade_date': row[0], 'open': row[1], 'price': row[2], 'high': row[3], 'low': row[4],
                  'volume': row[5], 'amount': row[6], 'avg_price': row[7], 'index_code': index_code})
         result_df = pd.DataFrame(data=data, columns=self._MARKET_INDEX_MIN_COLUMNS)
 
         # 清洗数据
-        result_df[['open', 'high', 'low', 'close', 'volume', 'amount', 'avg_price']] = \
-            result_df[['open', 'high', 'low', 'close', 'volume', 'amount', 'avg_price']].astype(float)
+        result_df[['price', 'volume', 'amount', 'avg_price']] = \
+            result_df[['price', 'volume', 'amount', 'avg_price']].astype(float)
         result_df['trade_time'] = pd.to_datetime(result_df['trade_date']).dt.strftime('%Y-%m-%d %H:%M:%S')
-        result_df['change'] = result_df['close'] - pre_price
+        result_df['trade_date'] = pd.to_datetime(result_df['trade_date']).dt.strftime('%Y-%m-%d')
+        result_df['change'] = result_df['price'] - pre_price
         result_df['change_pct'] = result_df['change'] / pre_price * 100
         result_df = result_df.round(2)
         return result_df
@@ -116,11 +117,11 @@ class StockMarketIndexEast(StockMarketIndexTemplate):
         result_df['change'] = result_df['price'] - pre_close
         result_df['change_pct'] = result_df['change'] / pre_close * 100
         result_df = result_df.round(2)
-        # result_df['trade_time'] = datetime.datetime.now()
+        result_df['trade_time'] = datetime.datetime.now()
         return result_df
 
 
 if __name__ == '__main__':
     # print(StockMarketIndexEast().get_market_index(index_code='000001', start_date='2022-12-01'))
-    # print(StockMarketIndexEast().get_market_index_min(index_code='000001'))
-    print(StockMarketIndexEast().get_market_index_current(index_code='000001'))
+    print(StockMarketIndexEast().get_market_index_min(index_code='000001'))
+    # print(StockMarketIndexEast().get_market_index_current(index_code='000001'))

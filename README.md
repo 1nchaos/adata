@@ -9,7 +9,7 @@
 ![GitHub language count](https://img.shields.io/github/languages/count/1nchaos/adata)![GitHub top language](https://img.shields.io/github/languages/top/1nchaos/adata)[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/adata?color=d)](https://pypi.org/project/adata/)[![Licence](https://img.shields.io/hexpm/l/apa?color=d)](https://gitee.com/inchaos/adata/blob/main/LICENSE)[![Downloads](https://static.pepy.tech/badge/adata/week)](https://pepy.tech/project/adata)![GitHub Repo stars](https://img.shields.io/github/stars/1nchaos/adata)![GitHub issues](https://img.shields.io/github/issues/1nchaos/adata)![GitHub contributors](https://img.shields.io/github/contributors/1nchaos/adata)![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/1nchaos/adata)[![Downloads](https://static.pepy.tech/badge/adata)](https://pepy.tech/project/adata)
 
 
-## 0、介绍
+## 0、[介绍](https://adata.1nchaos.com/idea.html)
 > 专注A股，专注量化，向阳而生；开放、纯净、持续、为Ai(爱)发电。
 >
 > 专注股票行情数据，为了保证数据的高可用性，采用多数据源融合切换。
@@ -18,7 +18,7 @@
 
 **市场寒冷，发热不易，坚持更难；如有帮助到你，右上角点 ⭐Star 一键三连，谢谢支持和收藏^_^**
 
-## 一、快速开始
+## 一、[快速开始](https://adata.1nchaos.com/quickStart.html)
 
 ### （1）安装sdk
 
@@ -126,36 +126,47 @@ print(res_df)
 
 整理了最新版本的数据列表和相关使用Api，详细内容和相关使用参数，请参考数据字典文档。
 
+- [数据列表](https://adata.1nchaos.com/dic/dataList.html) 
+- [数据字典](https://adata.1nchaos.com/dic/stockInfo.html)
+
 ### （1）股票-Stock
 
 #### 	1. 基本信息
 
-| 数据             | API                                  | 说明                          | 备注                                                     |
-| ---------------- | ------------------------------------ | ----------------------------- | -------------------------------------------------------- |
-| A股代码          | stock.info.all_code()                | 所有A股代码信息               |                                                          |
-| **概念**         |                                      |                               |                                                          |
-| 概念代码         | stock.info.all_concept_code_ths()    | 所有A股概念代码信息（同花顺） | 来源：同花顺公开数据                                     |
-| 概念成分列表     | stock.info.concept_constituent_ths() | 获取同花顺概念指数的成分股    | 注意：返回结果只有股票代码和股票简称，可根据概念名称查询 |
-| **指数**         |                                      |                               |                                                          |
-| 指数代码         | stock.info.all_index_code()          | 获取所有A股市场的指数代码     | 来源同花顺，可能存在同花顺对代码重新编码的情况           |
-| 指数对应的成分股 | stock.info.index_constituent()       | 获取对应指数的成分股列表      |                                                          |
-| **其它**         |                                      |                               |                                                          |
-| 股票交易日历     | stock.info.trade_calendar()          | 获取股票交易日信息            | 来源：深交所                                             |
+| 数据             | API                                   | 说明                                   | 备注                                                      |
+| ---------------- | ------------------------------------- | -------------------------------------- | --------------------------------------------------------- |
+| A股代码          | stock.info.all_code()                 | 所有A股代码信息                        |                                                           |
+| **概念**         |                                       |                                        |                                                           |
+| 来源：同花顺     |                                       |                                        |                                                           |
+| 概念代码         | stock.info.all_concept_code_ths()     | 所有A股概念代码信息（同花顺）          | 来源：同花顺公开数据                                      |
+| 概念成分列表     | stock.info.concept_constituent_ths()  | 获取同花顺概念指数的成分股（同花顺）   | 注意：返回结果只有股票代码和股票简称，可根据概念名称查询  |
+| 来源：东方财富   |                                       |                                        |                                                           |
+| 概念代码         | stock.info.all_concept_code_east()    | 所有A股概念代码信息（东方财富）        | 来源：[东方财富](https://data.eastmoney.com/bkzj/gn.html) |
+| 概念成分列表     | stock.info.concept_constituent_east() | 获取同花顺概念指数的成分股（东方财富） | 注意：返回结果只有股票代码和股票简称，可根据概念名称查询  |
+| **指数**         |                                       |                                        |                                                           |
+| 指数代码         | stock.info.all_index_code()           | 获取所有A股市场的指数代码              | 来源同花顺，可能存在同花顺对代码重新编码的情况            |
+| 指数对应的成分股 | stock.info.index_constituent()        | 获取对应指数的成分股列表               |                                                           |
+| **其它**         |                                       |                                        |                                                           |
+| 股票交易日历     | stock.info.trade_calendar()           | 获取股票交易日信息                     | 来源：深交所                                              |
 
 #### 	2. 行情信息
 
-| 数据     | API                                           | 说明                                  | 备注                                                         |
-| -------- | --------------------------------------------- | ------------------------------------- | ------------------------------------------------------------ |
-| 分红信息 | stock.market.get_dividend()                   | 获取单只股票的分红信息                |                                                              |
-| 股票行情 | stock.market.get_market()                     | 获取单只股票的行情信息-日、周、月 k线 |                                                              |
-|          | stock.market.get_market_min()                 | 获取单个股票的今日分时行情            | 只能获取当天                                                 |
-|          | stock.market.list_market_current()            | 获取多个股票最新行情信息              | 实时行情<br />数据源：2个，源新浪和腾讯                      |
-| 概念行情 | stock.market.get_market_concept_ths()         | 获取单个概念的行情信息-日、周、月 k线 | 目前只有同花顺相关概念行情，<br />获取概念行情时，<br />请注意传入参数是指数代码还是概念代码，<br />指数代码8开头，index_code |
-|          | stock.market.get_market_concept_min_ths()     | 获取同花顺概念行情-当日分时           | 只能获取当天                                                 |
-|          | stock.market.get_market_concept_current_ths() | 获取同花顺当前的概念行情              | 实时行情                                                     |
-| 指数行情 | stock.market.get_market_index()               | 获取指数的行情信息-日、周、月 k线     |                                                              |
-|          | stock.market.get_market_index_min()           | 获取指数的行情-当日分时               |                                                              |
-|          | stock.market.get_market_index_current()       | 获取当前的指数行情                    | 实时行情                                                     |
+
+| 数据              | API                                            | 说明                                  | 备注                                                         |
+| ----------------- | ---------------------------------------------- | ------------------------------------- | ------------------------------------------------------------ |
+| 分红信息          | stock.market.get_dividend()                    | 获取单只股票的分红信息                |                                                              |
+| 股票行情          | stock.market.get_market()                      | 获取单只股票的行情信息-日、周、月 k线 |                                                              |
+|                   | stock.market.get_market_min()                  | 获取单个股票的今日分时行情            | 只能获取当天                                                 |
+|                   | stock.market.list_market_current()             | 获取多个股票最新行情信息              | 实时行情<br />数据源：2个，源新浪和腾讯                      |
+| 概念行情-同花顺   | stock.market.get_market_concept_ths()          | 获取单个概念的行情信息-日、周、月 k线 | 获取同花顺概念行情时，<br />请注意传入参数是指数代码还是概念代码，<br />指数代码8开头，index_code |
+|                   | stock.market.get_market_concept_min_ths()      | 获取同花顺概念行情-当日分时           | 只能获取当天                                                 |
+|                   | stock.market.get_market_concept_current_ths()  | 获取同花顺当前的概念行情              | 实时行情                                                     |
+| 概念行情-东方财富 | stock.market.get_market_concept_east()         | 获取单个概念的行情信息-日、周、月 k线 | 获取东方财富概念行情时，<br />指数代码BK开头，index_code     |
+|                   | stock.market.get_market_concept_min_east()     | 获取同花顺概念行情-当日分时           | 只能获取当天                                                 |
+|                   | stock.market.get_market_concept_current_east() | 获取同花顺当前的概念行情              | 实时行情                                                     |
+| 指数行情          | stock.market.get_market_index()                | 获取指数的行情信息-日、周、月 k线     |                                                              |
+|                   | stock.market.get_market_index_min()            | 获取指数的行情-当日分时               |                                                              |
+|                   | stock.market.get_market_index_current()        | 获取当前的指数行情                    | 实时行情                                                     |
 
 **注：概念和指数从本质来看是一样的，所以相关的接口和返回结果是一致的，概念是各个厂商自定义的指数，指数是官方或者权威机构定义的，都是一揽子股票的组合。**
 
@@ -239,8 +250,8 @@ print(res_df)
 
 > 对于项目有支持，包括但不仅限：内容贡献，bug提交，思想交流等等，对项目有影响的个人和机构
 
-| Simon | [bigbigbigfish](https://github.com/bigbigbigfish) |
-| ----- | ------------------------------------------------- |
+| Simon | [bigbigbigfish](https://github.com/bigbigbigfish) | [LuneZ99](https://github.com/LuneZ99) |
+| ----- | ------------------------------------------------- | ------------------------------------- |
 
 ## Star History
 

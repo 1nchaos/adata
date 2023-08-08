@@ -21,12 +21,6 @@ class StockMarketIndexThs(BaseThs, StockMarketIndexTemplate):
     """
     股票指数 行情
     """
-    __MARKET_INDEX_COLUMNS = ['index_code', 'trade_time', 'trade_date', 'open', 'high', 'low', 'close', 'volume',
-                              'amount', 'change', 'change_pct']
-    __MARKET_INDEX_MIN_COLUMNS = ['index_code', 'trade_time', 'trade_date', 'price', 'avg_price',
-                                  'volume', 'amount', 'change', 'change_pct']
-    __MARKET_INDEX_CURRENT_COLUMNS = ['index_code', 'trade_time', 'trade_date', 'open', 'high', 'low', 'price',
-                                      'volume', 'amount']
 
     def __init__(self) -> None:
         super().__init__()
@@ -78,7 +72,7 @@ class StockMarketIndexThs(BaseThs, StockMarketIndexTemplate):
         # 4. 筛选时间范围
         if start_date:
             result_df = result_df[result_df['trade_date'] >= start_date]
-        return result_df[self.__MARKET_INDEX_COLUMNS]
+        return result_df[self._MARKET_INDEX_COLUMNS]
 
     def get_market_index_min(self, index_code='000001'):
         """
@@ -97,7 +91,7 @@ class StockMarketIndexThs(BaseThs, StockMarketIndexTemplate):
         if THS_IP_LIMIT_RES in text:
             return Exception(THS_IP_LIMIT_MSG)
         if not text:
-            return pd.DataFrame(data=[], columns=self.__MARKET_INDEX_MIN_COLUMNS)
+            return pd.DataFrame(data=[], columns=self._MARKET_INDEX_MIN_COLUMNS)
         # 2. 解析数据
         result_json = json.loads(text[text.index('{'):-1])[f"zs_{concept_code}"]
         pre_price = result_json['pre']
@@ -122,7 +116,7 @@ class StockMarketIndexThs(BaseThs, StockMarketIndexTemplate):
         result_df.replace('--', None, inplace=True)
         result_df.replace('', None, inplace=True)
         result_df.replace(np.nan, None, inplace=True)
-        return result_df[self.__MARKET_INDEX_MIN_COLUMNS]
+        return result_df[self._MARKET_INDEX_MIN_COLUMNS]
 
     def get_market_index_current(self, index_code: str = '000001'):
         """
@@ -158,7 +152,7 @@ class StockMarketIndexThs(BaseThs, StockMarketIndexTemplate):
         result_df = result_df[columns]
         result_df['index_code'] = index_code
         result_df['trade_date'] = pd.to_datetime(result_df['trade_date'], format='%Y%m%d').dt.strftime('%Y-%m-%d')
-        return result_df[self.__MARKET_INDEX_CURRENT_COLUMNS]
+        return result_df[self._MARKET_INDEX_CURRENT_COLUMNS]
 
 
 if __name__ == '__main__':

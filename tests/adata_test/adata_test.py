@@ -2,16 +2,11 @@
 import time
 import unittest
 
-import requests
-from HTMLTestRunner import HTMLTestRunner
-
 import adata
+from HTMLTestRunner import HTMLTestRunner
 
 if __name__ == "__main__":
     version = adata.version()
-    proxy_url = "http://http.tiqu.letecs.com/getip3?num=1&type=1&pro=&city=0&yys=100017&port=11&pack=326296&ts=0&ys=0&cs=0&lb=6&sb=0&pb=4&mr=1&regions="
-    # ip = requests.get(proxy_url).text
-    # adata.proxy(is_proxy=True, proxy_url=proxy_url)
     # 会识别出所在目录中，文件名字为test*.py格式的文件
     # defaultTestLoader测试加载器：包含加载测试用例的方法;使用discover()方法来自动识别并添加测试用例(多个)
     suite = unittest.defaultTestLoader.discover("", '*_test.py')

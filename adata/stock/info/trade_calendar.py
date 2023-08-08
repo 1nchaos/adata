@@ -8,7 +8,6 @@
 import datetime
 
 import pandas as pd
-from tqdm import tqdm
 
 from adata.common import requests
 from adata.stock.cache.calendar import years, get_csv_path
@@ -47,7 +46,7 @@ class TradeCalendar(object):
         """
         # 1. url，拼接月份
         data = []
-        for i in tqdm(range(12)):
+        for i in range(12):
             api_url = f"http://www.szse.cn/api/report/exchange/onepersistenthour/monthList?month={year}-{i + 1}"
             res = requests.request(method='get', url=api_url, headers={}, proxies={})
             # 2. 判断请求是否成功
