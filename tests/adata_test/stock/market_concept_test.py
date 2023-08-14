@@ -5,11 +5,7 @@
 @time: 2023/7/2
 @log: change log
 """
-import os
-import time
 import unittest
-
-import requests
 
 import adata
 

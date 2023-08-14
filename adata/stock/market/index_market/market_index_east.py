@@ -9,6 +9,7 @@ import datetime
 import pandas as pd
 
 from adata.common import requests
+from adata.common.exception.handler import handler_null
 from adata.stock.market.index_market.market_index_template import StockMarketIndexTemplate
 
 
@@ -16,6 +17,7 @@ class StockMarketIndexEast(StockMarketIndexTemplate):
     def __init__(self) -> None:
         super().__init__()
 
+    @handler_null
     def get_market_index(self, index_code: str = '000001', start_date='2020-01-01', k_type: int = 1):
         """
         获取指数行情
@@ -51,6 +53,7 @@ class StockMarketIndexEast(StockMarketIndexTemplate):
             result_df = result_df[result_df['trade_date'] >= start_date]
         return result_df[self._MARKET_INDEX_COLUMNS]
 
+    @handler_null
     def get_market_index_min(self, index_code='000001'):
         """
         获取指数当日的分时行情
@@ -87,6 +90,7 @@ class StockMarketIndexEast(StockMarketIndexTemplate):
         result_df = result_df.round(2)
         return result_df
 
+    @handler_null
     def get_market_index_current(self, index_code: str = '000001'):
         """
         获取当前的指数行情
