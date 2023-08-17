@@ -30,7 +30,7 @@ class DividendTestCase(unittest.TestCase):
         print("开始测试：test_get_dividend")
         df = adata.stock.market.get_dividend(stock_code='000001')
         print(df)
-        self.assertEqual(True, len(df) > 5)
+        self.assertEqual(True, len(df) > 20)
 
 
 if __name__ == '__main__':

@@ -40,9 +40,21 @@ class InfoTestCase(unittest.TestCase):
 
     def test_concept_constituent_ths(self):
         print("开始测试：test_concept_constituent_ths")
-        df = adata.stock.info.concept_constituent_ths(index_code="885556", wait_time=1000)
+        df = adata.stock.info.concept_constituent_ths(index_code="885556")
         print(df)
-        self.assertEqual(True, len(df) > 10)
+        self.assertEqual(True, len(df) > 200)
+
+    def test_all_concept_code_east(self):
+        print("开始测试：test_all_concept_code_ths")
+        df = adata.stock.info.all_concept_code_east()
+        print(df)
+        self.assertEqual(True, len(df) > 300)
+
+    def test_concept_constituent_east(self):
+        print("开始测试：test_concept_constituent_ths")
+        df = adata.stock.info.concept_constituent_east(concept_code="BK1104")
+        print(df)
+        self.assertEqual(True, len(df) > 200)
 
     def test_all_index_code(self):
         print("开始测试：test_all_index_code")
@@ -52,7 +64,7 @@ class InfoTestCase(unittest.TestCase):
 
     def test_index_constituent(self):
         print("开始测试：test_index_constituent")
-        df = adata.stock.info.index_constituent(index_code="000033", wait_time=1000)
+        df = adata.stock.info.index_constituent(index_code="000033")
         print(df)
         self.assertEqual(True, len(df) > 10)
 
