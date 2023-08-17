@@ -25,7 +25,7 @@ class StockCode(object):
 
     def all_code(self):
         """
-        获取所有股票的代码 ,后续补充多数据源
+        获取所有股票的代码
         :return: 所有股票的代码信息： ['stock_code','short_name','exchange']
         """
         res_df = self.__market_rank_baidu()
