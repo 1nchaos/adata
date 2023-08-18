@@ -79,17 +79,13 @@ class StockMarketBaiDu(StockMarketTemplate):
         result_df['stock_code'] = stock_code
         result_df['trade_date'] = result_df['trade_time']
         result_df['trade_time'] = pd.to_datetime(result_df['trade_time']).dt.strftime('%Y-%m-%d %H:%M:%S')
+        # 5. 数据清洗，剔除成交量为0的异常数据
         result_df.replace('--', None, inplace=True)
         result_df.replace('', None, inplace=True)
-        result_df['change'] = result_df['change'].str.replace('+', '', regex=True)
-        result_df['change_pct'] = result_df['change_pct'].str.replace('+', '', regex=True)
-        # 5. 数据清洗，剔除成交量为0的异常数据
         result_df['amount'] = result_df['amount'].astype(float)
         result_df = result_df[result_df['amount'] > 0]
-        result_df.replace('--', None, inplace=True)
-        result_df.replace('', None, inplace=True)
-        result_df['change'] = result_df['change'].str.replace('+', '', regex=True).astype(float)
-        result_df['change_pct'] = result_df['change_pct'].str.replace('+', '', regex=True).astype(float)
+        result_df['change'] = result_df['change'].str.replace('+', '').astype(float)
+        result_df['change_pct'] = result_df['change_pct'].str.replace('+', '').astype(float)
         return result_df
 
     def get_market_min(self, stock_code: str = '000001'):
@@ -138,9 +134,8 @@ class StockMarketBaiDu(StockMarketTemplate):
         result_df['trade_time'] = pd.to_datetime(result_df['time'], unit='s', utc=True).dt.tz_convert('Asia/Shanghai')
         result_df['trade_time'] = pd.to_datetime(result_df['trade_time']).dt.strftime("%Y-%m-%d %H:%M:%S")
         result_df['trade_date'] = result_df['trade_time'].str[:10]
-        result_df['change'] = result_df['change'].str.replace('+', '', regex=True).astype(float)
-        result_df['change_pct'] = result_df['change_pct'].str.replace('+', '', regex=True) \
-            .str.replace('%', '', regex=True).astype(float)
+        result_df['change'] = result_df['change'].str.replace('+', '').astype(float)
+        result_df['change_pct'] = result_df['change_pct'].str.replace('+', '').str.replace('%', '').astype(float)
         return result_df[self._MARKET_MIN_COLUMNS]
 
 
