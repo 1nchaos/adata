@@ -45,7 +45,6 @@ class SecuritiesMargin(object):
         :param start_date: 开始时间
         :return:
         """
-
         # 1. url拼接页码等参数
         data = []
         total_pages = 1
