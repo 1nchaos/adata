@@ -46,7 +46,8 @@ class BaseThs(object):
 
     def _get_years_by_start_date(self, start_date):
         """
-        根据开始时间获取年份
+        根据开始时间获取大于开始时间的所有年份的列表
+        例：start_date=2020-10-01 -> years=[2020,2021,2022,2023]
         :param start_date: 开始时间
         :return: 年份
         """
