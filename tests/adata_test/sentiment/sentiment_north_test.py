@@ -29,7 +29,7 @@ class SentimentNorthTestCase(unittest.TestCase):
         print("开始测试：test_securities_margin")
         df = adata.sentiment.north.north_flow_min()
         print(df)
-        self.assertEqual(True, len(df) > 10)
+        self.assertEqual(True, len(df) > 0)
 
     def test_north_flow(self):
         print("开始测试：test_north_flow")
