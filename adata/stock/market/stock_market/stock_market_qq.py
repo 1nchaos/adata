@@ -64,6 +64,69 @@ class StockMarketQQ(StockMarketTemplate):
         result_df.loc[mask, 'amount'] = result_df['amount'].astype(float) * 10000
         return result_df[self._MARKET_CURRENT_COLUMNS]
 
+    def get_market_five(self, stock_code: str = '000001'):
+        """
+         https://web.sqt.gtimg.cn/q=sh601666,sh600691
+        :param stock_code: 股票代码
+        :return:
+        """
+        return self.list_market_five([stock_code])
+
+    def list_market_five(self, code_list=None):
+        """
+         https://web.sqt.gtimg.cn/q=sh601666,sh600691
+        :param code_list: 股票代码列表
+        :return:
+        """
+        if code_list is None or len(code_list) == 0:
+            return pd.DataFrame(data=[], columns=self._MARKET_FIVE_COLUMNS)
+        api_url = f"https://web.sqt.gtimg.cn/q="
+        for code in code_list:
+            if code.startswith('0') or code.startswith('3'):
+                api_url += 'sz' + code + ','
+            elif code.startswith('6') or code.startswith('9'):
+                api_url += 'sh' + code + ','
+            elif code.startswith('4') or code.startswith('8'):
+                api_url += 'bj' + code + ','
+
+        # 1.请求接口
+        res = requests.request('get', api_url, headers={})
+
+        # 2. 判断结果是否正确
+        if len(res.text) < 1 or res.status_code != 200:
+            return pd.DataFrame(data=[], columns=self._MARKET_FIVE_COLUMNS)
+        # 3.解析数据
+
+        # 正常解析数据 _sh601666="1~平煤股份~601666~10.13~9.82~9.82~545608~302942~242666~10.12~1000~10.11~471~10.10~2083~10.09
+        # ~989~10.08~632~10.13~2544~10.14~2794~10.15~3149~10.16~2103~10.17~1430~~20230913155915~0.31~3.16~10.23~9.82
+        # ~10.13/545608/551678149~545608~55168~2.37~5.10~~10.23~9.82~4.18~233.15~234.39~1.08~10.80~8.84~1.05~-6845~10
+        # .11~5.25~4.09~~~1.16~55167.8149~0.0000~0~
+        # ~GP-A~1.91~1.81~8.59~19.02~6.34~13.52~7.21~19.60~31.56~34.53~2301581075~2313866675~-39.81~-4.70~2301581075
+        # ~~~-22.43~0.10~~CNY~0~___D__F__N";
+        data_list = res.text.split(';')
+        data = []
+        for data_str in data_list:
+            if len(data_str) < 8:
+                continue
+            code = data_str.split('~')
+
+            if len(code) == 85:
+                row = code[1:3]
+                row.extend(code[27:29])
+                row.extend(code[25:27])
+                row.extend(code[23:25])
+                row.extend(code[21:23])
+                row.extend(code[19:21])
+                row.extend(code[9:19])
+                data.append(row)
+
+        # 4. 封装数据
+        result_df = pd.DataFrame(data=data, columns=self._MARKET_FIVE_COLUMNS)
+        columns_to_multiply = ['sv5', 'sv4', 'sv3', 'sv2', 'sv1', 'bv1', 'bv2', 'bv3', 'bv4', 'bv5']
+        result_df[columns_to_multiply] = result_df[columns_to_multiply].astype(int) * 100
+        return result_df
+
 
 if __name__ == '__main__':
     print(StockMarketQQ().list_market_current(code_list=['000001', '600001', '000795', '872925']))
+    print(StockMarketQQ().get_market_five(stock_code='000001'))

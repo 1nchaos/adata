@@ -66,8 +66,26 @@ class StockMarket(object):
             df = self.qq.list_market_current(code_list=code_list)
         return df
 
+    def get_market_five(self, stock_code: str = '000001'):
+        """
+        获取单个股票的5档行情
+        :param stock_code: 股票代码
+        :return: 最新的五档行情
+        """
+        return self.qq.get_market_five(stock_code=stock_code)
+
+    def get_market_bar(self, stock_code: str = '000001'):
+        """
+        获取单个股票的分时成交
+        :param stock_code: 股票代码
+        :return: 最新当天的分时成交
+        """
+        return self.baidu.get_market_bar(stock_code=stock_code)
+
 
 if __name__ == '__main__':
     print(StockMarket().get_market(stock_code='000001', start_date='2021-01-01', k_type=1))
     print(StockMarket().get_market_min(stock_code='000001'))
     print(StockMarket().list_market_current(code_list=['000001', '600001', '000795', '872925']))
+    print(StockMarket().get_market_five(stock_code='000001'))
+    print(StockMarket().get_market_bar(stock_code='000001'))

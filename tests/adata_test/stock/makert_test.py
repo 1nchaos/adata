@@ -43,6 +43,18 @@ class MarketTestCase(unittest.TestCase):
         print(df)
         self.assertEqual(True, len(df) > 2)
 
+    def test_get_market_five(self):
+        print("开始测试：test_get_market_five")
+        df = adata.stock.market.get_market_five(stock_code='000001')
+        print(df)
+        self.assertEqual(True, len(df) == 1)
+
+    def test_get_market_bar(self):
+        print("开始测试：test_get_market_bar")
+        df = adata.stock.market.get_market_bar(stock_code='000001')
+        print(df)
+        self.assertEqual(True, len(df) >= 100)
+
 
 if __name__ == '__main__':
     unittest.main()

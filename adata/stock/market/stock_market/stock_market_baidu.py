@@ -138,7 +138,52 @@ class StockMarketBaiDu(StockMarketTemplate):
         result_df['change_pct'] = result_df['change_pct'].str.replace('+', '').str.replace('%', '').astype(float)
         return result_df[self._MARKET_MIN_COLUMNS]
 
+    def get_market_five(self, stock_code: str = '000001'):
+        """
+        https://finance.pae.baidu.com/vapi/v1/getquotation?srcid=5353&all=1&pointType=string&group=quotation_minute_ab&query=872925&code=872925&market_type=ab&newFormat=1&name=锦好医疗&finClientType=pc
+        :param stock_code: 股票代码
+        :return:
+        """
+        pass
+
+    def get_market_bar(self, stock_code: str = '000001'):
+        """
+        https://finance.pae.baidu.com/vapi/v1/getquotation?srcid=5353&all=1&pointType=string&group=quotation_minute_ab&query=872925&code=872925&market_type=ab&newFormat=1&name=锦好医疗&finClientType=pc
+        :param stock_code: 股票代码
+        :return:
+        """
+        # 1. 请求接口 url
+        api_url = f" https://finance.pae.baidu.com/vapi/v1/getquotation?srcid=5353&all=1&pointType=string&" \
+                  f"group=quotation_minute_ab&query={stock_code}&code={stock_code}&market_type=ab&newFormat=1&finClientType=pc"
+
+        res_json = None
+        for i in range(3):
+            res = requests.request('get', api_url, headers=baidu_headers.json_headers, proxies={})
+            # 2. 校验请求结果数据
+            res_json = res.json()
+            if res_json['ResultCode'] == '0':
+                break
+            time.sleep(1)
+        # 3.解析数据
+        # 3.1 空数据时返回为空
+        result = res_json['Result']
+        if not result:
+            return pd.DataFrame(data=[], columns=self._MARKET_MIN_COLUMNS)
+
+        # 3.2. 正常解析数据
+        market_data_list = res_json['Result']['detailinfos']
+
+        # 4. 封装数据
+        field = ['time', 'volume', 'price', 'type', 'bsFlag', 'formatTime']
+        rename_columns = {'time': 'trade_time', 'bsFlag': 'bs_type'}
+        result_df = pd.DataFrame(data=market_data_list, columns=field).rename(columns=rename_columns)
+        result_df['stock_code'] = stock_code
+        result_df['trade_time'] = pd.to_datetime(result_df['trade_time'], unit='s', utc=True).dt.tz_convert('Asia/Shanghai')
+        result_df['trade_time'] = pd.to_datetime(result_df['trade_time']).dt.strftime("%Y-%m-%d %H:%M:%S")
+        return result_df[self._MARKET_BAR_COLUMNS]
+
 
 if __name__ == '__main__':
     print(StockMarketBaiDu().get_market(stock_code='000001', start_date='2021-01-01', k_type=1))
     print(StockMarketBaiDu().get_market_min(stock_code='000001'))
+    print(StockMarketBaiDu().get_market_bar(stock_code='000001'))
