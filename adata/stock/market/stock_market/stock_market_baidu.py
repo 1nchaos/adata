@@ -12,6 +12,7 @@ import time
 
 import pandas as pd
 
+from adata.common.exception.handler import handler_null
 from adata.common.headers import baidu_headers
 from adata.common.utils import requests
 from adata.stock.market.stock_market.stock_market_template import StockMarketTemplate
@@ -138,13 +139,44 @@ class StockMarketBaiDu(StockMarketTemplate):
         result_df['change_pct'] = result_df['change_pct'].str.replace('+', '').str.replace('%', '').astype(float)
         return result_df[self._MARKET_MIN_COLUMNS]
 
+    @handler_null
     def get_market_five(self, stock_code: str = '000001'):
         """
         https://finance.pae.baidu.com/vapi/v1/getquotation?srcid=5353&all=1&pointType=string&group=quotation_minute_ab&query=872925&code=872925&market_type=ab&newFormat=1&name=锦好医疗&finClientType=pc
         :param stock_code: 股票代码
         :return:
         """
-        pass
+        # 1. 请求接口 url
+        api_url = f" https://finance.pae.baidu.com/vapi/v1/getquotation?srcid=5353&all=1&pointType=string&" \
+                  f"group=quotation_minute_ab&query={stock_code}&code={stock_code}&market_type=ab&newFormat=1&finClientType=pc"
+
+        res = requests.request('get', api_url, headers=baidu_headers.json_headers, proxies={})
+        # 2. 校验请求结果数据
+        res_json = res.json()
+        # 3.解析数据
+        # 3.1 空数据时返回为空
+        result = res_json['Result']
+        if not result:
+            return pd.DataFrame(data=[], columns=self._MARKET_FIVE_COLUMNS)
+
+        # 3.2. 正常解析数据
+        sell = result['askinfos']
+        buy = result['buyinfos']
+        short_name = result["basicinfos"]["name"]
+        # 4. 封装数据
+        data = {'stock_code': stock_code, 'short_name': short_name,
+                's5': sell[0]['askprice'], 'sv5': sell[0]['askvolume'],
+                's4': sell[1]['askprice'], 'sv4': sell[1]['askvolume'],
+                's3': sell[2]['askprice'], 'sv3': sell[2]['askvolume'],
+                's2': sell[3]['askprice'], 'sv2': sell[3]['askvolume'],
+                's1': sell[4]['askprice'], 'sv1': sell[4]['askvolume'],
+                'b1': buy[0]['bidprice'], 'bv1': buy[0]['bidvolume'],
+                'b2': buy[1]['bidprice'], 'bv2': buy[1]['bidvolume'],
+                'b3': buy[2]['bidprice'], 'bv3': buy[2]['bidvolume'],
+                'b4': buy[3]['bidprice'], 'bv4': buy[3]['bidvolume'],
+                'b5': buy[4]['bidprice'], 'bv5': buy[4]['bidvolume']}
+        result_df = pd.DataFrame(data=[data], columns=self._MARKET_FIVE_COLUMNS)
+        return result_df[self._MARKET_FIVE_COLUMNS]
 
     def get_market_bar(self, stock_code: str = '000001'):
         """
@@ -178,7 +210,8 @@ class StockMarketBaiDu(StockMarketTemplate):
         rename_columns = {'time': 'trade_time', 'bsFlag': 'bs_type'}
         result_df = pd.DataFrame(data=market_data_list, columns=field).rename(columns=rename_columns)
         result_df['stock_code'] = stock_code
-        result_df['trade_time'] = pd.to_datetime(result_df['trade_time'], unit='s', utc=True).dt.tz_convert('Asia/Shanghai')
+        result_df['trade_time'] = pd.to_datetime(result_df['trade_time'], unit='s', utc=True).dt.tz_convert(
+            'Asia/Shanghai')
         result_df['trade_time'] = pd.to_datetime(result_df['trade_time']).dt.strftime("%Y-%m-%d %H:%M:%S")
         return result_df[self._MARKET_BAR_COLUMNS]
 
