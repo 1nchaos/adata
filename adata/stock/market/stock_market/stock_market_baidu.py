@@ -184,6 +184,6 @@ class StockMarketBaiDu(StockMarketTemplate):
 
 
 if __name__ == '__main__':
-    # print(StockMarketBaiDu().get_market(stock_code='000001', start_date='2021-01-01', k_type=1))
-    # print(StockMarketBaiDu().get_market_min(stock_code='000001'))
+    print(StockMarketBaiDu().get_market(stock_code='000001', start_date='2021-01-01', k_type=1))
+    print(StockMarketBaiDu().get_market_min(stock_code='000001'))
     print(StockMarketBaiDu().get_market_bar(stock_code='000001'))
