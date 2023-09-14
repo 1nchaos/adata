@@ -157,7 +157,9 @@ print(res_df)
 | 分红信息          | stock.market.get_dividend()                    | 获取单只股票的分红信息                |                                                              |
 | 股票行情          | stock.market.get_market()                      | 获取单只股票的行情信息-日、周、月 k线 |                                                              |
 |                   | stock.market.get_market_min()                  | 获取单个股票的今日分时行情            | 只能获取当天                                                 |
-|                   | stock.market.list_market_current()             | 获取多个股票最新行情信息              | 实时行情<br />数据源：2个，源新浪和腾讯                      |
+| **实时行情**      | stock.market.list_market_current()             | 获取多个股票最新行情信息              | 实时行情<br />数据源：2个，新浪和腾讯                        |
+|                   | stock.market.get_market_five()                 | 获取单个股票的5档行情信息             | 实时行情<br />数据源：2个，腾讯和百度                        |
+|                   | stock.market.get_market_bar()                  | 获取单个股票的分笔成交行情            | 实时行情<br />[股市通](https://gushitong.baidu.com/stock/ab-872925) |
 | 概念行情-同花顺   | stock.market.get_market_concept_ths()          | 获取单个概念的行情信息-日、周、月 k线 | 获取同花顺概念行情时，<br />请注意传入参数是指数代码还是概念代码，<br />指数代码8开头，index_code |
 |                   | stock.market.get_market_concept_min_ths()      | 获取同花顺概念行情-当日分时           | 只能获取当天                                                 |
 |                   | stock.market.get_market_concept_current_ths()  | 获取同花顺当前的概念行情              | 实时行情                                                     |
@@ -220,7 +222,7 @@ print(res_df)
 |      | 版本号 | 内容 | 发布日期     | 备注                           |
 | ---- | ------ | ---- | ------------ | ------------------------------ |
 | ✅    | 0.x.x  | 股票 | 2023-04-05 ~ | 预览版本                       |
-| ☑️    | 1.x.x  | 股票 | 2023-10-01   | 中国Ai股                       |
+| ✅ ️    | 1.x.x  | 股票 | 2023-10-01   | 中国Ai股                       |
 | ☑️    | 2.x.x  | 基金 | 排期中       | 场内可交易基金：ETF            |
 | ☑️    | 3.x.x  | 债券 | 排期中       | 场内可交易债券：可转债         |
 | ☑️    | 4.x.x  | 舆情 | 排期中       | 挖掘新闻、网络文章和政策事件等 |
