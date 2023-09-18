@@ -111,7 +111,8 @@ class StockMarketQQ(StockMarketTemplate):
             code = data_str.split('~')
 
             if len(code) == 85:
-                row = code[1:3]
+                row = code[2:3]
+                row.append(code[1])
                 row.extend(code[27:29])
                 row.extend(code[25:27])
                 row.extend(code[23:25])

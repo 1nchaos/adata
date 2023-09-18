@@ -25,11 +25,23 @@ class MarketTestCase(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_get_market(self):
+    def test_get_market_d(self):
         print("开始测试：test_get_market")
         df = adata.stock.market.get_market(stock_code='000001', start_date='2021-01-01', k_type=1)
         print(df)
         self.assertEqual(True, len(df) > 300)
+
+    def test_get_market_w(self):
+        print("开始测试：test_get_market_w")
+        df = adata.stock.market.get_market(stock_code='000001', start_date='2021-01-01', k_type=2)
+        print(df)
+        self.assertEqual(True, len(df) > 80)
+
+    def test_get_market_m(self):
+        print("开始测试：test_get_market_m")
+        df = adata.stock.market.get_market(stock_code='000001', start_date='2021-01-01', k_type=3)
+        print(df)
+        self.assertEqual(True, len(df) > 20)
 
     def test_get_market_min(self):
         print("开始测试：test_get_market_min")

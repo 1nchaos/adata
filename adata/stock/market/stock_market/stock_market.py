@@ -69,10 +69,14 @@ class StockMarket(object):
     def get_market_five(self, stock_code: str = '000001'):
         """
         获取单个股票的5档行情
+        其中：百度的接口数据更精准，精确到了股。腾讯的精确到手
         :param stock_code: 股票代码
         :return: 最新的五档行情
         """
-        return self.qq.get_market_five(stock_code=stock_code)
+        res_df = self.qq.get_market_five(stock_code=stock_code)
+        if res_df.empty:
+            res_df = self.baidu.get_market_five(stock_code=stock_code)
+        return res_df
 
     def get_market_bar(self, stock_code: str = '000001'):
         """
@@ -88,4 +92,4 @@ if __name__ == '__main__':
     print(StockMarket().get_market_min(stock_code='000001'))
     print(StockMarket().list_market_current(code_list=['000001', '600001', '000795', '872925']))
     print(StockMarket().get_market_five(stock_code='000001'))
-    print(StockMarket().get_market_bar(stock_code='000001'))
+    print(StockMarket().get_market_bar(stock_code='872925'))
