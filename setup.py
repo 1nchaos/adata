@@ -18,7 +18,7 @@ with open("README.md", "r", encoding='utf-8') as f:
     readme = f.read()
 
 requires = [
-    "requests>=2.26.0",
+    "requests>=2.22.0",
     "pandas>=1.5.0",
     "beautifulsoup4>=4.11.2",
     "py_mini_racer>=0.6.0",
@@ -50,6 +50,7 @@ def setup_package():
             "Programming Language :: Python :: 3.11",
             "Programming Language :: Python :: 3.12",
         ],
+        python_requires=">=3.7",
     )
 
     try:
