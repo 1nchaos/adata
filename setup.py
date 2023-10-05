@@ -18,9 +18,9 @@ with open("README.md", "r", encoding='utf-8') as f:
     readme = f.read()
 
 requires = [
-    "requests>=2.26.0",
-    "pandas>=1.5.0",
-    "beautifulsoup4>=4.11.2",
+    "requests>=2.16.0",
+    "pandas>=1.1.5",
+    "beautifulsoup4>=4.0.2",
     "py_mini_racer>=0.6.0",
 ]
 
@@ -43,6 +43,7 @@ def setup_package():
             # Trove classifiers
             # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
             "License :: OSI Approved :: MIT License",
+            "Programming Language :: Python :: 3.6",
             "Programming Language :: Python :: 3.7",
             "Programming Language :: Python :: 3.8",
             "Programming Language :: Python :: 3.9",
