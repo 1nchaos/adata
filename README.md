@@ -152,23 +152,23 @@ print(res_df)
 #### 	2. 行情信息
 
 
-| 数据              | API                                            | 说明                                  | 备注                                                         |
-| ----------------- | ---------------------------------------------- | ------------------------------------- | ------------------------------------------------------------ |
-| 分红信息          | stock.market.get_dividend()                    | 获取单只股票的分红信息                |                                                              |
-| 股票行情          | stock.market.get_market()                      | 获取单只股票的行情信息-日、周、月 k线 |                                                              |
-|                   | stock.market.get_market_min()                  | 获取单个股票的今日分时行情            | 只能获取当天                                                 |
-| **实时行情**      | stock.market.list_market_current()             | 获取多个股票最新行情信息              | 实时行情<br />数据源：2个，新浪和腾讯                        |
-|                   | stock.market.get_market_five()                 | 获取单个股票的5档行情信息             | 实时行情<br />数据源：2个，腾讯和百度                        |
-|                   | stock.market.get_market_bar()                  | 获取单个股票的分笔成交行情            | 实时行情<br />[股市通](https://gushitong.baidu.com/stock/ab-872925) |
-| 概念行情-同花顺   | stock.market.get_market_concept_ths()          | 获取单个概念的行情信息-日、周、月 k线 | 获取同花顺概念行情时，<br />请注意传入参数是指数代码还是概念代码，<br />指数代码8开头，index_code |
-|                   | stock.market.get_market_concept_min_ths()      | 获取同花顺概念行情-当日分时           | 只能获取当天                                                 |
-|                   | stock.market.get_market_concept_current_ths()  | 获取同花顺当前的概念行情              | 实时行情                                                     |
-| 概念行情-东方财富 | stock.market.get_market_concept_east()         | 获取单个概念的行情信息-日、周、月 k线 | 获取东方财富概念行情时，<br />指数代码BK开头，index_code     |
-|                   | stock.market.get_market_concept_min_east()     | 获取同花顺概念行情-当日分时           | 只能获取当天                                                 |
-|                   | stock.market.get_market_concept_current_east() | 获取同花顺当前的概念行情              | 实时行情                                                     |
-| 指数行情          | stock.market.get_market_index()                | 获取指数的行情信息-日、周、月 k线     |                                                              |
-|                   | stock.market.get_market_index_min()            | 获取指数的行情-当日分时               |                                                              |
-|                   | stock.market.get_market_index_current()        | 获取当前的指数行情                    | 实时行情                                                     |
+| 数据                | API                                            | 说明                                  | 备注                                                         |
+| ------------------- | ---------------------------------------------- | ------------------------------------- | ------------------------------------------------------------ |
+| 分红信息            | stock.market.get_dividend()                    | 获取单只股票的分红信息                |                                                              |
+| 股票行情            | stock.market.get_market()                      | 获取单只股票的行情信息-日、周、月 k线 |                                                              |
+|                     | stock.market.get_market_min()                  | 获取单个股票的今日分时行情            | 只能获取当天                                                 |
+| <u>**实时行情**</u> | stock.market.list_market_current()             | 获取多个股票最新行情信息              | 实时行情<br />数据源：2个，新浪和腾讯                        |
+|                     | stock.market.get_market_five()                 | 获取单个股票的5档行情信息             | 实时行情<br />数据源：2个，腾讯和百度                        |
+|                     | stock.market.get_market_bar()                  | 获取单个股票的分笔成交行情            | 实时行情<br />[股市通](https://gushitong.baidu.com/stock/ab-872925) |
+| 概念行情-同花顺     | stock.market.get_market_concept_ths()          | 获取单个概念的行情信息-日、周、月 k线 | 获取同花顺概念行情时，<br />请注意传入参数是指数代码还是概念代码，<br />指数代码8开头，index_code |
+|                     | stock.market.get_market_concept_min_ths()      | 获取同花顺概念行情-当日分时           | 只能获取当天                                                 |
+|                     | stock.market.get_market_concept_current_ths()  | 获取同花顺当前的概念行情              | 实时行情                                                     |
+| 概念行情-东方财富   | stock.market.get_market_concept_east()         | 获取单个概念的行情信息-日、周、月 k线 | 获取东方财富概念行情时，<br />指数代码BK开头，index_code     |
+|                     | stock.market.get_market_concept_min_east()     | 获取同花顺概念行情-当日分时           | 只能获取当天                                                 |
+|                     | stock.market.get_market_concept_current_east() | 获取同花顺当前的概念行情              | 实时行情                                                     |
+| 指数行情            | stock.market.get_market_index()                | 获取指数的行情信息-日、周、月 k线     |                                                              |
+|                     | stock.market.get_market_index_min()            | 获取指数的行情-当日分时               |                                                              |
+|                     | stock.market.get_market_index_current()        | 获取当前的指数行情                    | 实时行情                                                     |
 
 **注：概念和指数从本质来看是一样的，所以相关的接口和返回结果是一致的，概念是各个厂商自定义的指数，指数是官方或者权威机构定义的，都是一揽子股票的组合。**
 
@@ -223,9 +223,8 @@ print(res_df)
 | ---- | ------ | ---- | ------------ | ------------------------------ |
 | ✅    | 0.x.x  | 股票 | 2023-04-05 ~ | 预览版本                       |
 | ✅ ️    | 1.x.x  | 股票 | 2023-10-01   | 中国Ai股                       |
-| ☑️    | 2.x.x  | 基金 | 排期中       | 场内可交易基金：ETF            |
-| ☑️    | 3.x.x  | 债券 | 排期中       | 场内可交易债券：可转债         |
-| ☑️    | 4.x.x  | 舆情 | 排期中       | 挖掘新闻、网络文章和政策事件等 |
+| ☑️    | 2.x.x  | 基金、债券 | 2024-01-01 | 场内可交易基金：ETF、可转债        |
+| ☑️    | 3.x.x | xxx        | 排期中       |  |
 
 ## 六、理念
 
@@ -252,9 +251,13 @@ print(res_df)
 
 > 对于项目有支持，包括但不仅限：内容贡献，bug提交，思想交流等等，对项目有影响的个人和机构
 
-| Simon | [bigbigbigfish](https://github.com/bigbigbigfish) | [LuneZ99](https://github.com/LuneZ99) | [lzd-1230](https://github.com/lzd-1230) |
-| ----- | ------------------------------------------------- | ------------------------------------- | --------------------------------------- |
+| Simon                                   | [bigbigbigfish](https://github.com/bigbigbigfish) | [LuneZ99](https://github.com/LuneZ99) | 匿名用户 | thue |
+| --------------------------------------- | ------------------------------------------------- | ------------------------------------- | -------- | ---- |
+| [lzd-1230](https://github.com/lzd-1230) |                                                   |                                       |          |      |
 
+----------------------------------------------------------------------
+
+> 
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=1nchaos/adata&type=Date)](https://star-history.com/#1nchaos/adata&Date)
