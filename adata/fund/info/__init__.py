@@ -5,7 +5,7 @@
 @time: 2023/6/5
 @log: change log
 """
-from .fund_info import FundInfo
+from adata.fund.info.fund_info import FundInfo
 
 
 class Info(FundInfo):

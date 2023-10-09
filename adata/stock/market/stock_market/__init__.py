@@ -5,5 +5,5 @@
 @time: 2023/6/19
 @log: change log
 """
-from .stock_market import StockMarket
+from adata.stock.market.stock_market.stock_market import StockMarket
 
