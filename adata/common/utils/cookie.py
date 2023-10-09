@@ -5,7 +5,7 @@
 @time: 2023/5/5
 @log: change log
 """
-from importlib import resources
+import os
 
 from py_mini_racer import py_mini_racer
 
@@ -15,7 +15,7 @@ def ths_cookie(js_path="ths.js"):
     js_code = py_mini_racer.MiniRacer()
     js_content = get_file_content_ths(file_path=js_path)
     js_code.eval(js_content)
-    return 'v=' + js_code.call("v")+";"
+    return 'v=' + js_code.call("v") + ";"
 
 
 def get_file_content_ths(file_path: str = None) -> str:
@@ -24,10 +24,11 @@ def get_file_content_ths(file_path: str = None) -> str:
     :param file_path:  JS 文件名
     :return: 文件内容
     """
-    with resources.path("adata.common.js", file_path) as f_path:
-        with open(f_path) as f:
-            file_data = f.read()
-        return file_data
+    _curpath = os.path.normpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+    f_path = _curpath.replace('utils', 'js/') + file_path
+    with open(f_path) as f:
+        file_data = f.read()
+    return file_data
 
 
 if __name__ == '__main__':

@@ -8,12 +8,12 @@
 
 import logging
 
-from .__version__ import __version__
-from .bond import bond
-from .common.utils.sunrequests import SunProxy
-from .fund import fund
-from .sentiment import sentiment
-from .stock import stock
+from adata.__version__ import __version__
+from adata.bond import bond
+from adata.common.utils.sunrequests import SunProxy
+from adata.fund import fund
+from adata.sentiment import sentiment
+from adata.stock import stock
 
 
 def version():

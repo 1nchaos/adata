@@ -5,7 +5,7 @@
 @time: 2023/5/31
 @log: change log
 """
-from .bond_code import BondCode
+from adata.bond.info.bond_code import BondCode
 
 
 class Info(BondCode):

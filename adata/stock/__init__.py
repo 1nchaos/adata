@@ -5,9 +5,9 @@
 @time: 2023/3/29
 @log: change log
 """
-from .index import index
-from .info import info
-from .market import market
+from adata.stock.index import index
+from adata.stock.info import info
+from adata.stock.market import market
 
 
 class Stock(object):
