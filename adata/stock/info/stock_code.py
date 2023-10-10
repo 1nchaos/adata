@@ -1,6 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-@desc: 股票代码
+@desc: 股票代码，上市日期等信息
+深交所
+http://www.szse.cn/market/product/stock/list/index.htm
+上海交易所
+http://www.sse.com.cn/assortment/stock/list/share/
+北交所
+https://www.bse.cn/nq/listedcompany.html
+
+东方财富：新股列表可做最新的补充
+https://data.eastmoney.com/xg/xg/
+
 @author: 1nchaos
 @time: 2023/3/28
 @log: change log
