@@ -20,3 +20,5 @@ if __name__ == '__main__':
     with open('index_code_rel_ths.json', 'w') as f:
         json.dump(rel, f)
     print(rel)
+
+

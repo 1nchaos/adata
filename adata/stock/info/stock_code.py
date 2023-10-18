@@ -2,7 +2,7 @@
 """
 @desc: 股票代码，上市日期等信息
 深交所
-http://www.szse.cn/market/product/stock/list/index.htm
+http://www.szse.cn/market/product/stock/list/index.html
 上海交易所
 http://www.sse.com.cn/assortment/stock/list/share/
 北交所
@@ -17,18 +17,20 @@ https://data.eastmoney.com/xg/xg/
 """
 import time
 
+import numpy as np
 import pandas as pd
 import requests
 
 from adata.common.exception.handler import handler_null
 from adata.common.headers import baidu_headers
+from adata.stock.cache import get_code_csv_path
 
 
 class StockCode(object):
     """
     股票代码
     """
-    __CODE_COLUMNS = ['stock_code', 'short_name', 'exchange']
+    __CODE_COLUMNS = ['stock_code', 'short_name', 'exchange', 'list_date']
 
     def __init__(self) -> None:
         super().__init__()
@@ -36,14 +38,20 @@ class StockCode(object):
     def all_code(self):
         """
         获取所有股票的代码
-        :return: 所有股票的代码信息： ['stock_code','short_name','exchange']
+        :return: 所有股票的代码信息：  ['stock_code', 'short_name', 'exchange', 'list_date']
         """
+        # 拼接股票上市日期
+        code = pd.read_csv(get_code_csv_path())[['stock_code', 'list_date2']]
         res_df = self.__market_rank_baidu()
         east = self.__new_sub_east()
         if not east.empty:
             res_df = pd.concat([east, res_df], axis=0, ignore_index=True)
             res_df = res_df.drop_duplicates(subset=['stock_code'], keep='first')
-        return res_df.sort_values('stock_code').reset_index(drop=True)
+        res_df['stock_code'] = res_df['stock_code'].astype(str)
+        code['stock_code'] = code['stock_code'].astype(str).str.zfill(6)
+        df = pd.merge(res_df, code, on='stock_code', how='left')
+        df['list_date'] = df['list_date'].fillna(df['list_date2'])
+        return df.sort_values('stock_code').reset_index(drop=True)[self.__CODE_COLUMNS]
 
     def __market_rank_baidu(self):
         """
@@ -80,7 +88,9 @@ class StockCode(object):
                 continue
         # 4. 封装数据
         rename = {'name': 'short_name', 'code': 'stock_code'}
-        return pd.DataFrame(data=data)[['code', 'name', 'exchange']].rename(columns=rename)[self.__CODE_COLUMNS]
+        df = pd.DataFrame(data=data)[['code', 'name', 'exchange']].rename(columns=rename)
+        df['list_date'] = np.nan
+        return df[self.__CODE_COLUMNS]
 
     @handler_null
     def __new_sub_east(self):
@@ -89,23 +99,30 @@ class StockCode(object):
         https://data.eastmoney.com/xg/xg/default.html
         https://datacenter-web.eastmoney.com/api/data/v1/get?sortColumns=APPLY_DATE,SECURITY_CODE&sortTypes=-1,-1&pageSize=50&pageNumber=1&reportName=RPTA_APP_IPOAPPLY&columns=SECURITY_CODE,SECURITY_NAME&quoteType=0&filter=(APPLY_DATE>'2010-01-01')&source=WEB&client=WEB
         """
-        url = f"https://datacenter-web.eastmoney.com/api/data/v1/get?" \
-              f"sortColumns=APPLY_DATE,SECURITY_CODE&sortTypes=-1,-1&pageSize=50&pageNumber=1&" \
-              f"reportName=RPTA_APP_IPOAPPLY&columns=SECURITY_CODE,SECURITY_NAME,TRADE_MARKET&quoteType=0&" \
-              f"filter=(APPLY_DATE>'2010-01-01')&source=WEB&client=WEB"
-        res_json = requests.request('get', url, headers={}, proxies={}).json()
-        res_data = res_json['result']['data']
         data = []
-        for _ in res_data:
-            exchange = str(_['TRADE_MARKET'])
-            if exchange.startswith('上海'):
-                exchange = 'SH'
-            elif exchange.startswith('深圳'):
-                exchange = 'SZ'
-            elif exchange.startswith('北京'):
-                exchange = 'BJ'
-            data.append({'stock_code': _['SECURITY_CODE'], 'short_name': _['SECURITY_NAME'], 'exchange': exchange})
+        for i in range(100):
+            url = f"https://datacenter-web.eastmoney.com/api/data/v1/get?" \
+                  f"sortColumns=APPLY_DATE,SECURITY_CODE&sortTypes=-1,-1&pageSize=50&pageNumber={i + 1}&" \
+                  f"reportName=RPTA_APP_IPOAPPLY&columns=SECURITY_CODE,SECURITY_NAME,TRADE_MARKET,LISTING_DATE&quoteType=0&" \
+                  f"filter=(APPLY_DATE>'2010-01-01')&source=WEB&client=WEB"
+            res_json = requests.request('get', url, headers={}, proxies={}).json()
+            res_data = res_json['result']['data']
+            for _ in res_data:
+                exchange = str(_['TRADE_MARKET'])
+                if exchange.startswith('上海'):
+                    exchange = 'SH'
+                elif exchange.startswith('深圳'):
+                    exchange = 'SZ'
+                elif exchange.startswith('北京'):
+                    exchange = 'BJ'
+                if _['LISTING_DATE']:
+                    data.append({'stock_code': _['SECURITY_CODE'], 'short_name': _['SECURITY_NAME'],
+                                 'exchange': exchange, 'list_date': _['LISTING_DATE']})
+            # if pd.to_datetime(data[-1]['list_date']) < pd.to_datetime('2023-10-01'):
+            if pd.to_datetime(data[-1]['list_date']) < pd.to_datetime('2020-01-01'):
+                break
         result_df = pd.DataFrame(data=data, columns=self.__CODE_COLUMNS)
+        result_df['list_date'] = pd.to_datetime(result_df['list_date']).dt.date
         return result_df
 
 
