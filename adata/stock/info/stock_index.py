@@ -114,9 +114,9 @@ class StockIndex(object):
         :return:['index_code', 'stock_code', 'short_name']
         """
         # 转换抓取的code,
-        catch_code = rel[index_code] if index_code.startswith('0') else index_code
+        catch_code = rel[index_code] if index_code.startswith('0') and index_code in rel.keys() else index_code
         # 转换指数代码
-        index_code = rel[index_code] if ('A' in index_code or 'B' in index_code or 'C' in index_code) else index_code
+        index_code = rel[index_code] if ('A' in index_code or 'B' in index_code or 'C' in index_code) and index_code in rel.keys() else index_code
         # 1. url拼接页码等参数
         data = []
         total_pages = 1
