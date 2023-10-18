@@ -9,6 +9,7 @@
 """
 
 import pandas as pd
+import numpy as np
 
 from adata.common.headers import baidu_headers
 from adata.common.utils import requests
@@ -76,8 +77,9 @@ class StockDividend(object):
         result_df = result_df.rename(columns=rename_columns)
         # 5. 数据清洗
         result_df = result_df[result_df.dividend_plan != '利润不分配']
+        result_df['ex_dividend_date'] = result_df['ex_dividend_date'].replace('--', np.nan)
         return result_df
 
 
 if __name__ == '__main__':
-    print(StockDividend().get_dividend(stock_code='000001'))
+    print(StockDividend().get_dividend(stock_code='600781'))
