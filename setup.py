@@ -19,7 +19,7 @@ with open("README.md", "r", encoding='utf-8') as f:
 
 requires = [
     "requests>=2.16.0",
-    "pandas>=1.1.5",
+    "pandas>=0.22.0",
     "beautifulsoup4>=4.0.2",
     "py_mini_racer>=0.6.0",
 ]

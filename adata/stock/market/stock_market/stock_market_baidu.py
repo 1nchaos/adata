@@ -77,6 +77,8 @@ class StockMarketBaiDu(StockMarketTemplate):
         rename_columns = {'turnoverratio': 'turnover_ratio', 'preClose': 'pre_close', 'range': 'change',
                           'ratio': 'change_pct', 'time': 'trade_time'}
         result_df = pd.DataFrame(data=data, columns=keys).rename(columns=rename_columns)[self._MARKET_COLUMNS]
+        if result_df.empty:
+            return pd.DataFrame(data=[], columns=self._MARKET_COLUMNS)
         result_df['stock_code'] = stock_code
         result_df['trade_date'] = result_df['trade_time']
         result_df['trade_time'] = pd.to_datetime(result_df['trade_time']).dt.strftime('%Y-%m-%d %H:%M:%S')
