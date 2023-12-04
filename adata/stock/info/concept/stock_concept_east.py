@@ -4,6 +4,9 @@
 东方财富股票概念
 
 https://data.eastmoney.com/bkzj/gn.html
+
+单个股票的所有概念板块
+https://datacenter.eastmoney.com/securities/api/data/v1/get?reportName=RPT_F10_CORETHEME_BOARDTYPE&columns=SECUCODE%2CSECURITY_CODE%2CSECURITY_NAME_ABBR%2CNEW_BOARD_CODE%2CBOARD_NAME%2CSELECTED_BOARD_REASON%2CIS_PRECISE%2CBOARD_RANK%2CBOARD_YIELD%2CDERIVE_BOARD_CODE&quoteColumns=f3~05~NEW_BOARD_CODE~BOARD_YIELD&filter=(SECUCODE%3D%22600138.SH%22)(IS_PRECISE%3D%221%22)&pageNumber=1&pageSize=&sortTypes=1&sortColumns=BOARD_RANK&source=HSF10&client=PC&v=0029565688091059528
 @author: 1nchaos
 @date: 2023/3/30 16:17
 """
@@ -11,6 +14,7 @@ https://data.eastmoney.com/bkzj/gn.html
 import pandas as pd
 
 from adata.common import requests
+from adata.common.utils.code_utils import compile_exchange_by_stock_code
 from adata.stock.info.concept.stock_concept_template import StockConceptTemplate
 
 
@@ -61,7 +65,38 @@ class StockConceptEast(StockConceptTemplate):
         result_df = pd.DataFrame(data=data, columns=self._CONCEPT_CONSTITUENT_COLUMNS)
         return result_df
 
+    def get_concept_east(self, stock_code: str = '000001'):
+        """
+        根据股票代码获取，股票所属的所有的概念信息
+        https://datacenter.eastmoney.com/securities/api/data/v1/get?
+        reportName=RPT_F10_CORETHEME_BOARDTYPE
+        &columns=SECUCODE%2CSECURITY_CODE%2CSECURITY_NAME_ABBR%2CNEW_BOARD_CODE%2CBOARD_NAME%2CSELECTED_BOARD_REASON%2CIS_PRECISE%2CBOARD_RANK%2CBOARD_YIELD%2CDERIVE_BOARD_CODE
+        &quoteColumns=f3~05~NEW_BOARD_CODE~BOARD_YIELD
+        &filter=(SECUCODE%3D%22600138.SH%22)(IS_PRECISE%3D%221%22)
+        &pageNumber=1&pageSize=&sortTypes=1&sortColumns=BOARD_RANK&source=HSF10&client=PC&v=0029565688091059528
+        :param stock_code: 股票代码
+        :return: 概念信息
+        """
+        stock_code = compile_exchange_by_stock_code(stock_code)
+        url = f"https://datacenter.eastmoney.com/securities/api/data/v1/get?" \
+              f"reportName=RPT_F10_CORETHEME_BOARDTYPE&" \
+              f"columns=SECUCODE%2CSECURITY_CODE%2CSECURITY_NAME_ABBR%2CNEW_BOARD_CODE%2CBOARD_NAME%2CSELECTED_BOARD_REASON%2CIS_PRECISE%2CBOARD_RANK%2CBOARD_YIELD%2CDERIVE_BOARD_CODE&" \
+              f"quoteColumns=f3~05~NEW_BOARD_CODE~BOARD_YIELD&" \
+              f"filter=(SECUCODE%3D%22{stock_code}%22)(IS_PRECISE%3D%221%22)&pageNumber=1&pageSize=50&sortTypes=1&" \
+              f"sortColumns=BOARD_RANK&source=HSF10&client=PC"
+        res_json = requests.request('get', url, headers={}, proxies={}).json()
+        res_data = res_json['result']['data']
+        data = []
+        for _ in res_data:
+            # ['stock_code', 'short_name', 'concept_code', 'name', 'reason', 'source']
+            data.append({'stock_code': _['SECURITY_CODE'], 'concept_code': _['NEW_BOARD_CODE'],
+                         'name': _['BOARD_NAME'],
+                         'reason': _['SELECTED_BOARD_REASON'], 'source': '东方财富'})
+        result_df = pd.DataFrame(data=data, columns=self._CONCEPT_INFO_COLUMNS)
+        return result_df
+
 
 if __name__ == '__main__':
     print(StockConceptEast().all_concept_code_east())
     print(StockConceptEast().concept_constituent_east(concept_code="BK0637"))
+    print(StockConceptEast().get_concept_east(stock_code="600020").to_string())
