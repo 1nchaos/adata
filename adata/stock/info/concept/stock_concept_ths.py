@@ -6,6 +6,8 @@
 概念，指数成分
 来源于同花顺
 http://q.10jqka.com.cn/gn
+
+https://basic.10jqka.com.cn/000002/concept.html?cid=308717#ifind
 @author: 1nchaos
 @date: 2023/3/30 16:17
 """
@@ -255,6 +257,34 @@ class StockConceptThs(StockConceptTemplate):
         data.clear()
         return result_df[self._CONCEPT_CONSTITUENT_COLUMNS]
 
+    def get_concept_ths(self, stock_code: str = '000001'):
+        """
+        根据股票代码获取，股票所属的所有的概念信息
+        https://basic.10jqka.com.cn/300033/concept.html
+        :param stock_code: 股票代码
+        :return: 概念信息
+        """
+        url = f"https://basic.10jqka.com.cn/{stock_code}/concept.html"
+        headers = ths_headers.text_headers
+        headers['Host'] = 'basic.10jqka.com.cn'
+        res = requests.request('get', url, headers=headers, proxies={})
+        # 3. 解析数据
+        text = res.content.decode('gbk')
+        soup = BeautifulSoup(text, 'html.parser')
+        table = soup.find('table', attrs={'class': 'gnContent'})
+        trs = table.tbody.find_all('tr')
+        data = []
+        for i in range(0, len(trs), 2):
+            columns = trs[i].find_all('td')
+            data.append({'stock_code': stock_code, 'concept_code': columns[1].get('clid'),
+                         'name': columns[1].text,
+                         'reason': trs[i + 1].text, 'source': '同花顺'})
+        result_df = pd.DataFrame(data=data, columns=self._CONCEPT_INFO_COLUMNS)
+        result_df.replace(to_replace=[r'\t', r'\n', ' '], value='', regex=True, inplace=True)
+        return result_df
+
 
 if __name__ == '__main__':
-    print(StockConceptThs().all_concept_code_ths())
+    # print(StockConceptThs().all_concept_code_ths())
+    print(StockConceptThs().get_concept_ths(stock_code='300033')[
+              ['stock_code', 'concept_code', 'name', 'source','reason']].to_string())

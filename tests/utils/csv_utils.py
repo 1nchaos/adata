@@ -12,7 +12,7 @@ import adata
 
 def calendar_csv():
     for i in range(20):
-        year = 2013 - i
+        year = 2024 - i
         df = adata.stock.info.trade_calendar(year=year)
         df.to_csv(f'{year}.csv', index=False)
 
@@ -28,4 +28,4 @@ def code_csv():
 
 
 if __name__ == '__main__':
-    code_csv()
+    calendar_csv()

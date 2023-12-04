@@ -134,21 +134,23 @@ print(res_df)
 
 #### 	1. 基本信息
 
-| 数据             | API                                   | 说明                                   | 备注                                                      |
-| ---------------- | ------------------------------------- | -------------------------------------- | --------------------------------------------------------- |
-| A股代码          | stock.info.all_code()                 | 所有A股代码信息                        |                                                           |
-| **概念**         |                                       |                                        |                                                           |
-| 来源：同花顺     |                                       |                                        |                                                           |
-| 概念代码         | stock.info.all_concept_code_ths()     | 所有A股概念代码信息（同花顺）          | 来源：同花顺公开数据                                      |
-| 概念成分列表     | stock.info.concept_constituent_ths()  | 获取同花顺概念指数的成分股（同花顺）   | 注意：返回结果只有股票代码和股票简称，可根据概念名称查询  |
-| 来源：东方财富   |                                       |                                        |                                                           |
-| 概念代码         | stock.info.all_concept_code_east()    | 所有A股概念代码信息（东方财富）        | 来源：[东方财富](https://data.eastmoney.com/bkzj/gn.html) |
-| 概念成分列表     | stock.info.concept_constituent_east() | 获取同花顺概念指数的成分股（东方财富） | 注意：返回结果只有股票代码和股票简称，可根据概念名称查询  |
-| **指数**         |                                       |                                        |                                                           |
-| 指数代码         | stock.info.all_index_code()           | 获取所有A股市场的指数代码              | 来源同花顺，可能存在同花顺对代码重新编码的情况            |
-| 指数对应的成分股 | stock.info.index_constituent()        | 获取对应指数的成分股列表               |                                                           |
-| **其它**         |                                       |                                        |                                                           |
-| 股票交易日历     | stock.info.trade_calendar()           | 获取股票交易日信息                     | 来源：深交所                                              |
+| 数据             | API                                   | 说明                                   | 备注                                                         |
+| ---------------- | ------------------------------------- | -------------------------------------- | ------------------------------------------------------------ |
+| A股代码          | stock.info.all_code()                 | 所有A股代码信息                        |                                                              |
+| **概念**         |                                       |                                        |                                                              |
+| 来源：同花顺     |                                       |                                        |                                                              |
+| 概念代码         | stock.info.all_concept_code_ths()     | 所有A股概念代码信息（同花顺）          | 来源：同花顺公开数据                                         |
+| 概念成分列表     | stock.info.concept_constituent_ths()  | 获取同花顺概念指数的成分股（同花顺）   | 注意：返回结果只有股票代码和股票简称，可根据概念名称查询     |
+| 股票所属概念     | stock.info.get_concept_ths()          | 获取单只股票所属的概念板块             | [F10](https://basic.10jqka.com.cn/300033/concept.html)       |
+| 来源：东方财富   |                                       |                                        |                                                              |
+| 概念代码         | stock.info.all_concept_code_east()    | 所有A股概念代码信息（东方财富）        | 来源：[东方财富](https://data.eastmoney.com/bkzj/gn.html)    |
+| 概念成分列表     | stock.info.concept_constituent_east() | 获取同花顺概念指数的成分股（东方财富） | 注意：返回结果只有股票代码和股票简称，可根据概念名称查询     |
+| 股票所属概念     | stock.info.get_concept_east()         | 获取单只股票所属的概念板块             | [核心题材](https://emweb.securities.eastmoney.com/pc_hsf10/pages/index.html?type=web&code=SZ300059&color=b#/hxtc) |
+| **指数**         |                                       |                                        |                                                              |
+| 指数代码         | stock.info.all_index_code()           | 获取所有A股市场的指数代码              | 来源同花顺，可能存在同花顺对代码重新编码的情况               |
+| 指数对应的成分股 | stock.info.index_constituent()        | 获取对应指数的成分股列表               |                                                              |
+| **其它**         |                                       |                                        |                                                              |
+| 股票交易日历     | stock.info.trade_calendar()           | 获取股票交易日信息                     | 来源：深交所                                                 |
 
 #### 	2. 行情信息
 
@@ -252,8 +254,8 @@ print(res_df)
 
 > 对于项目有支持，包括但不仅限：内容贡献，bug提交，思想交流等等，对项目有影响的个人和机构
 
-| Simon | [bigbigbigfish](https://github.com/bigbigbigfish) | [LuneZ99](https://github.com/LuneZ99) | 匿名用户 | thue | [Triones009](https://github.com/Triones009) | [lzd-1230](https://github.com/lzd-1230) |      |
-| ----- | ------------------------------------------------- | ------------------------------------- | -------- | ---- | ------------------------------------------- | --------------------------------------- | ---- |
+| Simon | [bigbigbigfish](https://github.com/bigbigbigfish) | [LuneZ99](https://github.com/LuneZ99) | 匿名用户 | thue | [Triones009](https://github.com/Triones009) | [lzd-1230](https://github.com/lzd-1230) | [hanxuanliang](https://github.com/hanxuanliang) |
+| ----- | ------------------------------------------------- | ------------------------------------- | -------- | ---- | ------------------------------------------- | --------------------------------------- | ----------------------------------------------- |
 
 ----------------------------------------------------------------------
 
