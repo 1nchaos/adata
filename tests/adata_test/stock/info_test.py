@@ -28,7 +28,7 @@ class InfoTestCase(unittest.TestCase):
 
     def test_trade_calendar(self):
         print("开始测试：test_trade_calendar")
-        df = adata.stock.info.trade_calendar(year=2023)
+        df = adata.stock.info.trade_calendar(year=2024)
         print(df)
         self.assertEqual(True, len(df) > 360)
 
