@@ -8,6 +8,10 @@
 http://q.10jqka.com.cn/gn
 
 https://basic.10jqka.com.cn/000002/concept.html?cid=308717#ifind
+
+https://d.10jqka.com.cn/v4/stockblock/hs_600769/last.js
+https://m.10jqka.com.cn/stockpage/hs_600769/#&atab=pankou
+
 @author: 1nchaos
 @date: 2023/3/30 16:17
 """
