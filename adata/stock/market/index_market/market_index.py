@@ -50,6 +50,6 @@ class StockMarketIndex(object):
 
 
 if __name__ == '__main__':
-    print(StockMarketIndex().get_market_index(index_code='000001', start_date='2022-12-01'))
+    print(StockMarketIndex().get_market_index(index_code='000001', start_date='2022-12-01', k_type=1))
     print(StockMarketIndex().get_market_index_min(index_code='000001'))
     print(StockMarketIndex().get_market_index_current(index_code='000001'))
