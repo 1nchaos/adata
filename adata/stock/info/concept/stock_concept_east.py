@@ -85,6 +85,11 @@ class StockConceptEast(StockConceptTemplate):
               f"filter=(SECUCODE%3D%22{stock_code}%22)(IS_PRECISE%3D%221%22)&pageNumber=1&pageSize=50&sortTypes=1&" \
               f"sortColumns=BOARD_RANK&source=HSF10&client=PC"
         res_json = requests.request('get', url, headers={}, proxies={}).json()
+        # 1. 返回结果判断
+        if not res_json['success']:
+            return pd.DataFrame(data=[], columns=self._CONCEPT_INFO_COLUMNS)
+
+        # 2. 正常返回数据结果封装
         res_data = res_json['result']['data']
         data = []
         for _ in res_data:
