@@ -271,6 +271,7 @@ print(res_df)
     <img width="180" src="./docs/wx.jpg" alt="logo">
   </a>
 </p>
+
 - 添加wx好友，备注：Adata量化进交流群；
 - 群最近建立人较少，意在提供一个交流的平台；
 - 一起保卫3000点。
