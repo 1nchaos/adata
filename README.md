@@ -1,7 +1,7 @@
-# [AData](https://adata.1nchaos.com)
+# [AData](https://adata.30006124.xyz)
 
 <p align="center">
-  <a href="https://adata.1nchaos.com/" target="_blank">
+  <a href="https://adata.30006124.xyz/" target="_blank">
     <img width="180" src="./docs/AData200x200.png" alt="logo">
   </a>
 </p>
@@ -10,7 +10,7 @@
 
 
 
-## 0、[介绍](https://adata.1nchaos.com/idea.html)
+## 0、[介绍](https://adata.30006124.xyz/idea.html)
 > 专注A股，专注量化，向阳而生；开放、纯净、持续、为Ai(爱)发电。
 >
 > 专注股票行情数据，为了保证数据的高可用性，采用多数据源融合切换。
@@ -19,7 +19,7 @@
 
 **市场寒冷，发热不易，坚持更难；如有帮助到你，右上角点 ⭐Star 一键三连，谢谢支持和收藏^_^**
 
-## 一、[快速开始](https://adata.1nchaos.com/quickStart.html)
+## 一、[快速开始](https://adata.30006124.xyz/quickStart.html)
 
 ### （1）安装sdk
 
@@ -102,7 +102,7 @@ print(res_df)
 
 请参考下面数据列表和相关字典文档，找到对应的函数并查看对应的函数注释，进行正确使用。
 
-- [数据字典](https://adata.1nchaos.com/dic/stockInfo.html) 
+- [数据字典](https://adata.30006124.xyz/dic/stockInfo.html) 
 
 ####  4. 代理设置
 
@@ -123,12 +123,12 @@ print(res_df)
 - proxy_url: 获取代理Ip的链接；ip和proxy_url方式选择其一；
 - 每次请求获取一次，为节省ip资源建议使用自建的代理池。
 
-## 二、[数据列表](https://adata.1nchaos.com/dic/dataList.html)
+## 二、[数据列表](https://adata.30006124.xyz/dic/dataList.html)
 
 整理了最新版本的数据列表和相关使用Api，详细内容和相关使用参数，请参考数据字典文档。
 
-- [数据列表](https://adata.1nchaos.com/dic/dataList.html) 
-- [数据字典](https://adata.1nchaos.com/dic/stockInfo.html)
+- [数据列表](https://adata.30006124.xyz/dic/dataList.html) 
+- [数据字典](https://adata.30006124.xyz/dic/stockInfo.html)
 
 ### （1）股票-Stock
 
@@ -201,7 +201,7 @@ print(res_df)
 |                          | sentiment.north.north_flow()         | 获取北向资金历史流入行情                   |                                                              |
 | 其它数据排期中           | TODO                                 | 若您有相关资源可以一起参与贡献             |                                                              |
 
-## 三、[数据源](https://adata.1nchaos.com/dataSource.html)
+## 三、[数据源](https://adata.30006124.xyz/dataSource.html)
 
 | 数据源     | 板块                                                         | 描述             |
 | ---------- | ------------------------------------------------------------ | ---------------- |
@@ -240,7 +240,7 @@ print(res_df)
 **注：**
 
 - 永久免费开源A股数据库，只有交易相关的数据，专注量化交易。
-- 送给A股的各位朋友一首歌：[谢天笑-向阳花](https://adata.1nchaos.com/向阳花.html)，愿你我向阳而生。
+- 送给A股的各位朋友一首歌：[谢天笑-向阳花](https://adata.30006124.xyz/向阳花.html)，愿你我向阳而生。
 
 ## 参与贡献
 
@@ -254,9 +254,9 @@ print(res_df)
 
 > 对于项目有支持，包括但不仅限：内容贡献，bug提交，思想交流等等，对项目有影响的个人和机构
 
-| Simon                                         | [bigbigbigfish](https://github.com/bigbigbigfish) | [LuneZ99](https://github.com/LuneZ99) | 匿名用户 | thue | [Triones009](https://github.com/Triones009) |
-| --------------------------------------------- | ------------------------------------------------- | ------------------------------------- | -------- | ---- | ------------------------------------------- |
-| [LeslieWuboy](https://github.com/LeslieWuboy) |                                                   |                                       |          |      |                                             |
+| Simon | [bigbigbigfish](https://github.com/bigbigbigfish) | [LuneZ99](https://github.com/LuneZ99) | 匿名用户 | thue | [Triones009](https://github.com/Triones009) | **[adaaaaaa](https://github.com/adaaaaaa)** | **[LeslieWuboy](https://github.com/LeslieWuboy)** |
+| ----- | ------------------------------------------------- | ------------------------------------- | -------- | ---- | ------------------------------------------- | ------------------------------------------- | ------------------------------------------------- |
+|       |                                                   |                                       |          |      |                                             |                                             |                                                   |
 
 ----------------------------------------------------------------------
 
@@ -264,3 +264,14 @@ print(res_df)
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=1nchaos/adata&type=Date)](https://star-history.com/#1nchaos/adata&Date)
+
+## 欢迎进行交流
+<p align="center">
+  <a href="https://adata.30006124.xyz/" target="_blank">
+    <img width="180" src="./docs/wx.jpg" alt="logo">
+  </a>
+</p>
+
+- 添加wx好友，备注：Adata量化进交流群；
+- 群最近建立人较少，意在提供一个交流的平台；
+- 一起保卫3000点。
