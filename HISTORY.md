@@ -1,7 +1,7 @@
 Release History
 ===============
 
-![logo](https://adata.1nchaos.com/favicon.ico)[AData](https://github.com/1nchaos/adata)
+![logo](https://adata.30006124.xyz/favicon.ico)[AData](https://github.com/1nchaos/adata)
 
 master
 ------
