@@ -1,13 +1,18 @@
 Release History
 ===============
 
-![logo](https://adata.1nchaos.com/favicon.ico)[AData](https://github.com/1nchaos/adata)
+![logo](https://adata.30006124.xyz/favicon.ico)[AData](https://github.com/1nchaos/adata)
 
 master
 ------
 开放、纯净、持续
 
 专注股票量化数据，为Ai(爱)发电，向阳而生。
+
+2.0.0b0 (2024-04-17)
+------------------
+1. 新增：基金ETF行情接口。
+
 
 1.2.4 (2024-02-02)
 ------------------

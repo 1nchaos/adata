@@ -7,12 +7,14 @@
 """
 
 from adata.fund.info import info
+from adata.fund.market import market
 
 
 class Fund(object):
 
     def __init__(self) -> None:
         self.info = info
+        self.market = market
 
 
 fund = Fund()
