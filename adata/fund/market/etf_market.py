@@ -51,3 +51,9 @@ class ETFMarket(object):
         成交额：元 16959251000.000 169.6亿
         """
         return self.ths.get_market_etf_current_ths(fund_code, k_type)
+
+
+if __name__ == '__main__':
+    print(ETFMarket().get_market_etf(fund_code='512880', start_date='2024-01-01'))
+    print(ETFMarket().get_market_etf_min(fund_code='512880'))
+    print(ETFMarket().get_market_etf_current(fund_code='512880'))
