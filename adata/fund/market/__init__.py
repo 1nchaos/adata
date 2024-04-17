@@ -12,3 +12,13 @@ https://xueqiu.com
 @time: 2023/6/5
 @log: change log
 """
+from adata.fund.market.etf_market import ETFMarket
+
+
+class Market(ETFMarket):
+
+    def __init__(self) -> None:
+        super().__init__()
+
+
+market = Market()

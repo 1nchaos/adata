@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-VERSION = (1, 2, 4)
-PRERELEASE = None  # alpha, beta or rc
+VERSION = (2, 0, 0)
+PRERELEASE = 'beta'  # alpha, beta or rc
 REVISION = None
 
 
