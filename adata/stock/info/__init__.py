@@ -8,10 +8,11 @@
 from adata.stock.info.stock_code import StockCode
 from adata.stock.info.concept.stock_concept import StockConcept
 from adata.stock.info.stock_index import StockIndex
+from adata.stock.info.stock_info import StockInfo
 from adata.stock.info.trade_calendar import TradeCalendar
 
 
-class Info(StockCode, StockConcept, TradeCalendar, StockIndex):
+class Info(StockCode, StockConcept, TradeCalendar, StockIndex, StockInfo):
 
     def __init__(self) -> None:
         super().__init__()
