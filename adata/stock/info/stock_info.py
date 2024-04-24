@@ -8,7 +8,6 @@
 import pandas as pd
 
 from adata.common import requests
-
 from adata.common.utils.code_utils import compile_exchange_by_stock_code
 
 
@@ -36,13 +35,15 @@ class StockInfo(object):
         for _ in res_data:
             data.append({'stock_code': _['SECURITY_CODE'], 'change_date': _['END_DATE'],
                          'total_shares': _['TOTAL_SHARES'],
-                         'limit_shares': _['LIMITED_SHARES'], 'list_a_shares': _['LISTED_A_SHARES'],
+                         'limit_shares': _['LIMITED_SHARES'],
+                         'list_a_shares': int(_['LISTED_A_SHARES']) if _['LISTED_A_SHARES'] else _['LISTED_A_SHARES'],
                          'change_reason': _['CHANGE_REASON']})
         result_df = pd.DataFrame(data=data, columns=self.__STOCK_SHARES_COLUMNS)
         if not is_history:
             result_df = result_df.iloc[0:1]
+        result_df['change_date'] = pd.to_datetime(result_df['change_date']).dt.strftime('%Y-%m-%d')
         return result_df
 
 
 if __name__ == '__main__':
-    print(StockInfo().get_stock_shares(stock_code='688192', is_history=False))
+    print(StockInfo().get_stock_shares(stock_code='600001', is_history=True))
