@@ -80,6 +80,12 @@ class InfoTestCase(unittest.TestCase):
         print(df)
         self.assertEqual(True, len(df) > 10)
 
+    def test_get_stock_shares_history(self):
+        print("开始测试：get_stock_shares_history")
+        df = adata.stock.info.get_stock_shares(stock_code="000033")
+        print(df)
+        self.assertEqual(True, len(df) > 2)
+
 
 if __name__ == '__main__':
     unittest.main()

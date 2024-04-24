@@ -48,7 +48,7 @@ class ETFMarketThs(BaseThs, ETFMarketTemplate):
         for d in data_list:
             data.append(str(d).split(',')[0:7])
         result_df = pd.DataFrame(data=data, columns=['trade_date', 'open', 'high', 'low', 'close', 'volume', 'amount'])
-        result_df['index_code'] = fund_code
+        result_df['fund_code'] = fund_code
         result_df['trade_time'] = pd.to_datetime(result_df['trade_date']).dt.strftime('%Y-%m-%d %H:%M:%S')
         result_df['trade_date'] = pd.to_datetime(result_df['trade_date'], format='%Y%m%d').dt.strftime('%Y-%m-%d')
         result_df['close'] = result_df['close'].astype(float)
@@ -92,7 +92,7 @@ class ETFMarketThs(BaseThs, ETFMarketTemplate):
             data.append(str(d).split(','))
         # 3. 封装数据
         result_df = pd.DataFrame(data=data, columns=['trade_time', 'price', 'amount', 'avg_price', 'volume'])
-        result_df['index_code'] = fund_code
+        result_df['fund_code'] = fund_code
         result_df['trade_time'] = trade_date + result_df['trade_time']
         result_df['trade_date'] = pd.to_datetime(trade_date, format='%Y%m%d').strftime('%Y-%m-%d')
         result_df['trade_time'] = pd.to_datetime(result_df['trade_time'], format='%Y%m%d%H%M').dt.strftime(
@@ -139,7 +139,7 @@ class ETFMarketThs(BaseThs, ETFMarketTemplate):
             '%Y-%m-%d %H:%M:%S')
         columns = ['trade_time', 'trade_date', 'open', 'high', 'low', 'price', 'volume', 'amount']
         result_df = result_df[columns]
-        result_df['index_code'] = fund_code
+        result_df['fund_code'] = fund_code
         result_df['trade_date'] = pd.to_datetime(result_df['trade_date'], format='%Y%m%d').dt.strftime('%Y-%m-%d')
         result_df['change'] = None
         result_df['change_pct'] = None
