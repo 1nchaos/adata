@@ -263,9 +263,9 @@ print(res_df)
 
 > 对于项目有支持，包括但不仅限：内容贡献，bug提交，思想交流等等，对项目有影响的个人和机构
 
-| Simon | [bigbigbigfish](https://github.com/bigbigbigfish) | [LuneZ99](https://github.com/LuneZ99) | 匿名用户 | thue | [Triones009](https://github.com/Triones009) | **[adaaaaaa](https://github.com/adaaaaaa)** | **[LeslieWuboy](https://github.com/LeslieWuboy)** |
-| ----- | ------------------------------------------------- | ------------------------------------- | -------- | ---- | ------------------------------------------- | ------------------------------------------- | ------------------------------------------------- |
-|       |                                                   |                                       |          |      |                                             |                                             |                                                   |
+| Simon                                 | [bigbigbigfish](https://github.com/bigbigbigfish) | [LuneZ99](https://github.com/LuneZ99) | 匿名用户 | thue | [Triones009](https://github.com/Triones009) | **[adaaaaaa](https://github.com/adaaaaaa)** | **[LeslieWuboy](https://github.com/LeslieWuboy)** |
+| ------------------------------------- | ------------------------------------------------- | ------------------------------------- | -------- | ---- | ------------------------------------------- | ------------------------------------------- | ------------------------------------------------- |
+| [yxm0513](https://github.com/yxm0513) |                                                   |                                       |          |      |                                             |                                             |                                                   |
 
 ----------------------------------------------------------------------
 
