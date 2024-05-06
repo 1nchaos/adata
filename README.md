@@ -193,10 +193,10 @@ print(res_df)
 
 ### （3）债券-Bond
 
-| 数据           | API                          | 说明                                | 备注                                                   |
-| -------------- | ---------------------------- | ----------------------------------- | ------------------------------------------------------ |
-| 可转债代码     | bond.info.all_convert_code() | 获取所有A股市场的可转换债券代码信息 | 来源：1. [同花顺](http://data.10jqka.com.cn/ipo/bond/) |
-| 其它数据排期中 | TODO                         | 若您有相关资源可以一起参与贡献      |                                                        |
+| 数据       | API                               | 说明                                | 备注                                                   |
+| ---------- | --------------------------------- | ----------------------------------- | ------------------------------------------------------ |
+| 可转债代码 | bond.info.all_convert_code()      | 获取所有A股市场的可转换债券代码信息 | 来源：1. [同花顺](http://data.10jqka.com.cn/ipo/bond/) |
+| 可转债行情 | bond.market.list_market_current() | 获取A股市场的可转换债券最新行情     | 来源：新浪                                             |
 
 ### （4）舆情
 
@@ -208,6 +208,9 @@ print(res_df)
 |                          | sentiment.north.north_flow_current() | 获取北向资金（沪深港通）当前流入资金的行情 | 来源：1.[东方财富](https://data.eastmoney.com/hsgt/index.html) |
 |                          | sentiment.north.north_flow_min()     | 获取北向资金分时行情                       |                                                              |
 |                          | sentiment.north.north_flow()         | 获取北向资金历史流入行情                   |                                                              |
+| **热度榜单**             | sentiment.hot.pop_rank_100_east      | 东方财富人气100榜单                        | 来源：[东方财富](http://guba.eastmoney.com/rank/)            |
+|                          | sentiment.hot.hot_rank_100_ths()     | 同花顺热度100排行榜                        | 来源：[同花顺](https://dq.10jqka.com.cn/fuyao/hot_list_data/out/hot_list/v1/stock?stock_type=a&type=hour&list_type=normal) |
+|                          | sentiment.hot.hot_concept_20_ths()   | 同花顺热门概念板块20排行榜                 | 来源：[同花顺](https://dq.10jqka.com.cn/fuyao/hot_list_data/out/hot_list/v1/stock?stock_type=a&type=hour&list_type=normal) |
 | 其它数据排期中           | TODO                                 | 若您有相关资源可以一起参与贡献             |                                                              |
 
 ## 三、[数据源](https://adata.30006124.xyz/dataSource.html)
@@ -263,9 +266,9 @@ print(res_df)
 
 > 对于项目有支持，包括但不仅限：内容贡献，bug提交，思想交流等等，对项目有影响的个人和机构
 
-| Simon                                 | [bigbigbigfish](https://github.com/bigbigbigfish) | [LuneZ99](https://github.com/LuneZ99) | 匿名用户 | thue | [Triones009](https://github.com/Triones009) | **[adaaaaaa](https://github.com/adaaaaaa)** | **[LeslieWuboy](https://github.com/LeslieWuboy)** |
-| ------------------------------------- | ------------------------------------------------- | ------------------------------------- | -------- | ---- | ------------------------------------------- | ------------------------------------------- | ------------------------------------------------- |
-| [yxm0513](https://github.com/yxm0513) |                                                   |                                       |          |      |                                             |                                             |                                                   |
+| Simon                                 | [bigbigbigfish](https://github.com/bigbigbigfish) | [LuneZ99](https://github.com/LuneZ99)         | 匿名用户 | thue | [Triones009](https://github.com/Triones009) | **[adaaaaaa](https://github.com/adaaaaaa)** | **[LeslieWuboy](https://github.com/LeslieWuboy)** | [yinzhengxin](https://github.com/yinzhengxin) |
+| ------------------------------------- | ------------------------------------------------- | --------------------------------------------- | -------- | ---- | ------------------------------------------- | ------------------------------------------- | ------------------------------------------------- | --------------------------------------------- |
+| [yxm0513](https://github.com/yxm0513) | [hanxuanliang](https://github.com/hanxuanliang)   | [akihara-sam](https://github.com/akihara-sam) |          |      |                                             |                                             |                                                   |                                               |
 
 ----------------------------------------------------------------------
 

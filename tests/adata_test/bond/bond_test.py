@@ -32,6 +32,12 @@ class BondTestCase(unittest.TestCase):
         print(df)
         self.assertEqual(True, len(df) > 200)
 
+    def test_list_market_current(self):
+        print("开始测试：list_market_current")
+        df = adata.bond.market.list_market_current()
+        print(df)
+        self.assertEqual(True, len(df) > 200)
+
 
 if __name__ == '__main__':
     unittest.main()

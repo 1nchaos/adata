@@ -33,7 +33,7 @@ class BondMarketSina(BondMarketTemplate):
         data = []
         for i in range(100):
             # 1.请求接口
-            params = {"page": {i}, "num": "80", "sort": "symbol",
+            params = {"page": {i+1}, "num": "80", "sort": "symbol",
                       "asc": "1", "node": "hskzz_z", "_s_r_a": "page"}
             res = requests.request('get', api_url, params=params)
             res = res.json()
@@ -53,9 +53,10 @@ class BondMarketSina(BondMarketTemplate):
         result_df = pd.DataFrame(data=data).rename(columns=rename)
         columns_to_convert = ['price', 'open', 'high', 'low', 'pre_close', 'change', 'change_pct', 'volume', 'amount']
         result_df[columns_to_convert] = result_df[columns_to_convert].astype(float)
-        return result_df[self._MARKET_CURRENT_COLUMNS]
+        result_df_unique = result_df.drop_duplicates(keep='last', subset=['bond_code'])
+        return result_df_unique[self._MARKET_CURRENT_COLUMNS]
 
 
 if __name__ == '__main__':
-    df = BondMarketSina().list_market_current()
+    df = BondMarketSina().list_market_current(code_list=['110044', '127103'])
     print(df)
