@@ -31,6 +31,24 @@ class SentimentTestCase(unittest.TestCase):
         print(df)
         self.assertEqual(True, len(df) > 250)
 
+    def test_hot_rank_100_ths(self):
+        print("开始测试：hot_rank_100_ths")
+        df = adata.sentiment.hot.hot_rank_100_ths()
+        print(df)
+        self.assertEqual(True, len(df) == 100)
+
+    def test_pop_rank_100_east(self):
+        print("开始测试：pop_rank_100_east")
+        df = adata.sentiment.hot.pop_rank_100_east()
+        print(df)
+        self.assertEqual(True, len(df) == 100)
+
+    def test_hot_concept_20_ths(self):
+        print("开始测试：hot_concept_20_ths")
+        df = adata.sentiment.hot.hot_concept_20_ths()
+        print(df)
+        self.assertEqual(True, len(df) == 20)
+
 
 if __name__ == '__main__':
     unittest.main()
