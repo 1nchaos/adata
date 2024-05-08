@@ -278,8 +278,13 @@ print(res_df)
   <a href="https://adata.30006124.xyz/" target="_blank">
     <img width="180" src="./docs/wx.jpg" alt="logo">
   </a>
+  <a href="https://adata.30006124.xyz/" target="_blank">
+    <img width="400" src="./docs/xyhcl-gzh.png" alt="logo">
+  </a>
 </p>
 
 - 添加wx好友，备注：Adata量化进交流群；
-- 群最近建立，意在提供一个交流的平台，欢迎讨论交流；
+- 扫码关注向阳花策略，不定期分享量化的知识，一起实盘量化切磋；
+- 创始交流群和公众号都是近期建立，意在提供一个交流的平台，欢迎讨论交流；
 - 一起保卫3000点直到突破6124点。
+
