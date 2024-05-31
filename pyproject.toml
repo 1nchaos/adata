@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "adata"
+version = "2.1.0"
+description = "专注A股, 专注量化, 向阳而生; 开放、纯净、持续、为Ai(爱)发电。"
+authors = ["1nchaos<9527@1nchaos.com>"]
+license = "Apache License"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+requests = ">=2.16.0"
+pandas = ">=0.22.0"
+beautifulsoup4 = ">=4.0.2"
+py-mini-racer = ">=0.6.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
