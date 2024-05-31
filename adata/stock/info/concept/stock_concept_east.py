@@ -139,7 +139,7 @@ class StockConceptEast(StockConceptTemplate):
         res_json = requests.request("get", url, headers={}, proxies={}).json()
         # 1. 返回结果判断
         if not res_json["success"]:
-            return pd.DataFrame(data=[], columns=self._CONCEPT_INFO_COLUMNS)
+            return pd.DataFrame(data=[], columns=self._BOARD_INFO_COLUMNS)
 
         # 2. 正常返回数据结果封装
         res_data = res_json["result"]["data"]
