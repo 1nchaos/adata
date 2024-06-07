@@ -10,41 +10,41 @@ https://data.eastmoney.com/zjlx/600519.html
 @log: change log
 """
 
-import time
-
-import numpy as np
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
 
-def get_html_source_code(url):
-    # 初始化playwright
-    with sync_playwright() as p:
-        # 启动浏览器并创建一个页面
-        browser = p.chromium.launch()
-        page = browser.new_page()
-
-        # 打开目标网页
-        page.goto(url)
-
-        # 等待页面加载完成，可以根据实际情况调整等待条件
-        page.wait_for_load_state()
-
-        # 读取并打印网页源代码
-        source_code = page.content()
-        #print(source_code)        
-
-        # 关闭浏览器
-        browser.close()
-        
-        return source_code
 
 class StockCapitalFlows(object):
     
     
     def __init__(self) -> None:
         super().__init__()
+    
+    @classmethod
+    def get_html_source_code(cls, url):
+        # 初始化playwright
+        with sync_playwright() as p:
+            # 启动浏览器并创建一个页面
+            browser = p.chromium.launch()
+            page = browser.new_page()
+
+            # 打开目标网页
+            page.goto(url)
+
+            # 等待页面加载完成，可以根据实际情况调整等待条件
+            page.wait_for_load_state()
+
+            # 读取并打印网页源代码
+            source_code = page.content()
+            #print(source_code)        
+
+            # 关闭浏览器
+            browser.close()
+            
+        return source_code
+
         
     def get_inflow(self,stock_code):
         __INFLOW_COLUMNS = ['stock_code', 
@@ -76,7 +76,7 @@ class StockCapitalFlows(object):
         # 检查请求是否成功
         if response.status_code == 200:
             
-            source_code=get_html_source_code(url)
+            source_code=self.get_html_source_code(url)
             # 使用BeautifulSoup解析HTML内容
             soup = BeautifulSoup(source_code, 'html.parser')
             
