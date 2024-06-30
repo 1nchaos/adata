@@ -11,18 +11,10 @@ https://push2his.eastmoney.com/api/qt/stock/fflow/daykline/get?cb=jQuery11230366
 @log: change log
 """
 
+from adata.stock.market.capital_flow.stock_capital_flow_template import StockCapitalFlowTemplate
 
-class StockCapitalFlowTemplate(object):
-    """股票资金流向"""
-    _FLOW_MIN_COLUMNS = ['stock_code', 'trade_time', 'main_net_inflow', 'sm_net_inflow', 'mid_net_inflow',
-                         'lg_net_inflow', 'max_net_inflow']
-    # _FLOW_COLUMNS = ['stock_code', 'trade_date', 'main_net_inflow', 'sm_net_inflow', 'mid_net_inflow',
-    #                  'lg_net_inflow', 'max_net_inflow',
-    #                  'main_net_inflow_rate', 'sm_net_inflow_rate', 'mid_net_inflow_rate',
-    #                  'lg_net_inflow_rate', 'max_net_inflow_rate']
 
-    _FLOW_COLUMNS = ['stock_code', 'trade_date', 'main_net_inflow', 'sm_net_inflow', 'mid_net_inflow',
-                     'lg_net_inflow', 'max_net_inflow']
+class StockCapitalFlowBaidu(StockCapitalFlowTemplate):
 
     def get_capital_flow_min(self, stock_code: str = '000001'):
         """
@@ -30,8 +22,7 @@ class StockCapitalFlowTemplate(object):
         :param stock_code: 股票代码
         :return: 当日分钟资金流向
         """
-
-    pass
+        pass
 
     def get_capital_flow(self, stock_code: str = '000001'):
         """
@@ -41,3 +32,8 @@ class StockCapitalFlowTemplate(object):
         :return: 资金流向-日度
         """
         pass
+
+
+if __name__ == '__main__':
+    print(StockCapitalFlowBaidu().get_capital_flow_min(stock_code='000001'))
+    print(StockCapitalFlowBaidu().get_capital_flow(stock_code='000001'))

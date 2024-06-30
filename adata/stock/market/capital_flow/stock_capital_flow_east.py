@@ -13,23 +13,12 @@ https://push2his.eastmoney.com/api/qt/stock/fflow/daykline/get?cb=jQuery11230366
 import pandas as pd
 
 from adata.common.utils import requests
+from adata.stock.market.capital_flow.stock_capital_flow_template import StockCapitalFlowTemplate
 
 
-class StockCapitalFlow(object):
-    """股票资金流向"""
-    _FLOW_MIN_COLUMNS = ['stock_code', 'trade_time', 'main_net_inflow', 'sm_net_inflow', 'mid_net_inflow',
-                         'lg_net_inflow', 'max_net_inflow']
-    # _FLOW_COLUMNS = ['stock_code', 'trade_date', 'main_net_inflow', 'sm_net_inflow', 'mid_net_inflow',
-    #                  'lg_net_inflow', 'max_net_inflow',
-    #                  'main_net_inflow_rate', 'sm_net_inflow_rate', 'mid_net_inflow_rate',
-    #                  'lg_net_inflow_rate', 'max_net_inflow_rate']
+class StockCapitalFlowEast(StockCapitalFlowTemplate):
 
-    _FLOW_COLUMNS = ['stock_code', 'trade_date', 'main_net_inflow', 'sm_net_inflow', 'mid_net_inflow',
-                     'lg_net_inflow', 'max_net_inflow',
-                     'main_net_inflow_rate', 'sm_net_inflow_rate', 'mid_net_inflow_rate',
-                     'lg_net_inflow_rate', 'max_net_inflow_rate']
-
-    def get_flow_min(self, stock_code: str = '000001'):
+    def get_capital_flow_min(self, stock_code: str = '000001'):
         """
         获取单个股票的今日分时资金流向
         :param stock_code: 股票代码
@@ -56,7 +45,7 @@ class StockCapitalFlow(object):
                         'mid_net_inflow': 'float64', 'lg_net_inflow': 'float64', 'max_net_inflow': 'float64'})
         return df
 
-    def get_flow(self, stock_code: str = '000001'):
+    def get_capital_flow(self, stock_code: str = '000001'):
         """
         获取单个股票的资金流向-日度
         目前只有120天的数据
@@ -76,20 +65,17 @@ class StockCapitalFlow(object):
         if not data:
             return pd.DataFrame([], columns=self._FLOW_COLUMNS)
         lines = data['klines']
+
         # 3. 数据etl
         # '2023-12-18,-58234405.0,47874618.0,10359788.0,-13362003.0,-44872402.0,-9.72,7.99,1.73,-2.23,-7.49,8.41,-0.94,0.00,0.00'
-        data = [[stock_code] + line.split(',') for line in lines]
+        data = [[stock_code] + line.split(',')[0:6] for line in lines]
         df = pd.DataFrame(data, columns=self._FLOW_COLUMNS)
         df = df.astype({'main_net_inflow': 'float64', 'sm_net_inflow': 'float64',
-                        'mid_net_inflow': 'float64', 'lg_net_inflow': 'float64', 'max_net_inflow': 'float64',
-                        'main_net_inflow_rate': 'float64', 'sm_net_inflow_rate': 'float64',
-                        'mid_net_inflow_rate': 'float64', 'lg_net_inflow_rate': 'float64',
-                        'max_net_inflow_rate': 'float64',
+                        'mid_net_inflow': 'float64', 'lg_net_inflow': 'float64', 'max_net_inflow': 'float64'
                         })
-        # df['trade_date'] = pd.to_datetime(df['trade_date'], format='%Y-%m-%d')
         return df
 
 
 if __name__ == '__main__':
-    print(StockCapitalFlow().get_flow_min(stock_code='000001'))
-    print(StockCapitalFlow().get_flow(stock_code='000001'))
+    print(StockCapitalFlowEast().get_capital_flow_min(stock_code='000001'))
+    print(StockCapitalFlowEast().get_capital_flow(stock_code='000001'))
