@@ -31,6 +31,13 @@ class MarketTestCase(unittest.TestCase):
         print(df)
         self.assertEqual(True, len(df) > 300)
 
+    def test_get_market_2(self):
+        print("开始测试：test_get_market_2")
+        df = adata.stock.market.get_market(stock_code='002860', start_date='2007-01-01', k_type=1)
+        df = adata.stock.market.get_market(stock_code='002824', start_date='2007-01-01', k_type=1)
+        print(df)
+        self.assertEqual(True, len(df) > 300)
+
     def test_get_market_w(self):
         print("开始测试：test_get_market_w")
         df = adata.stock.market.get_market(stock_code='000001', start_date='2021-01-01', k_type=2)

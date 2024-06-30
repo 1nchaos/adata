@@ -64,21 +64,19 @@ class StockDividend(object):
             new_company = result[-1]['DisplayData']['resultData']['tplData']['result']['tabs'][-1]['content'][
                 'newCompany']
             bonus_transfer = new_company['bonusTransfer']
-            header = bonus_transfer['header']
             body = bonus_transfer['body']
         except KeyError:
-            # TODO logger
             return null_df
 
         # 4. 封装数据
-        result_df = pd.DataFrame(data=body, columns=header)[['公告日', '分红方案', '除权除息日']]
+        result_df = pd.DataFrame(data=body, columns=['公告日', '分红方案', '除权除息日', '信息'])
         result_df['stock_code'] = stock_code
         rename_columns = {'公告日': 'report_date', '分红方案': 'dividend_plan', '除权除息日': 'ex_dividend_date'}
         result_df = result_df.rename(columns=rename_columns)
         # 5. 数据清洗
         result_df = result_df[result_df.dividend_plan != '利润不分配']
         result_df['ex_dividend_date'] = result_df['ex_dividend_date'].replace('--', np.nan)
-        return result_df
+        return result_df[['stock_code', 'report_date', 'dividend_plan', 'ex_dividend_date']]
 
 
 if __name__ == '__main__':
