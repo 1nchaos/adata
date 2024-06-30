@@ -22,6 +22,9 @@ class StockCapitalFlowBaidu(StockCapitalFlowTemplate):
         :param stock_code: 股票代码
         :return: 当日分钟资金流向
         """
+        url = f"https://finance.pae.baidu.com/vapi/v1/fundflow?finance_type=stock&fund_flow_type=&" \
+              f"type=stock&market=ab&name=%E4%B8%9C%E6%96%B9%E8%B4%A2%E5%AF%8C&" \
+              f"code={stock_code}&belongs=stocklevelone&finClientType=pc"
         pass
 
     def get_capital_flow(self, stock_code: str = '000001'):
@@ -31,6 +34,10 @@ class StockCapitalFlowBaidu(StockCapitalFlowTemplate):
         :param stock_code: 股票代码
         :return: 资金流向-日度
         """
+        date = '20240430'
+        url = f"https://finance.pae.baidu.com/vapi/v1/fundsortlist?" \
+              f"code={stock_code}&market=ab&finance_type=stock&tab=day&" \
+              f"from=history&date={date}&rn=20&finClientType=pc"
         pass
 
 
