@@ -20,27 +20,29 @@ class StockCapitalFlow(object):
 
     def __init__(self) -> None:
         super().__init__()
-        self.east = StockCapitalFlowEast()
-        self.baidu = StockCapitalFlowBaidu()
+        self.east_capital_flow = StockCapitalFlowEast()
+        self.baidu_capital_flow = StockCapitalFlowBaidu()
 
-    def get_flow_min(self, stock_code: str = '000001'):
+    def get_capital_flow_min(self, stock_code: str = '000001'):
         """
         获取单个股票的今日分时资金流向
         :param stock_code: 股票代码
         :return: 当日分钟资金流向
         """
-        return self.east.get_capital_flow_min(stock_code)
+        return self.east_capital_flow.get_capital_flow_min(stock_code)
 
-    def get_flow(self, stock_code: str = '000001'):
+    def get_capital_flow(self, stock_code: str = '000001', start_date=None, end_date=None):
         """
         获取单个股票的资金流向-日度
-        目前只有120天的数据
+        只能获取最近2年多的数据
+        :param end_date: 结束日期
+        :param start_date: 开始日期
         :param stock_code: 股票代码
         :return: 资金流向-日度
         """
-        pass
+        return self.baidu_capital_flow.get_capital_flow(stock_code, start_date=start_date, end_date=end_date)
 
 
 if __name__ == '__main__':
-    print(StockCapitalFlow().get_flow_min(stock_code='000001'))
-    print(StockCapitalFlow().get_flow(stock_code='000001'))
+    print(StockCapitalFlow().get_capital_flow_min(stock_code='300059'))
+    print(StockCapitalFlow().get_capital_flow(stock_code='000001'))

@@ -21,9 +21,9 @@ class StockMarket(object):
 
     def __init__(self) -> None:
         super().__init__()
-        self.sina = StockMarketSina()
-        self.qq = StockMarketQQ()
-        self.baidu = StockMarketBaiDu()
+        self.sina_market = StockMarketSina()
+        self.qq_market = StockMarketQQ()
+        self.baidu_market = StockMarketBaiDu()
 
     def get_market(self, stock_code: str = '000001', start_date='1990-01-01', k_type=1, adjust_type: int = 1):
         """
@@ -34,7 +34,7 @@ class StockMarket(object):
         :param adjust_type: k线复权类型：0.不复权；1.前复权；2.后复权 默认：1 前复权 （目前：只有前复权,作为股票交易已经可用）
         :return: k线行情数据
         """
-        return self.baidu.get_market(stock_code=stock_code, start_date=start_date, k_type=k_type)
+        return self.baidu_market.get_market(stock_code=stock_code, start_date=start_date, k_type=k_type)
 
     def get_market_min(self, stock_code: str = '000001'):
         """
@@ -42,7 +42,7 @@ class StockMarket(object):
         :param stock_code: 股票代码
         :return: 当日分钟行情数据
         """
-        return self.baidu.get_market_min(stock_code=stock_code)
+        return self.baidu_market.get_market_min(stock_code=stock_code)
 
     def list_market_current(self, code_list=None):
         """
@@ -60,10 +60,10 @@ class StockMarket(object):
         if code_list is None:
             return pd.DataFrame()
         # 1. 先查询新浪
-        df = self.sina.list_market_current(code_list=code_list)
+        df = self.sina_market.list_market_current(code_list=code_list)
         # 2. 然后腾讯
         if df.empty:
-            df = self.qq.list_market_current(code_list=code_list)
+            df = self.qq_market.list_market_current(code_list=code_list)
         return df
 
     def get_market_five(self, stock_code: str = '000001'):
@@ -73,9 +73,9 @@ class StockMarket(object):
         :param stock_code: 股票代码
         :return: 最新的五档行情
         """
-        res_df = self.qq.get_market_five(stock_code=stock_code)
+        res_df = self.qq_market.get_market_five(stock_code=stock_code)
         if res_df.empty:
-            res_df = self.baidu.get_market_five(stock_code=stock_code)
+            res_df = self.baidu_market.get_market_five(stock_code=stock_code)
         return res_df
 
     def get_market_bar(self, stock_code: str = '000001'):
@@ -84,7 +84,7 @@ class StockMarket(object):
         :param stock_code: 股票代码
         :return: 最新当天的分时成交
         """
-        return self.baidu.get_market_bar(stock_code=stock_code)
+        return self.baidu_market.get_market_bar(stock_code=stock_code)
 
 
 if __name__ == '__main__':

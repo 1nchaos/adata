@@ -45,10 +45,12 @@ class StockCapitalFlowEast(StockCapitalFlowTemplate):
                         'mid_net_inflow': 'float64', 'lg_net_inflow': 'float64', 'max_net_inflow': 'float64'})
         return df
 
-    def get_capital_flow(self, stock_code: str = '000001'):
+    def get_capital_flow(self, stock_code: str = '000001', start_date=None, end_date=None):
         """
         获取单个股票的资金流向-日度
         目前只有120天的数据
+        :param end_date: 开始日期
+        :param start_date: 结束结束
         :param stock_code: 股票代码
         :return: 资金流向-日度
         """
@@ -77,5 +79,5 @@ class StockCapitalFlowEast(StockCapitalFlowTemplate):
 
 
 if __name__ == '__main__':
-    print(StockCapitalFlowEast().get_capital_flow_min(stock_code='000001'))
+    print(StockCapitalFlowEast().get_capital_flow_min(stock_code='300059'))
     print(StockCapitalFlowEast().get_capital_flow(stock_code='000001'))

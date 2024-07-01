@@ -33,10 +33,12 @@ class StockCapitalFlowTemplate(object):
 
     pass
 
-    def get_capital_flow(self, stock_code: str = '000001'):
+    def get_capital_flow(self, stock_code: str = '000001', start_date=None, end_date=None):
         """
         获取单个股票的资金流向-日度
         目前只有120天的数据
+        :param end_date: 开始日期
+        :param start_date: 结束日期
         :param stock_code: 股票代码
         :return: 资金流向-日度
         """
