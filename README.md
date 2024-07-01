@@ -172,6 +172,8 @@ print(res_df)
 | 指数行情            | stock.market.get_market_index()                | 获取指数的行情信息-日、周、月 k线     |                                                              |
 |                     | stock.market.get_market_index_min()            | 获取指数的行情-当日分时               |                                                              |
 |                     | stock.market.get_market_index_current()        | 获取当前的指数行情                    | 实时行情                                                     |
+| 个股资金流          | stock.market.get_capital_flow_min()            | 获取单个股票的今日分时资金流向        | 最新实时数据                                                 |
+|                     | stock.market.get_capital_flow()                | 获取单个股票的资金流向                | 历史日度数据                                                 |
 
 **注：概念和指数从本质来看是一样的，所以相关的接口和返回结果是一致的，概念是各个厂商自定义的指数，指数是官方或者权威机构定义的，都是一揽子股票的组合。**
 
