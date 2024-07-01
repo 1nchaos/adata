@@ -5,13 +5,14 @@
 @time: 2023/3/29
 @log: change log
 """
+from adata.stock.market.capital_flow import StockCapitalFlow
 from adata.stock.market.concepth_market import StockMarketConcept
-from adata.stock.market.index_market.market_index import StockMarketIndex
+from adata.stock.market.index_market import StockMarketIndex
 from adata.stock.market.stock_dividend import StockDividend
 from adata.stock.market.stock_market import StockMarket
 
 
-class Market(StockMarket, StockMarketConcept, StockDividend, StockMarketIndex):
+class Market(StockCapitalFlow, StockMarket, StockMarketConcept, StockDividend, StockMarketIndex):
 
     def __init__(self) -> None:
         super().__init__()

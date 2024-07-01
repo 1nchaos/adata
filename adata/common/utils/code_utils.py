@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 @desc: readme
-@author: yinchao
+@author: 1nchaos
 @time: 2023/12/4
 @log: change log
 """
