@@ -82,11 +82,12 @@ class StockMarketBaiDu(StockMarketTemplate):
         result_df['stock_code'] = stock_code
         result_df['trade_date'] = result_df['trade_time']
         result_df['trade_time'] = pd.to_datetime(result_df['trade_time']).dt.strftime('%Y-%m-%d %H:%M:%S')
-        # 5. 数据清洗，剔除成交量为0的异常数据
+        # 5. 数据清洗，剔除成交量且成交额为0的异常数据
         result_df.replace('--', None, inplace=True)
         result_df.replace('', None, inplace=True)
         result_df['amount'] = result_df['amount'].astype(float)
-        result_df = result_df[result_df['amount'] > 0]
+        result_df['volume'] = result_df['volume'].astype(float)
+        result_df = result_df[(result_df['amount'] > 0) | (result_df['volume'] > 0)]
         result_df['change'] = result_df['change'].str.replace('+', '').astype(float)
         result_df['change_pct'] = result_df['change_pct'].str.replace('+', '').astype(float)
         return result_df
