@@ -51,6 +51,8 @@ class StockCode(object):
         code['stock_code'] = code['stock_code'].astype(str).str.zfill(6)
         df = pd.merge(res_df, code, on='stock_code', how='left')
         df['list_date'] = df['list_date'].fillna(df['list_date2'])
+        df['list_date'] = pd.to_datetime(df['list_date'], errors='coerce').dt.date
+        df['list_date'] = df['list_date'].where(df['list_date'].notnull(), np.nan)
         return df.sort_values('stock_code').reset_index(drop=True)[self.__CODE_COLUMNS]
 
     def __market_rank_baidu(self):
