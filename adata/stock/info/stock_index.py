@@ -101,9 +101,9 @@ class StockIndex(object):
         :param wait_time: 等待时间：毫秒；表示每个请求的间隔时间，主要用于防止请求太频繁的限制。
         :return: ['index_code', 'stock_code', 'short_name']
         """
-        # res = self.__index_constituent_sina(index_code=index_code)
-        # if not res.empty:
-        #     return res
+        res = self.__index_constituent_baidu(index_code=index_code)
+        if not res.empty:
+            return res
         return self.__index_constituent_ths(index_code=index_code, wait_time=wait_time)
 
     def __index_constituent_ths(self, index_code=None, wait_time=None):
@@ -245,5 +245,5 @@ class StockIndex(object):
 
 if __name__ == '__main__':
     print(StockIndex().all_index_code())
-    print(StockIndex().index_constituent(index_code='000033'))
-    print(StockIndex().index_constituent(index_code='399387', wait_time=158))
+    # print(StockIndex().index_constituent(index_code='000033'))
+    # print(StockIndex().index_constituent(index_code='399387', wait_time=158))

@@ -11,12 +11,12 @@ https://eq.10jqka.com.cn/frontend/thsTopRank/index.html?fontzoom=no&client_useri
 """
 import pandas as pd
 
-from adata.common.base.base_ths import BaseThs
 from adata.common.headers import ths_headers
 from adata.common.utils import requests
+from adata.sentiment.alist import AList
 
 
-class Hot(BaseThs):
+class Hot(AList):
     """热门榜单"""
 
     # 东方财富人气榜
