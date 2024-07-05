@@ -46,4 +46,4 @@ class StockInfo(object):
 
 
 if __name__ == '__main__':
-    print(StockInfo().get_stock_shares(stock_code='600001', is_history=True))
+    print(StockInfo().get_stock_shares(stock_code='300033', is_history=True))

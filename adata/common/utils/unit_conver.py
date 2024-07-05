@@ -18,6 +18,7 @@ def convert_to_yuan(input_dict):
     unit_multipliers = {'亿': 100000000, '万': 10000}
 
     for key, value in input_dict.items():
+        input_dict[key] = value.replace('元', '')
         if isinstance(value, str) and any(unit in value for unit in unit_multipliers.keys()):
             number, unit = re.findall(r'([-+]?\d*\.\d+|\d+)([亿万]?)', value)[0]
             number = float(number)

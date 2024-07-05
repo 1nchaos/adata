@@ -74,7 +74,7 @@ class StockCapitalFlowBaidu(StockCapitalFlowTemplate):
             url = f"https://finance.pae.baidu.com/vapi/v1/fundsortlist?" \
                   f"code={stock_code}&market=ab&finance_type=stock&tab=day&" \
                   f"from=history&date={end_date}&pn=0&rn=20&finClientType=pc"
-            res = requests.request('get', url, headers= baidu_headers.json_headers, proxies={})
+            res = requests.request('get', url, headers=baidu_headers.json_headers, proxies={})
             data_list = res.json()["Result"]["content"]
             if len(data_list) == 0:
                 break
@@ -102,4 +102,4 @@ class StockCapitalFlowBaidu(StockCapitalFlowTemplate):
 
 if __name__ == '__main__':
     print(StockCapitalFlowBaidu().get_capital_flow_min(stock_code='300059'))
-    print(StockCapitalFlowBaidu().get_capital_flow(stock_code='300059'))
+    print(StockCapitalFlowBaidu().get_capital_flow(stock_code='300059', start_date='2024-01-01', end_date='2024-04-01'))

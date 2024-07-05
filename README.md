@@ -213,6 +213,7 @@ print(res_df)
 | **热度榜单**             | sentiment.hot.pop_rank_100_east      | 东方财富人气100榜单                        | 来源：[东方财富](http://guba.eastmoney.com/rank/)            |
 |                          | sentiment.hot.hot_rank_100_ths()     | 同花顺热度100排行榜                        | 来源：[同花顺](https://dq.10jqka.com.cn/fuyao/hot_list_data/out/hot_list/v1/stock?stock_type=a&type=hour&list_type=normal) |
 |                          | sentiment.hot.hot_concept_20_ths()   | 同花顺热门概念板块20排行榜                 | 来源：[同花顺](https://dq.10jqka.com.cn/fuyao/hot_list_data/out/hot_list/v1/stock?stock_type=a&type=hour&list_type=normal) |
+|                          | sentiment.hot.list_a_list_daily()    | 龙虎榜单列表                               | 来源：[东方财富](https://data.eastmoney.com/stock/lhb/yyb/10033779.html) |
 | 其它数据排期中           | TODO                                 | 若您有相关资源可以一起参与贡献             |                                                              |
 
 ## 三、[数据源](https://adata.30006124.xyz/dataSource.html)
