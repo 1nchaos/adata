@@ -4,7 +4,7 @@
 @author: 1nchaos
 @date: 2023/06/01 16:17
 """
-
+from adata.stock.market.index_market.market_index_baidu import StockMarketIndexBaidu
 from adata.stock.market.index_market.market_index_east import StockMarketIndexEast
 from adata.stock.market.index_market.market_index_ths import StockMarketIndexThs
 
@@ -17,12 +17,13 @@ class StockMarketIndex(object):
     def __init__(self) -> None:
         self.ths_index = StockMarketIndexThs()
         self.east_index = StockMarketIndexEast()
+        self.baidu_index = StockMarketIndexBaidu()
 
     def get_market_index(self, index_code: str = '000001', start_date='2020-01-01', k_type: int = 1):
         """
         获取指数行情
         """
-        res_df = self.east_index.get_market_index(index_code=index_code, start_date=start_date, k_type=k_type)
+        res_df = self.baidu_index.get_market_index(index_code=index_code, start_date=start_date, k_type=k_type)
         if res_df.empty:
             res_df = self.ths_index.get_market_index(index_code=index_code, start_date=start_date, k_type=k_type)
         return res_df
