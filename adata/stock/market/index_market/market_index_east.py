@@ -22,13 +22,15 @@ class StockMarketIndexEast(StockMarketIndexTemplate):
         """
         获取指数行情
         http://77.push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000300&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61&klt=102&fqt=1&beg=0&end=20500101&smplmt=1247.73&lmt=1000000
+
+        https://push2his.eastmoney.com/api/qt/stock/kline/get?cb=jQuery35106984074321162019_1720433274629&secid=0.399008&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=101&fqt=1&beg=0&end=20500101&smplmt=1419&lmt=1000000&_=1720433274631
         :param start_date: 开始时间
         :param index_code: 指数代码
         :param k_type: k线类型：1.日；2.周；3.月 默认：1 日k
         :return: k线行情数据 [日期，开，高，低，收,成交量，成交额]
         """
         url = f"https://push2his.eastmoney.com/api/qt/stock/kline/get?" \
-              f"secid=1.{index_code}&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61&" \
+              f"secid=0.{index_code}&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61&" \
               f"klt=10{k_type}&fqt=1&end=20500101&lmt=1000000"
         res_json = requests.request('get', url, headers={}, proxies={}).json()
         # 解析数据
@@ -64,7 +66,7 @@ class StockMarketIndexEast(StockMarketIndexTemplate):
         """
         url = f"http://push2his.eastmoney.com/api/qt/stock/trends2/get?" \
               f"fields1=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13&fields2=f51,f52,f53,f54,f55,f56,f57,f58&" \
-              f"iscr=0&ndays=1&secid=1.{index_code}"
+              f"iscr=0&ndays=1&secid=0.{index_code}"
         res_json = requests.request('get', url, headers={}, proxies={}).json()
         # 解析数据
         code = res_json['data']['code']
@@ -101,7 +103,7 @@ class StockMarketIndexEast(StockMarketIndexTemplate):
         url = f"http://push2.eastmoney.com/api/qt/stock/get?" \
               f"invt=2&fltt=1&fields=f58,f107,f57,f43,f59,f169,f170,f152,f46,f60,f44,f45,f47,f48,f19,f532,f39,f161,f49," \
               f"f171,f50,f86,f600,f601,f154,f84,f85,f168,f108,f116,f167,f164,f92,f71,f117,f292,f113,f114,f115,f119," \
-              f"f120,f121,f122,f296&secid=1.{index_code}&wbp2u=|0|0|0|web"
+              f"f120,f121,f122,f296&secid=0.{index_code}&wbp2u=|0|0|0|web"
         res_json = requests.request('get', url, headers={}, proxies={}).json()
         # 解析数据
         j = res_json['data']

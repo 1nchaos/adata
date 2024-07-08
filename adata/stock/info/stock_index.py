@@ -19,15 +19,11 @@ http://quote.eastmoney.com/center/gridlist.html#index_sz
 @time: 2023/5/23
 @log: change log
 """
-import copy
 
 import pandas as pd
 from bs4 import BeautifulSoup
 
-from adata.common.exception.exception_msg import *
-from adata.common.headers import ths_headers
-from adata.common.utils import cookie, requests
-from adata.stock.cache.index_code_rel_ths import rel
+from adata.common.utils import requests
 
 
 class StockIndex(object):
@@ -47,51 +43,37 @@ class StockIndex(object):
         concept_code为同花顺的概念代码
         :return: 指数信息[name,index_code,concept_code,source]
         """
-        return self.__all_index_code_ths()
+        return self.__all_index_code_east()
 
-    def __all_index_code_ths(self):
+    def __all_index_code_east(self, wait_time=0):
         """
-        获取同花顺所有行情中心的指数代码
-        http://q.10jqka.com.cn/zs/
-        上面地址可不用翻页
+        东方财富指数列表
+        https://quote.eastmoney.com/center/gridlist.html#index_sh
+        https://39.push2.eastmoney.com/api/qt/clist/get?pn=1&pz=20&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&dect=1&wbp2u=|0|0|0|web&fid=f3&fs=m:1+s:2&fields=f12,f14&_=1720430951494
         :return: 指数信息[name,index_code，concept_code,source]
         """
-        # 1. url拼接页码等参数
         data = []
-        total_pages = 1
-        curr_page = 1
-        while curr_page <= total_pages:
-            api_url = f"http://q.10jqka.com.cn/zs/index/field/zdf/order/desc/page/{curr_page}/ajax/1/"
-            headers = copy.deepcopy(ths_headers.text_headers)
-            headers['Cookie'] = cookie.ths_cookie()
-            res = requests.request(method='get', url=api_url, headers=headers, proxies={})
-            curr_page += 1
-            # 2. 判断请求是否成功
-            if res.status_code != 200:
-                continue
-            text = res.text
-            soup = BeautifulSoup(text, 'html.parser')
-            # 3 .获取总的页数
-            if total_pages == 1:
-                page_info = soup.find('span', {'class': 'page_info'})
-                if page_info:
-                    total_pages = int(page_info.text.split("/")[1])
-            # 4. 解析数据
-            page_data = []
-            for idx, tr in enumerate(soup.find_all('tr')):
-                if idx != 0:
-                    tds = tr.find_all('td')
-                    a_href = tds[1].find('a')
-                    page_data.append({'index_code': tds[1].contents[0].text,
-                                      'concept_code': a_href['href'].split('/')[-2],
-                                      'name': tds[2].contents[0].text, 'source': '同花顺'})
-            data.extend(page_data)
-        # 5. 封装数据
-        if not data:
-            return pd.DataFrame(data=data, columns=self.__INDEX_CODE_COLUMN)
-        result_df = pd.DataFrame(data=data)
-        data.clear()
-        return result_df[self.__INDEX_CODE_COLUMN]
+        for i in range(2):
+            curr_page = 1
+            while curr_page < 88:
+                if i == 0:
+                    url = f"https://39.push2.eastmoney.com/api/qt/clist/get?" \
+                          f"pn={curr_page}&pz=20&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&" \
+                          f"dect=1&wbp2u=|0|0|0|web&fid=f3&fs=m:1+s:2&fields=f12,f14&_=1720430951494"
+                else:
+                    url = f"https://31.push2.eastmoney.com/api/qt/clist/get?" \
+                          f"pn={curr_page}&pz=20&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&dect=1&" \
+                          f"wbp2u=|0|0|0|web&fid=f3&fs=m:0+t:5&fields=f12,f14&_=1720432207117"
+                res_json = requests.request('get', url, headers={}, proxies={}, wait_time=wait_time).json()
+                res_data = res_json['data']
+                if not res_data:
+                    break
+                res_data = res_data['diff']
+                for _ in res_data:
+                    data.append({'index_code': _['f12'], 'name': _['f14'], 'source': '东方财富', 'concept_code': ''})
+                curr_page += 1
+        result_df = pd.DataFrame(data=data, columns=self.__INDEX_CODE_COLUMN)
+        return result_df
 
     def index_constituent(self, index_code=None, wait_time=None):
         """
@@ -101,61 +83,7 @@ class StockIndex(object):
         :param wait_time: 等待时间：毫秒；表示每个请求的间隔时间，主要用于防止请求太频繁的限制。
         :return: ['index_code', 'stock_code', 'short_name']
         """
-        res = self.__index_constituent_baidu(index_code=index_code)
-        if not res.empty:
-            return res
-        return self.__index_constituent_ths(index_code=index_code, wait_time=wait_time)
-
-    def __index_constituent_ths(self, index_code=None, wait_time=None):
-        """
-        同花顺指数成分股
-        :param index_code: 指数代码 399282
-        :param wait_time: 等待时间：毫秒；表示每个请求的间隔时间，主要用于防止请求太频繁的限制。
-        :return:['index_code', 'stock_code', 'short_name']
-        """
-        # 转换抓取的code,
-        catch_code = rel[index_code] if index_code.startswith('0') and index_code in rel.keys() else index_code
-        # 转换指数代码
-        index_code = rel[index_code] if ('A' in index_code or 'B' in index_code or 'C' in index_code) and index_code in rel.keys() else index_code
-        # 1. url拼接页码等参数
-        data = []
-        total_pages = 1
-        curr_page = 1
-        while curr_page <= total_pages:
-            api_url = f"http://q.10jqka.com.cn/zs/detail/field/199112/order/desc/page/" \
-                      f"{curr_page}/ajax/1/code/{catch_code}"
-            headers = copy.deepcopy(ths_headers.text_headers)
-            headers['Cookie'] = cookie.ths_cookie()
-            res = requests.request(method='get', url=api_url, headers=headers, proxies={}, wait_time=wait_time)
-            curr_page += 1
-            # 2. 判断请求是否成功
-            if res.status_code != 200:
-                continue
-            text = res.text
-            if THS_IP_LIMIT_RES in res:
-                raise Exception(THS_IP_LIMIT_MSG)
-            if '暂无成份股数据' in text or '概念板块' in text or '概念时间表' in text:
-                break
-            soup = BeautifulSoup(text, 'html.parser')
-            # 3 .获取总的页数
-            if total_pages == 1:
-                page_info = soup.find('span', {'class': 'page_info'})
-                if page_info:
-                    total_pages = int(page_info.text.split("/")[1])
-            # 4. 解析数据
-            page_data = []
-            for idx, tr in enumerate(soup.find_all('tr')):
-                if idx != 0:
-                    tds = tr.find_all('td')
-                    page_data.append({'index_code': index_code, 'stock_code': tds[1].contents[0].text,
-                                      'short_name': tds[2].contents[0].text})
-            data.extend(page_data)
-        # 5. 封装数据
-        if not data:
-            return pd.DataFrame(data=data, columns=self.__INDEX_CONSTITUENT_COLUMN)
-        result_df = pd.DataFrame(data=data)
-        data.clear()
-        return result_df[self.__INDEX_CONSTITUENT_COLUMN]
+        return self.__index_constituent_baidu(index_code=index_code)
 
     def __index_constituent_baidu(self, index_code=None):
         """
@@ -245,5 +173,4 @@ class StockIndex(object):
 
 if __name__ == '__main__':
     print(StockIndex().all_index_code())
-    # print(StockIndex().index_constituent(index_code='000033'))
-    # print(StockIndex().index_constituent(index_code='399387', wait_time=158))
+    print(StockIndex().index_constituent(index_code='000113'))
