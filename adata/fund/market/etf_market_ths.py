@@ -42,8 +42,10 @@ class ETFMarketThs(BaseThs, ETFMarketTemplate):
         text = self._get_text(api_url, fund_code)
         if THS_IP_LIMIT_RES in text:
             return Exception(THS_IP_LIMIT_MSG)
-        result_text = text[text.index('{'):-1]
-        data_list = json.loads(result_text)['data'].split(';')
+        result_json = json.loads(text[text.index('{'):-1])
+        if result_json['total'] == 0:
+            return pd.DataFrame()
+        data_list = result_json['data'].split(';')
         data = []
         for d in data_list:
             data.append(str(d).split(',')[0:7])

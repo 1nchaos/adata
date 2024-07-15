@@ -43,6 +43,12 @@ class SentimentHotTestCase(unittest.TestCase):
         print(df)
         self.assertEqual(True, len(df) >= 20)
 
+    def test_get_a_list_info(self):
+        print("开始测试：get_a_list_info")
+        df = adata.sentiment.hot.get_a_list_info(stock_code='600297', report_date='2024-07-12')
+        print(df)
+        self.assertEqual(True, len(df) >= 10)
+
 
 if __name__ == '__main__':
     unittest.main()
