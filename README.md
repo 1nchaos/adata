@@ -214,6 +214,7 @@ print(res_df)
 |                          | sentiment.hot.hot_rank_100_ths()     | 同花顺热度100排行榜                        | 来源：[同花顺](https://dq.10jqka.com.cn/fuyao/hot_list_data/out/hot_list/v1/stock?stock_type=a&type=hour&list_type=normal) |
 |                          | sentiment.hot.hot_concept_20_ths()   | 同花顺热门概念板块20排行榜                 | 来源：[同花顺](https://dq.10jqka.com.cn/fuyao/hot_list_data/out/hot_list/v1/stock?stock_type=a&type=hour&list_type=normal) |
 |                          | sentiment.hot.list_a_list_daily()    | 龙虎榜单列表                               | 来源：[东方财富](https://data.eastmoney.com/stock/lhb/yyb/10033779.html) |
+|                          | sentiment.get_a_list_info()          | 单只股票龙虎榜信息详情                     | 来源：[东方财富](https://data.eastmoney.com/stock/lhb/yyb/10033779.html) |
 | 其它数据排期中           | TODO                                 | 若您有相关资源可以一起参与贡献             |                                                              |
 
 ## 三、[数据源](https://adata.30006124.xyz/dataSource.html)
@@ -269,9 +270,9 @@ print(res_df)
 
 > 对于项目有支持，包括但不仅限：内容贡献，bug提交，思想交流等等，对项目有影响的个人和机构
 
-| Simon                                 | [bigbigbigfish](https://github.com/bigbigbigfish) | [LuneZ99](https://github.com/LuneZ99)         | 匿名用户 | thue | [Triones009](https://github.com/Triones009) | **[adaaaaaa](https://github.com/adaaaaaa)** | **[LeslieWuboy](https://github.com/LeslieWuboy)** | [yinzhengxin](https://github.com/yinzhengxin) |
-| ------------------------------------- | ------------------------------------------------- | --------------------------------------------- | -------- | ---- | ------------------------------------------- | ------------------------------------------- | ------------------------------------------------- | --------------------------------------------- |
-| [yxm0513](https://github.com/yxm0513) | [hanxuanliang](https://github.com/hanxuanliang)   | [akihara-sam](https://github.com/akihara-sam) |          |      |                                             |                                             |                                                   |                                               |
+| Simon                                 | [bigbigbigfish](https://github.com/bigbigbigfish) | [LuneZ99](https://github.com/LuneZ99)         | 匿名用户 | thue                                    | [Triones009](https://github.com/Triones009) | **[adaaaaaa](https://github.com/adaaaaaa)** | **[LeslieWuboy](https://github.com/LeslieWuboy)** | [yinzhengxin](https://github.com/yinzhengxin) |
+| ------------------------------------- | ------------------------------------------------- | --------------------------------------------- | -------- | --------------------------------------- | ------------------------------------------- | ------------------------------------------- | ------------------------------------------------- | --------------------------------------------- |
+| [yxm0513](https://github.com/yxm0513) | [hanxuanliang](https://github.com/hanxuanliang)   | [akihara-sam](https://github.com/akihara-sam) | Andy     | [baei2048](https://github.com/baei2048) |                                             |                                             |                                                   |                                               |
 
 ----------------------------------------------------------------------
 
