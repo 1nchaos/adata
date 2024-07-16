@@ -64,4 +64,4 @@ class StockConceptBaidu(StockConceptTemplate):
 
 
 if __name__ == '__main__':
-    print(StockConceptBaidu().get_concept_baidu(stock_code=["600020", '300059', '300033']).to_string())
+    print(StockConceptBaidu().get_concept_baidu(stock_code="600020").to_string())
