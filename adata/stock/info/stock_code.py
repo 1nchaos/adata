@@ -53,6 +53,7 @@ class StockCode(object):
         df['list_date'] = df['list_date'].fillna(df['list_date2'])
         df['list_date'] = pd.to_datetime(df['list_date'], errors='coerce').dt.date
         df['list_date'] = df['list_date'].where(df['list_date'].notnull(), np.nan)
+        df['short_name'] = df['short_name'].str.replace(' ', '')
         return df.sort_values('stock_code').reset_index(drop=True)[self.__CODE_COLUMNS]
 
     def __market_rank_baidu(self):
