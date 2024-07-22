@@ -10,6 +10,7 @@ TODO 数据返回类型转换
 import pandas as pd
 
 from adata.stock.market.stock_market.stock_market_baidu import StockMarketBaiDu
+from adata.stock.market.stock_market.stock_market_east import StockMarketEast
 from adata.stock.market.stock_market.stock_market_qq import StockMarketQQ
 from adata.stock.market.stock_market.stock_market_sina import StockMarketSina
 
@@ -24,6 +25,7 @@ class StockMarket(object):
         self.sina_market = StockMarketSina()
         self.qq_market = StockMarketQQ()
         self.baidu_market = StockMarketBaiDu()
+        self.east_market = StockMarketEast()
 
     def get_market(self, stock_code: str = '000001', start_date='1990-01-01', k_type=1, adjust_type: int = 1):
         """
@@ -34,7 +36,10 @@ class StockMarket(object):
         :param adjust_type: k线复权类型：0.不复权；1.前复权；2.后复权 默认：1 前复权 （目前：只有前复权,作为股票交易已经可用）
         :return: k线行情数据
         """
-        return self.baidu_market.get_market(stock_code=stock_code, start_date=start_date, k_type=k_type)
+        df = self.east_market.get_market(stock_code=stock_code, start_date=start_date, k_type=k_type)
+        if df.empty:
+            df = self.baidu_market.get_market(stock_code=stock_code, start_date=start_date, k_type=k_type)
+        return df
 
     def get_market_min(self, stock_code: str = '000001'):
         """
