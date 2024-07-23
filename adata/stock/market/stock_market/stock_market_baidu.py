@@ -26,7 +26,8 @@ class StockMarketBaiDu(StockMarketTemplate):
     def __init__(self) -> None:
         super().__init__()
 
-    def get_market(self, stock_code: str = '000001', start_date='1990-01-01', k_type=1, adjust_type: int = 1):
+    def get_market(self, stock_code: str = '000001', start_date='1990-01-01', end_date=None, k_type=1,
+                   adjust_type: int = 1):
         """
         获取百度的股票行情数据
         web： https://gushitong.baidu.com/stock/ab-002926
@@ -40,10 +41,11 @@ class StockMarketBaiDu(StockMarketTemplate):
         all=1&code=601318&isIndex=false&isBk=false&isBlock=false&isFutures=false&isStock=true&newFormat=1&
         group=quotation_minute_ab&finClientType=pc
         "ma5均价","ma5成交量","ma10均价","ma10成交量","ma20均价","ma20成交量"
+        :param end_date: 结束日期
         :param stock_code: 6位股票代码
         :param start_date: 开始时间
         :param k_type: k线类型：1.日；2.周；3.月
-        # :param adjust_type: k线复权类型：0.不复权；1.前复权；2.后复权 默认：1 前复权 TODO
+        :param adjust_type: k线复权类型：0.不复权；1.前复权；2.后复权 默认：1 前复权 TODO
         :return: k线行情数据:"时间戳", "时间","开盘","收盘","成交量","最高","最低","成交额","涨跌额","涨跌幅","换手率","昨收"
         """
         # 1. 请求接口 url
