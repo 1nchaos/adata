@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-VERSION = (2, 5, 0)
+VERSION = (2, 5, 1)
 PRERELEASE = None  # alpha, beta or rc
 REVISION = None
 

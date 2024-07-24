@@ -23,6 +23,7 @@ import requests
 
 from adata.common.exception.handler import handler_null
 from adata.common.headers import baidu_headers
+from adata.common.utils.code_utils import get_exchange_by_stock_code
 from adata.stock.cache import get_code_csv_path
 
 
@@ -42,7 +43,10 @@ class StockCode(object):
         """
         # 拼接股票上市日期
         code = pd.read_csv(get_code_csv_path())[['stock_code', 'list_date2']]
-        res_df = self.__market_rank_baidu()
+        # 请求数据：优先东方财富，其次百度
+        res_df = self.__market_rank_east()
+        if res_df.empty:
+            res_df = self.__market_rank_baidu()
         east = self.__new_sub_east()
         if not east.empty:
             res_df = pd.concat([east, res_df], axis=0, ignore_index=True)
@@ -127,6 +131,35 @@ class StockCode(object):
         result_df = pd.DataFrame(data=data, columns=self.__CODE_COLUMNS)
         result_df['list_date'] = pd.to_datetime(result_df['list_date']).dt.date
         return result_df
+
+    @handler_null
+    def __market_rank_east(self):
+        """
+        东方财富新股申购列表
+        https://quote.eastmoney.com/center/gridlist.html
+        """
+        url = "https://82.push2.eastmoney.com/api/qt/clist/get"
+        params = {
+            "pn": "1", "pz": "50000",
+            "po": "1", "np": "1",
+            "ut": "bd1d9ddb04089700cf9c27f6f7426281",
+            "fltt": "2", "invt": "2", "fid": "f3",
+            "fs": "m:0 t:6,m:0 t:80,m:1 t:2,m:1 t:23,m:0 t:81 s:2048",
+            "fields": "f12,f14",
+            "_": "1623833739532",
+        }
+        # 请求数据
+        r = requests.get(url, timeout=15, params=params)
+        data_json = r.json()
+        if not data_json["data"]["diff"]:
+            return pd.DataFrame()
+        df = pd.DataFrame(data=data_json["data"]["diff"])
+        df.columns = ['stock_code', 'short_name']
+        # 数据etl
+        df['exchange'] = df['stock_code'].apply(lambda x: get_exchange_by_stock_code(x))
+        df['list_date'] = np.nan
+        df.reset_index(inplace=True)
+        return df[self.__CODE_COLUMNS]
 
 
 if __name__ == '__main__':
