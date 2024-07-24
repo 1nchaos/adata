@@ -29,14 +29,15 @@ class StockMarketIndexEast(StockMarketIndexTemplate):
         :param k_type: k线类型：1.日；2.周；3.月 默认：1 日k
         :return: k线行情数据 [日期，开，高，低，收,成交量，成交额]
         """
+        sec_id = {'1': '1', '3': '0', '4': '0', '9': '0'}[index_code[0]]
         url = f"https://push2his.eastmoney.com/api/qt/stock/kline/get?" \
-              f"secid=0.{index_code}&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61&" \
+              f"secid={sec_id}.{index_code}&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61&" \
               f"klt=10{k_type}&fqt=1&end=20500101&lmt=1000000"
         res_json = requests.request('get', url, headers={}, proxies={}).json()
         # 解析数据
         code = res_json['data']['code']
         if code != index_code:
-            return
+            return pd.DataFrame(data=[], columns=[])
         res_data = res_json['data']['klines']
         data = []
         for _ in res_data:
@@ -128,6 +129,6 @@ class StockMarketIndexEast(StockMarketIndexTemplate):
 
 
 if __name__ == '__main__':
-    print(StockMarketIndexEast().get_market_index(index_code='000001', start_date='2022-12-01'))
-    print(StockMarketIndexEast().get_market_index_min(index_code='000001'))
-    print(StockMarketIndexEast().get_market_index_current(index_code='000001'))
+    print(StockMarketIndexEast().get_market_index(index_code='980072', start_date='2022-12-01'))
+    # print(StockMarketIndexEast().get_market_index_min(index_code='000001'))
+    # print(StockMarketIndexEast().get_market_index_current(index_code='000001'))

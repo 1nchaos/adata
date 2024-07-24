@@ -69,7 +69,9 @@ class StockMarketEast(StockMarketTemplate):
                            'turnover_ratio', 'pre_close']
         df[numeric_columns] = df[numeric_columns].apply(pd.to_numeric)
         df.reset_index(inplace=True, drop=True)
-        return df
+        return df[
+            ['trade_time', "trade_date", "open", "close", "high", "low", "volume", "amount", "change_pct", "change",
+             "turnover_ratio", "pre_close"]]
 
     def get_market_min(self, stock_code: str = '000001'):
         """
