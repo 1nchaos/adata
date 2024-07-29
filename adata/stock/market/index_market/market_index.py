@@ -49,7 +49,8 @@ class StockMarketIndex(object):
         :return: [指数代码,交易时间，交易日期，开，高，低，当前价格,成交量，成交额]
         ['trade_time', 'trade_date', 'open', 'high', 'low', 'price', 'volume', 'amount']
         """
-        return self.east_index.get_market_index_current(index_code=index_code)
+        res_df = self.east_index.get_market_index_current(index_code=index_code)
+        return res_df
 
 
 if __name__ == '__main__':

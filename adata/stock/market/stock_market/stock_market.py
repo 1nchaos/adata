@@ -40,8 +40,6 @@ class StockMarket(object):
         """
         df = self.east_market.get_market(stock_code=stock_code, start_date=start_date, end_date=end_date,
                                          k_type=k_type, adjust_type=adjust_type)
-        # if df.empty:
-        #     df = self.baidu_market.get_market(stock_code=stock_code, start_date=start_date, k_type=k_type)
         return df
 
     def get_market_min(self, stock_code: str = '000001'):
@@ -50,7 +48,10 @@ class StockMarket(object):
         :param stock_code: 股票代码
         :return: 当日分钟行情数据
         """
-        return self.baidu_market.get_market_min(stock_code=stock_code)
+        df = self.east_market.get_market_min(stock_code=stock_code)
+        if df.empty:
+            return self.baidu_market.get_market_min(stock_code=stock_code)
+        return df
 
     def list_market_current(self, code_list=None):
         """
@@ -92,7 +93,10 @@ class StockMarket(object):
         :param stock_code: 股票代码
         :return: 最新当天的分时成交
         """
-        return self.baidu_market.get_market_bar(stock_code=stock_code)
+        res_df = self.baidu_market.get_market_bar(stock_code=stock_code)
+        if res_df.empty:
+            res_df = self.qq_market.get_market_bar(stock_code=stock_code)
+        return res_df
 
 
 if __name__ == '__main__':

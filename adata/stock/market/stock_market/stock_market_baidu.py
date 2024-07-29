@@ -26,6 +26,7 @@ class StockMarketBaiDu(StockMarketTemplate):
     def __init__(self) -> None:
         super().__init__()
 
+    @handler_null
     def get_market(self, stock_code: str = '000001', start_date='1990-01-01', end_date=None, k_type=1,
                    adjust_type: int = 1):
         """
@@ -94,6 +95,7 @@ class StockMarketBaiDu(StockMarketTemplate):
         result_df['change_pct'] = result_df['change_pct'].str.replace('+', '').astype(float)
         return result_df
 
+    @handler_null
     def get_market_min(self, stock_code: str = '000001'):
         """
         获取百度的股票行情数据
@@ -183,6 +185,7 @@ class StockMarketBaiDu(StockMarketTemplate):
         result_df = pd.DataFrame(data=[data], columns=self._MARKET_FIVE_COLUMNS)
         return result_df[self._MARKET_FIVE_COLUMNS]
 
+    @handler_null
     def get_market_bar(self, stock_code: str = '000001'):
         """
         https://finance.pae.baidu.com/vapi/v1/getquotation?srcid=5353&all=1&pointType=string&group=quotation_minute_ab&query=872925&code=872925&market_type=ab&newFormat=1&name=锦好医疗&finClientType=pc
@@ -205,7 +208,7 @@ class StockMarketBaiDu(StockMarketTemplate):
         # 3.1 空数据时返回为空
         result = res_json['Result']
         if not result:
-            return pd.DataFrame(data=[], columns=self._MARKET_MIN_COLUMNS)
+            return pd.DataFrame(data=[], columns=self._MARKET_BAR_COLUMNS)
 
         # 3.2. 正常解析数据
         market_data_list = res_json['Result']['detailinfos']

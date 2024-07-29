@@ -29,11 +29,12 @@ class StockMarketIndexEast(StockMarketIndexTemplate):
         :param k_type: k线类型：1.日；2.周；3.月 默认：1 日k
         :return: k线行情数据 [日期，开，高，低，收,成交量，成交额]
         """
-        sec_id = {'1': '1', '3': '0', '4': '0', '9': '0'}[index_code[0]]
-        url = f"https://push2his.eastmoney.com/api/qt/stock/kline/get?" \
-              f"secid={sec_id}.{index_code}&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61&" \
-              f"klt=10{k_type}&fqt=1&end=20500101&lmt=1000000"
-        res_json = requests.request('get', url, headers={}, proxies={}).json()
+        beg = 0
+        if start_date:
+            beg = start_date.replace('-', '')
+        sec_id = 0 if index_code[0] == 0 else 1
+        url = f"https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={sec_id}.{index_code}&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=10{k_type}&fqt=1&beg={beg}&end=20500101&smplmt=460&lmt=1000000&_=1722235849235"
+        res_json = requests.request('post', url, headers={}, proxies={}).json()
         # 解析数据
         code = res_json['data']['code']
         if code != index_code:
@@ -65,9 +66,10 @@ class StockMarketIndexEast(StockMarketIndexTemplate):
         :return 时间，现价，成交额（元），均价，成交量（股） 涨跌额，涨跌幅
         ['index_code', 'trade_time', 'price', 'change', 'change_pct', 'volume', 'avg_price', 'amount']
         """
+        sec_id = 0 if index_code[0] == 0 else 1
         url = f"http://push2his.eastmoney.com/api/qt/stock/trends2/get?" \
               f"fields1=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13&fields2=f51,f52,f53,f54,f55,f56,f57,f58&" \
-              f"iscr=0&ndays=1&secid=0.{index_code}"
+              f"iscr=0&ndays=1&secid={sec_id}.{index_code}"
         res_json = requests.request('get', url, headers={}, proxies={}).json()
         # 解析数据
         code = res_json['data']['code']
@@ -101,10 +103,11 @@ class StockMarketIndexEast(StockMarketIndexTemplate):
         :return: [指数代码,交易时间，交易日期，开，高，低，当前价格,成交量，成交额]
         ['trade_time', 'trade_date', 'open', 'high', 'low', 'price', 'volume', 'amount']
         """
+        sec_id = 0 if index_code[0] == 0 else 1
         url = f"http://push2.eastmoney.com/api/qt/stock/get?" \
               f"invt=2&fltt=1&fields=f58,f107,f57,f43,f59,f169,f170,f152,f46,f60,f44,f45,f47,f48,f19,f532,f39,f161,f49," \
               f"f171,f50,f86,f600,f601,f154,f84,f85,f168,f108,f116,f167,f164,f92,f71,f117,f292,f113,f114,f115,f119," \
-              f"f120,f121,f122,f296&secid=0.{index_code}&wbp2u=|0|0|0|web"
+              f"f120,f121,f122,f296&secid={sec_id}.{index_code}&wbp2u=|0|0|0|web"
         res_json = requests.request('get', url, headers={}, proxies={}).json()
         # 解析数据
         j = res_json['data']
@@ -129,6 +132,6 @@ class StockMarketIndexEast(StockMarketIndexTemplate):
 
 
 if __name__ == '__main__':
-    print(StockMarketIndexEast().get_market_index(index_code='980072', start_date='2022-12-01'))
-    # print(StockMarketIndexEast().get_market_index_min(index_code='000001'))
-    # print(StockMarketIndexEast().get_market_index_current(index_code='000001'))
+    print(StockMarketIndexEast().get_market_index(index_code='000001', start_date='2022-12-01'))
+    print(StockMarketIndexEast().get_market_index_min(index_code='000001'))
+    print(StockMarketIndexEast().get_market_index_current(index_code='000001'))
