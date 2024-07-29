@@ -9,6 +9,7 @@ https://finance.sina.com.cn/stock/
 """
 
 import pandas as pd
+from adata.common.exception.handler import handler_null
 
 from adata.common.headers import sina_headers
 from adata.common.utils import requests
@@ -23,6 +24,7 @@ class StockMarketSina(StockMarketTemplate):
     def __init__(self) -> None:
         super().__init__()
 
+    @handler_null
     def list_market_current(self, code_list=None):
         """
         获取新浪的最新股票行情

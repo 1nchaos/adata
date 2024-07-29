@@ -8,8 +8,10 @@ https://stockapp.finance.qq.com/mstats/#
 @log: change log
 """
 import pandas as pd
+from adata.common.exception.handler import handler_null
 
 from adata.common import requests
+from adata.common.utils.code_utils import get_exchange_by_stock_code
 from adata.stock.market.stock_market.stock_market_template import StockMarketTemplate
 
 
@@ -21,6 +23,7 @@ class StockMarketQQ(StockMarketTemplate):
     def __init__(self) -> None:
         super().__init__()
 
+    @handler_null
     def list_market_current(self, code_list=None):
         """
         获取多个股票最新行情信息
@@ -64,6 +67,7 @@ class StockMarketQQ(StockMarketTemplate):
         result_df.loc[mask, 'amount'] = result_df['amount'].astype(float) * 10000
         return result_df[self._MARKET_CURRENT_COLUMNS]
 
+    @handler_null
     def get_market_five(self, stock_code: str = '000001'):
         """
          https://web.sqt.gtimg.cn/q=sh601666,sh600691
@@ -72,6 +76,7 @@ class StockMarketQQ(StockMarketTemplate):
         """
         return self.list_market_five([stock_code])
 
+    @handler_null
     def list_market_five(self, code_list=None):
         """
          https://web.sqt.gtimg.cn/q=sh601666,sh600691
@@ -127,7 +132,48 @@ class StockMarketQQ(StockMarketTemplate):
         result_df[columns_to_multiply] = result_df[columns_to_multiply].astype(int) * 100
         return result_df
 
+    @handler_null
+    def get_market_bar(self, stock_code: str = '000001'):
+        """
+        https://gu.qq.com/sh601857/gp/detail
+        :param stock_code: 股票代码
+        :return:
+        """
+        # 1. 参数处理
+        code = get_exchange_by_stock_code(stock_code).lower()+stock_code
+        res_df = pd.DataFrame()
+
+        # 2. 请求接口
+        for page in range(0, 10000):
+            url = "http://stock.gtimg.cn/data/index.php"
+            params = {
+                "appn": "detail",
+                "action": "data",
+                "c": code,
+                "p": page,
+            }
+            try:
+                text = requests.request(method='get', url=url, params=params).text
+                df = pd.DataFrame(eval(text[text.find("["):])[1].split("|")).iloc[:, 0].str.split("/", expand=True)
+                if df.empty:
+                    break
+            except:
+                break
+            res_df = pd.concat([res_df, df], ignore_index=True)
+        if res_df.empty:
+            return pd.DataFrame(data=[], columns=self._MARKET_BAR_COLUMNS)
+
+        # 3. 数据etl
+        # big_df = res_df.iloc[:, 1:].copy()
+        res_df.reset_index(drop=True, inplace=True)
+        res_df.columns = ['no', "trade_time", "price", "1", "volume", "2", "bs_type"]
+
+        res_df["stock_code"] = stock_code
+        res_df = res_df.astype({"trade_time": str, "price": float, "volume": int, "bs_type": str, })
+        return res_df[self._MARKET_BAR_COLUMNS]
+
 
 if __name__ == '__main__':
     print(StockMarketQQ().list_market_current(code_list=['000001', '600001', '000795', '872925']))
     print(StockMarketQQ().get_market_five(stock_code='000001'))
+    print(StockMarketQQ().get_market_bar(stock_code='000001'))

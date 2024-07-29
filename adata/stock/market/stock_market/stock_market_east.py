@@ -9,6 +9,7 @@ https://quote.eastmoney.com/center/
 """
 
 import pandas as pd
+from adata.common.exception.handler import handler_null
 
 from adata.common.utils import requests
 from adata.common.utils.date_utils import get_cur_time
@@ -23,6 +24,7 @@ class StockMarketEast(StockMarketTemplate):
     def __init__(self) -> None:
         super().__init__()
 
+    @handler_null
     def get_market(self, stock_code: str = '000001', start_date='1990-01-01', end_date=None, k_type=1,
                    adjust_type: int = 1):
         """
@@ -73,19 +75,51 @@ class StockMarketEast(StockMarketTemplate):
             ['trade_time', "trade_date", "open", "close", "high", "low", "volume", "amount", "change_pct", "change",
              "turnover_ratio", "pre_close"]]
 
+    @handler_null
     def get_market_min(self, stock_code: str = '000001'):
         """
-        获取百度的股票行情数据
-        web： https://gushitong.baidu.com/stock/ab-002926
-        url: https://finance.pae.baidu.com/selfselect/getstockquotation?
-        all=1&code=601318&isIndex=false&isBk=false&isBlock=false&isFutures=false&isStock=true&newFormat=1
-        &group=quotation_minute_ab&finClientType=pc
-        time, price, ratio, increase, volume, avgPrice, amount, timeKey, datetime, oriAmount
         :param stock_code: 6位股票代码
         :return: k线行情数据:"时间","价格","涨跌率","涨幅","均价","成交量", "成交额"
         """
-        pass
+        #  # 1. 参数处理
+        se_cid = 1 if stock_code.startswith('6') else 0
+        params = {
+            "fields1": "f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13",
+            "fields2": "f51,f52,f53,f54,f55,f56,f57,f58",
+            "ut": "fa5fd1943c7b386f172d6893dbfba10b",
+            "ndays": "1", "iscr": "1",
+            "iscca": "0", "secid": f"{se_cid}.{stock_code}",
+            "_": "1623766962675",
+        }
+        url = "https://push2.eastmoney.com/api/qt/stock/trends2/get"
+        res = requests.request(method='get', url=url, params=params).json()
+        # 2. 结果处理
+        if not res["data"]:
+            return pd.DataFrame()
+
+        # 3. 数据ETL
+        pre_close = res["data"]["preClose"]
+        data = [item.split(",") for item in res["data"]["trends"]]
+        columns = ['trade_time', 'open', 'close', 'high', 'low', 'volume', 'amount', 'price']
+        df = pd.DataFrame(data=data, columns=columns)
+        # 前面的累加求和
+        # df['avg_price'] = df['amount'].astype(float).cumsum() / df['volume'].astype(float).cumsum()/100
+        # 换算成股
+        df['volume'] = df['volume'].astype(float) * 100
+        df['stock_code'] = stock_code
+        df['avg_price'] = df['price']
+        df['price'] = df['close']
+
+        numeric_columns = ['open', 'close', 'volume', 'high', 'low', 'amount', 'price', 'avg_price']
+        df[numeric_columns] = df[numeric_columns].apply(pd.to_numeric)
+
+        df['change'] = df['price'] - pre_close
+        df['change_pct'] = df['change'] / pre_close*100
+        df['change_pct'] = df['change_pct'].round(2)
+        df.reset_index(drop=True, inplace=True)
+        return df[self._MARKET_MIN_COLUMNS]
 
 
 if __name__ == '__main__':
     print(StockMarketEast().get_market(stock_code='600020', k_type=1, adjust_type=1))
+    print(StockMarketEast().get_market_min(stock_code='600020'))
