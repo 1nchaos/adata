@@ -128,6 +128,8 @@ class StockMarketIndexEast(StockMarketIndexTemplate):
         result_df['change_pct'] = result_df['change'] / pre_close * 100
         result_df = result_df.round(2)
         result_df['trade_time'] = datetime.datetime.now()
+        result_df[['open', 'high', 'low', 'price', 'change']] = \
+            result_df[['open', 'high', 'low', 'price', 'change']].astype(float) / 100
         return result_df
 
 
