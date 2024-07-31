@@ -122,7 +122,9 @@ class StockIndex(object):
         result_df = pd.DataFrame(data=data).rename(columns={'code': 'stock_code', 'name': 'short_name'})
         result_df['index_code'] = index_code
         data.clear()
-        return result_df[self.__INDEX_CONSTITUENT_COLUMN]
+        result_df = result_df[self.__INDEX_CONSTITUENT_COLUMN]
+        result_df = result_df.drop_duplicates()
+        return result_df
 
     def __index_constituent_sina(self, index_code=None, wait_time=None):
         """

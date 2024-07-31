@@ -9,8 +9,8 @@ https://quote.eastmoney.com/center/
 """
 
 import pandas as pd
-from adata.common.exception.handler import handler_null
 
+from adata.common.exception.handler import handler_null
 from adata.common.utils import requests
 from adata.common.utils.date_utils import get_cur_time
 from adata.stock.market.stock_market.stock_market_template import StockMarketTemplate
@@ -39,7 +39,7 @@ class StockMarketEast(StockMarketTemplate):
         se_cid = 1 if stock_code.startswith('6') else 0
         start_date = start_date.replace('-', '') if start_date else '19900101'
         end_date = end_date.replace('-', '') if end_date else get_cur_time("%Y%m%d")
-        k_type = f"10{k_type}" if k_type < 5 else k_type
+        k_type = f"10{k_type}" if int(k_type) < 5 else k_type
         params = {"fields1": "f1,f2,f3,f4,f5,f6",
                   "fields2": "f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61,f116",
                   "ut": "7eea3edcaed734bea9cbfc24409ed989",
@@ -64,6 +64,7 @@ class StockMarketEast(StockMarketTemplate):
                                               '', "change_pct", "change", "turnover_ratio"])
         # 4.清洗数据
         df['pre_close'] = df['close'].astype(float) - df['change'].astype(float)
+        df['pre_close'] = df['pre_close'].round(2)
         df['trade_time'] = pd.to_datetime(df['trade_date']).dt.strftime('%Y-%m-%d %H:%M:%S')
         df['trade_date'] = pd.to_datetime(df['trade_date']).dt.strftime('%Y-%m-%d')
         df['stock_code'] = stock_code
@@ -71,9 +72,8 @@ class StockMarketEast(StockMarketTemplate):
                            'turnover_ratio', 'pre_close']
         df[numeric_columns] = df[numeric_columns].apply(pd.to_numeric)
         df.reset_index(inplace=True, drop=True)
-        return df[
-            ['trade_time', "trade_date", "open", "close", "high", "low", "volume", "amount", "change_pct", "change",
-             "turnover_ratio", "pre_close"]]
+        return df[['stock_code', 'trade_time', "trade_date", "open", "close", "high", "low", "volume", "amount",
+                   "change_pct", "change", "turnover_ratio", "pre_close"]]
 
     @handler_null
     def get_market_min(self, stock_code: str = '000001'):
@@ -114,7 +114,7 @@ class StockMarketEast(StockMarketTemplate):
         df[numeric_columns] = df[numeric_columns].apply(pd.to_numeric)
 
         df['change'] = df['price'] - pre_close
-        df['change_pct'] = df['change'] / pre_close*100
+        df['change_pct'] = df['change'] / pre_close * 100
         df['change_pct'] = df['change_pct'].round(2)
         df.reset_index(drop=True, inplace=True)
         return df[self._MARKET_MIN_COLUMNS]
@@ -122,4 +122,4 @@ class StockMarketEast(StockMarketTemplate):
 
 if __name__ == '__main__':
     print(StockMarketEast().get_market(stock_code='600020', k_type=1, adjust_type=1))
-    print(StockMarketEast().get_market_min(stock_code='600020'))
+    # print(StockMarketEast().get_market_min(stock_code='600020'))
