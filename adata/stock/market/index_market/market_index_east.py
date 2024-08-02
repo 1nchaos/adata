@@ -103,7 +103,7 @@ class StockMarketIndexEast(StockMarketIndexTemplate):
         :return: [指数代码,交易时间，交易日期，开，高，低，当前价格,成交量，成交额]
         ['trade_time', 'trade_date', 'open', 'high', 'low', 'price', 'volume', 'amount']
         """
-        sec_id = 0 if index_code[0] == 0 else 1
+        sec_id = 1 if index_code[0] == 0 else 0
         url = f"http://push2.eastmoney.com/api/qt/stock/get?" \
               f"invt=2&fltt=1&fields=f58,f107,f57,f43,f59,f169,f170,f152,f46,f60,f44,f45,f47,f48,f19,f532,f39,f161,f49," \
               f"f171,f50,f86,f600,f601,f154,f84,f85,f168,f108,f116,f167,f164,f92,f71,f117,f292,f113,f114,f115,f119," \
