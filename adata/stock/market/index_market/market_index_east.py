@@ -33,7 +33,7 @@ class StockMarketIndexEast(StockMarketIndexTemplate):
         if start_date:
             beg = start_date.replace('-', '')
         sec_id = 0 if index_code[0] == 0 else 1
-        url = f"https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={sec_id}.{index_code}&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=10{k_type}&fqt=1&beg={beg}&end=20500101&smplmt=460&lmt=1000000&_=1722235849235"
+        url = f"https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={sec_id}.{index_code}&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=10{k_type}&fqt=1&beg={beg}&end=20500101&smplmt=100000&lmt=1000000&_=1722235849235"
         res_json = requests.request('post', url, headers={}, proxies={}).json()
         # 解析数据
         code = res_json['data']['code']
