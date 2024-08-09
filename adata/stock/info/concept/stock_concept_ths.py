@@ -157,6 +157,9 @@ class StockConceptThs(StockConceptTemplate):
                 page_info = soup.find('span', {'class': 'page_info'})
                 if page_info:
                     total_pages = int(page_info.text.split("/")[1])
+                    # 只能获取到前5页
+                    if total_pages > 5:
+                        total_pages = 5
             # 4. 解析数据
             page_data = []
             for idx, tr in enumerate(soup.find_all('tr')):
@@ -226,12 +229,14 @@ class StockConceptThs(StockConceptTemplate):
         total_pages = 1
         curr_page = 1
         while curr_page <= total_pages:
-            api_url = f"https://www.iwencai.com/gateway/urp/v7/landing/getDataList?query={name} 概念成分&" \
-                      f"page={curr_page}&perpage=100&query_type=stock&comp_id=6734520&uuid=24087"
+            api_url = f"http://www.iwencai.com/gateway/urp/v7/landing/getDataList?query={name} 概念成分股有哪些&" \
+                      f"urp_sort_way=desc&urp_sort_index=最新涨跌幅&page={curr_page}&perpage=100&addheaderindexes=&codelist=&" \
+                      f"indexnamelimit=&ret=json_all&date_range[0]=20240809&urp_use_sort=1&query_type=stock&" \
+                      f"comp_id=6836372&business_cat=soniu&uuid=24087"
             headers = copy.deepcopy(ths_headers.json_headers)
             headers['Host'] = 'www.iwencai.com'
             headers['Sec-Fetch-Mode'] = 'navigate'
-            res = requests.request(method='get', url=api_url, headers=headers, proxies={}, wait_time=wait_time)
+            res = requests.request(method='post', url=api_url, headers=headers, proxies={}, wait_time=wait_time)
             curr_page += 1
             # 2. 判断请求是否成功
             if res.status_code != 200:
@@ -289,6 +294,7 @@ class StockConceptThs(StockConceptTemplate):
 
 
 if __name__ == '__main__':
-    # print(StockConceptThs().all_concept_code_ths())
-    print(StockConceptThs().get_concept_ths(stock_code='300033')[
-              ['stock_code', 'concept_code', 'name', 'source','reason']].to_string())
+    print(StockConceptThs().all_concept_code_ths())
+    print(StockConceptThs().concept_constituent_ths(name='生物医药'))
+    print(StockConceptThs().concept_constituent_ths(index_code='885403'))
+    print(StockConceptThs().concept_constituent_ths(concept_code='300769'))
