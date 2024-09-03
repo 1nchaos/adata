@@ -19,8 +19,8 @@ import time
 
 import numpy as np
 import pandas as pd
-import requests
 
+from adata.common import requests
 from adata.common.exception.handler import handler_null
 from adata.common.headers import baidu_headers
 from adata.common.utils.code_utils import get_exchange_by_stock_code
