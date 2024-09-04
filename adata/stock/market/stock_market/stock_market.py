@@ -100,8 +100,8 @@ class StockMarket(object):
 
 
 if __name__ == '__main__':
-    print(StockMarket().get_market(stock_code='002230', start_date='2024-07-22', k_type=1))
-    print(StockMarket().get_market_min(stock_code='000001'))
-    print(StockMarket().list_market_current(code_list=['000001', '600001', '000795', '872925']))
+    # print(StockMarket().get_market(stock_code='002230', start_date='2024-07-22', k_type=1))
+    # print(StockMarket().get_market_min(stock_code='000001'))
+    # print(StockMarket().list_market_current(code_list=['000001', '600001', '000795', '872925']))
     print(StockMarket().get_market_five(stock_code='000001'))
-    print(StockMarket().get_market_bar(stock_code='872925'))
+    # print(StockMarket().get_market_bar(stock_code='000001'))
