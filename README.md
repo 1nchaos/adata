@@ -178,6 +178,12 @@ print(res_df)
 
 **注：概念和指数从本质来看是一样的，所以相关的接口和返回结果是一致的，概念是各个厂商自定义的指数，指数是官方或者权威机构定义的，都是一揽子股票的组合。**
 
+#### 3.  财务数据
+
+| 数据         | API                            | 说明                       | 备注                                             |
+| ------------ | ------------------------------ | -------------------------- | ------------------------------------------------ |
+| 核心财务数据 | stock.finance.get_core_index() | 获取单只股票的核心财务数据 | 来源：东方财富<br />三大报表详细数据，暂时不提供 |
+
 ### （2）基金-ETF
 
 #### 1. 基本信息
@@ -273,7 +279,7 @@ print(res_df)
 
 | Simon                                 | [bigbigbigfish](https://github.com/bigbigbigfish) | [LuneZ99](https://github.com/LuneZ99)         | 匿名用户 | thue                                    | [Triones009](https://github.com/Triones009) | **[adaaaaaa](https://github.com/adaaaaaa)** | **[LeslieWuboy](https://github.com/LeslieWuboy)** | [yinzhengxin](https://github.com/yinzhengxin) |
 | ------------------------------------- | ------------------------------------------------- | --------------------------------------------- | -------- | --------------------------------------- | ------------------------------------------- | ------------------------------------------- | ------------------------------------------------- | --------------------------------------------- |
-| [yxm0513](https://github.com/yxm0513) | [hanxuanliang](https://github.com/hanxuanliang)   | [akihara-sam](https://github.com/akihara-sam) | Andy     | [baei2048](https://github.com/baei2048) | [zpsakura](https://github.com/zpsakura)     |                                             |                                                   |                                               |
+| [yxm0513](https://github.com/yxm0513) | [hanxuanliang](https://github.com/hanxuanliang)   | [akihara-sam](https://github.com/akihara-sam) | Andy     | [baei2048](https://github.com/baei2048) | [zpsakura](https://github.com/zpsakura)     | [Yzx-1024](https://github.com/Yzx-1024)     |                                                   |                                               |
 
 ----------------------------------------------------------------------
 
