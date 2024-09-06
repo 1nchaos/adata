@@ -8,7 +8,7 @@
 import copy
 
 import pandas as pd
-import requests
+from adata.common import requests
 
 from adata.common.headers import ths_headers
 
@@ -46,7 +46,7 @@ class BondCode(object):
         headers = copy.deepcopy(ths_headers.text_headers)
         headers['Host'] = 'data.10jqka.com.cn'
         headers['Referer'] = 'http://data.10jqka.com.cn/ipo/bond/'
-        res = requests.get(api_url, headers=headers, proxies={})
+        res = requests.request(url=api_url, headers=headers, proxies={})
         res_json = res.json()
         if res.status_code != 200 or res_json['status_msg'] != 'ok':
             return pd.DataFrame(data=[], columns=COLUMNS)
