@@ -32,10 +32,11 @@ class StockMarketIndexEast(StockMarketIndexTemplate):
         beg = 0
         if start_date:
             beg = start_date.replace('-', '')
+        sec_id = 0
         if index_code[:2] == '93':
             sec_id = 2
-        else:
-            sec_id = 0
+        elif index_code[0] == '0':
+            sec_id = 1
         url = f"https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={sec_id}.{index_code}&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=10{k_type}&fqt=1&beg={beg}&end=20500101&smplmt=100000&lmt=1000000&_=1722235849235"
         res_json = requests.request('post', url, headers={}, proxies={}).json()
         # 解析数据
@@ -69,10 +70,11 @@ class StockMarketIndexEast(StockMarketIndexTemplate):
         :return 时间，现价，成交额（元），均价，成交量（股） 涨跌额，涨跌幅
         ['index_code', 'trade_time', 'price', 'change', 'change_pct', 'volume', 'avg_price', 'amount']
         """
+        sec_id = 0
         if index_code[:2] == '93':
             sec_id = 2
-        else:
-            sec_id = 0
+        elif index_code[0] == '0':
+            sec_id = 1
         url = f"http://push2his.eastmoney.com/api/qt/stock/trends2/get?" \
               f"fields1=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13&fields2=f51,f52,f53,f54,f55,f56,f57,f58&" \
               f"iscr=0&ndays=1&secid={sec_id}.{index_code}"
@@ -143,11 +145,11 @@ class StockMarketIndexEast(StockMarketIndexTemplate):
 
 
 if __name__ == '__main__':
-    print(StockMarketIndexEast().get_market_index(index_code='000001', start_date='2022-12-01'))
-    print(StockMarketIndexEast().get_market_index(index_code='399001', start_date='2022-12-01'))
-    print(StockMarketIndexEast().get_market_index(index_code='932000', start_date='2022-12-01'))
+    # print(StockMarketIndexEast().get_market_index(index_code='000001', start_date='2022-12-01'))
+    # print(StockMarketIndexEast().get_market_index(index_code='399001', start_date='2022-12-01'))
+    # print(StockMarketIndexEast().get_market_index(index_code='932000', start_date='2022-12-01'))
     # print(StockMarketIndexEast().get_market_index_min(index_code='399001'))
     # print(StockMarketIndexEast().get_market_index_min(index_code='000001'))
-    # print(StockMarketIndexEast().get_market_index_current(index_code='399001'))
-    # print(StockMarketIndexEast().get_market_index_current(index_code='000001'))
-    # print(StockMarketIndexEast().get_market_index_current(index_code='932000'))
+    print(StockMarketIndexEast().get_market_index_current(index_code='399001'))
+    print(StockMarketIndexEast().get_market_index_current(index_code='000001'))
+    print(StockMarketIndexEast().get_market_index_current(index_code='932000'))
