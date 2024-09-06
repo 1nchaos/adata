@@ -93,6 +93,8 @@ class StockCode(object):
                 time.sleep(2)
                 print(e)
                 continue
+        if not data:
+            return pd.DataFrame(data=[], columns=self.__CODE_COLUMNS)
         # 4. 封装数据
         rename = {'name': 'short_name', 'code': 'stock_code'}
         df = pd.DataFrame(data=data)[['code', 'name', 'exchange']].rename(columns=rename)
@@ -112,7 +114,7 @@ class StockCode(object):
                   f"sortColumns=APPLY_DATE,SECURITY_CODE&sortTypes=-1,-1&pageSize=50&pageNumber={i + 1}&" \
                   f"reportName=RPTA_APP_IPOAPPLY&columns=SECURITY_CODE,SECURITY_NAME,TRADE_MARKET,LISTING_DATE&quoteType=0&" \
                   f"filter=(APPLY_DATE>'2010-01-01')&source=WEB&client=WEB"
-            res_json = requests.request('get', url, headers={}, proxies={}).json()
+            res_json = requests.request(method='get', url=url, headers={}, proxies={}).json()
             res_data = res_json['result']['data']
             for _ in res_data:
                 exchange = str(_['TRADE_MARKET'])
@@ -149,7 +151,7 @@ class StockCode(object):
             "_": "1623833739532",
         }
         # 请求数据
-        r = requests.request(url, timeout=15, params=params)
+        r = requests.request(url=url, timeout=15, params=params)
         data_json = r.json()
         if not data_json["data"]["diff"]:
             return pd.DataFrame()
