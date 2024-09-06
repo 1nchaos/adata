@@ -33,7 +33,6 @@ class StockMarketIndexBaidu(StockMarketIndexTemplate):
         :param index_code: 6位股票代码
         :param start_date: 开始时间
         :param k_type: k线类型：1.日；2.周；3.月
-        # :param adjust_type: k线复权类型：0.不复权；1.前复权；2.后复权 默认：1 前复权 TODO
         :return: k线行情数据:"时间戳", "时间","开盘","收盘","成交量","最高","最低","成交额","涨跌额","涨跌幅","换手率","昨收"
         """
         # 1. 请求接口 url
@@ -87,4 +86,4 @@ class StockMarketIndexBaidu(StockMarketIndexTemplate):
 
 
 if __name__ == '__main__':
-    print(StockMarketIndexBaidu().get_market_index(index_code='000001', start_date='2021-01-01', k_type=1))
+    print(StockMarketIndexBaidu().get_market_index(index_code='000001', start_date='2001-01-01', k_type=1))

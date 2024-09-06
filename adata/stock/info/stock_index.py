@@ -59,21 +59,22 @@ class StockIndex(object):
                 if i == 0:
                     url = f"https://39.push2.eastmoney.com/api/qt/clist/get?" \
                           f"pn={curr_page}&pz=20&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&" \
-                          f"dect=1&wbp2u=|0|0|0|web&fid=f3&fs=m:1+s:2&fields=f12,f14&_=1720430951494"
+                          f"dect=1&wbp2u=|0|0|0|web&fid=f3&fs=m:1+s:2&fields=f12,f13,f14&_=1720430951494"
                 else:
                     url = f"https://31.push2.eastmoney.com/api/qt/clist/get?" \
                           f"pn={curr_page}&pz=20&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&dect=1&" \
-                          f"wbp2u=|0|0|0|web&fid=f3&fs=m:0+t:5&fields=f12,f14&_=1720432207117"
+                          f"wbp2u=|0|0|0|web&fid=f3&fs=m:0+t:5&fields=f12,f13,f14&_=1720432207117"
                 res_json = requests.request('get', url, headers={}, proxies={}, wait_time=wait_time).json()
                 res_data = res_json['data']
                 if not res_data:
                     break
                 res_data = res_data['diff']
                 for _ in res_data:
-                    data.append({'index_code': _['f12'], 'name': _['f14'], 'source': '东方财富', 'concept_code': ''})
+                    data.append({'cid': _['f13'], 'index_code': _['f12'], 'name': _['f14'], 'source': '东方财富',
+                                 'concept_code': ''})
                 curr_page += 1
-        result_df = pd.DataFrame(data=data, columns=self.__INDEX_CODE_COLUMN)
-        return result_df
+        result_df = pd.DataFrame(data=data)
+        return result_df[self.__INDEX_CODE_COLUMN]
 
     def index_constituent(self, index_code=None, wait_time=None):
         """

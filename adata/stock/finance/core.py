@@ -50,7 +50,7 @@ class Core(object):
             'NOTICE_DATE': 'notice_date',
 
             'EPSJB': 'basic_eps',
-            'EPSKCJB': 'diluted_eps	',
+            'EPSKCJB': 'diluted_eps',
             'EPSXS': 'non_gaap_eps',
             'BPS': 'net_asset_ps',
             'MGZBGJ': 'cap_reserve_ps',
