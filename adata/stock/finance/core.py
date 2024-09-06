@@ -88,7 +88,7 @@ class Core(object):
 
             "ZZCZZTS": 'total_asset_turn_days',
             "CHZZTS": 'inv_turn_days',
-            "YSZKZZTS": 'total_asset_turn_rate',
+            "YSZKZZTS": 'acct_recv_turn_days',
             "TOAZZL": 'total_asset_turn_rate',
             "CHZZL": 'inv_turn_rate',
             "YSZKZZL": 'acct_recv_turn_rate',
