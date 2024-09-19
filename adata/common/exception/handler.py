@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@desc: readme
+@desc: 异常-空值处理
 @author: 1nchaos
 @time: 2023/8/14
 @log: change log
@@ -14,7 +14,6 @@ def handler_null(func):
         try:
             return func(*args, **kwargs)
         except Exception:
-            print("data null:", func.__name__)
             return pd.DataFrame(data=[], columns=[])
 
     return wrapper
