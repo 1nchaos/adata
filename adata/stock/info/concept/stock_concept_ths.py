@@ -298,3 +298,4 @@ if __name__ == '__main__':
     print(StockConceptThs().concept_constituent_ths(name='生物医药'))
     print(StockConceptThs().concept_constituent_ths(index_code='885403'))
     print(StockConceptThs().concept_constituent_ths(concept_code='300769'))
+    print(StockConceptThs().get_concept_ths(stock_code='300033'))
