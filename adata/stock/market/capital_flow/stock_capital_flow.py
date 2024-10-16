@@ -45,4 +45,4 @@ class StockCapitalFlow(object):
 
 if __name__ == '__main__':
     print(StockCapitalFlow().get_capital_flow_min(stock_code='300059'))
-    print(StockCapitalFlow().get_capital_flow(stock_code='000001'))
+    print(StockCapitalFlow().get_capital_flow(stock_code='300059'))

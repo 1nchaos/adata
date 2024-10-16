@@ -100,8 +100,40 @@ class StockConceptEast(StockConceptTemplate):
         result_df = pd.DataFrame(data=data, columns=self._CONCEPT_INFO_COLUMNS)
         return result_df
 
+    def get_plate_east(self, stock_code: str = '000001', plate_type=None):
+        """
+        根据股票代码获取，股票所属的所有的板块相关的信息
+        :param stock_code: 股票代码
+        :param plate_type: 1. 行业 2. 地域板块 3.概念 默认：0全部
+        :return: 板块信息
+        """
+        stock_code = compile_exchange_by_stock_code(stock_code)
+        url = f'https://datacenter.eastmoney.com/securities/api/data/get?' \
+              f'type=RPT_F10_CORETHEME_BOARDTYPE&' \
+              f'sty=SECUCODE,SECURITY_CODE,SECURITY_NAME_ABBR,BOARD_CODE,BOARD_NAME,IS_PRECISE,BOARD_RANK,BOARD_TYPE&' \
+              f'filter=(SECUCODE="{stock_code}")&p=1&ps=&sr=1&st=BOARD_RANK&source=HSF10&client=PC&v=08059745171648254'
+        res_json = requests.request('get', url, headers={}, proxies={}).json()
+        # 1. 返回结果判断
+        if not res_json['success']:
+            return pd.DataFrame(data=[], columns=self._PLATE_INFO_COLUMNS)
+
+        # 2. 正常返回数据结果封装
+        res_data = res_json['result']['data']
+        data = []
+        for _ in res_data:
+            plate_code = '0000' + _['BOARD_CODE']
+            data.append({'stock_code': _['SECURITY_CODE'], 'plate_code': 'BK' + plate_code[-4:],
+                         'plate_name': _['BOARD_NAME'], 'source': '东方财富',
+                         'plate_type': _['BOARD_TYPE'] if _['BOARD_TYPE'] else '概念'})
+        result_df = pd.DataFrame(data=data, columns=self._PLATE_INFO_COLUMNS)
+        if plate_type is None:
+            return result_df
+        plate_type = {'1': '行业', '2': '板块', '3': '概念'}.get(str(plate_type), None)
+        return result_df[result_df['plate_type'] == plate_type]
+
 
 if __name__ == '__main__':
     print(StockConceptEast().all_concept_code_east())
     print(StockConceptEast().concept_constituent_east(concept_code="BK0637"))
     print(StockConceptEast().get_concept_east(stock_code="600020").to_string())
+    print(StockConceptEast().get_plate_east(stock_code="600020", plate_type=1).to_string())

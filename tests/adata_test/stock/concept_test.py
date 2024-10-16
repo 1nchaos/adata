@@ -36,6 +36,14 @@ class InfoTestCase(unittest.TestCase):
         print(df)
         self.assertEqual(True, len(df) > 2)
 
+    def test_get_plate_east(self):
+        # 中青旅
+        stock_code = '600138'
+        print(f"开始测试：get_plate_east:{stock_code}")
+        df = adata.stock.info.get_plate_east(stock_code=stock_code)
+        print(df)
+        self.assertEqual(True, len(df) > 2)
+
 
 if __name__ == '__main__':
     unittest.main()
