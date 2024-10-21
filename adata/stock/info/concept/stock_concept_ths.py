@@ -210,6 +210,8 @@ class StockConceptThs(StockConceptTemplate):
             items = result_json['items']
             data_list.extend(items)
 
+        if not data_list:
+            return pd.DataFrame(data=data_list, columns=self._CONCEPT_CONSTITUENT_COLUMNS)
         # 4. 数据封装，去重
         rename = {'5': 'stock_code', '55': 'short_name'}
         result_df = pd.DataFrame(data=data_list).rename(columns=rename)
@@ -294,8 +296,8 @@ class StockConceptThs(StockConceptTemplate):
 
 
 if __name__ == '__main__':
-    print(StockConceptThs().all_concept_code_ths())
-    print(StockConceptThs().concept_constituent_ths(name='生物医药'))
+    # print(StockConceptThs().all_concept_code_ths())
+    # print(StockConceptThs().concept_constituent_ths(name='生物医药'))
     print(StockConceptThs().concept_constituent_ths(index_code='885403'))
-    print(StockConceptThs().concept_constituent_ths(concept_code='300769'))
-    print(StockConceptThs().get_concept_ths(stock_code='300033'))
+    # print(StockConceptThs().concept_constituent_ths(concept_code='300769'))
+    # print(StockConceptThs().get_concept_ths(stock_code='300033'))

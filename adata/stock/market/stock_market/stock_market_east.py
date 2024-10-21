@@ -2,7 +2,7 @@
 """
 @desc: 东方财富
 https://quote.eastmoney.com/center/
-
+TODO 数据校验
 @author: 1nchaos
 @time: 2023/06/19
 @log: change log
@@ -65,6 +65,7 @@ class StockMarketEast(StockMarketTemplate):
         # 4.清洗数据
         df['pre_close'] = df['close'].astype(float) - df['change'].astype(float)
         df['pre_close'] = df['pre_close'].round(2)
+        df['volume'] = df['volume'].astype(int) * 100
         df['trade_time'] = pd.to_datetime(df['trade_date']).dt.strftime('%Y-%m-%d %H:%M:%S')
         df['trade_date'] = pd.to_datetime(df['trade_date']).dt.strftime('%Y-%m-%d')
         df['stock_code'] = stock_code
@@ -121,5 +122,5 @@ class StockMarketEast(StockMarketTemplate):
 
 
 if __name__ == '__main__':
-    print(StockMarketEast().get_market(stock_code='600020', k_type=1, adjust_type=1))
+    print(StockMarketEast().get_market(stock_code='000333', k_type=1, adjust_type=1))
     # print(StockMarketEast().get_market_min(stock_code='600020'))
