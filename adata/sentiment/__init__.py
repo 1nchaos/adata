@@ -3,7 +3,7 @@
 @desc: 新闻&舆情相关的数据
 @author: 1nchaos
 @time:2023/04/06
-@log: 
+@log:
 """
 from adata.sentiment.hot import Hot
 from adata.sentiment.north_flow import NorthFlow
@@ -20,4 +20,3 @@ class Sentiment(StockLifting, SecuritiesMargin):
 
 
 sentiment = Sentiment()
-

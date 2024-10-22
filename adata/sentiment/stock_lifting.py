@@ -21,7 +21,7 @@ from adata.common.utils import cookie
 
 
 class StockLifting(object):
-    __STOCK_LIFTING_COLUMN = ['stock_code', 'short_name', 'lift_date', 'volume', 'amount', 'ratio', 'price']
+    __STOCK_LIFTING_COLUMN = ["stock_code", "short_name", "lift_date", "volume", "amount", "ratio", "price"]
 
     def __init__(self) -> None:
         super().__init__()
@@ -49,32 +49,39 @@ class StockLifting(object):
             if curr_page > 1:
                 api_url = api_url + f"page/{curr_page}/free/1/"
             headers = copy.deepcopy(ths_headers.text_headers)
-            headers['Host'] = 'data.10jqka.com.cn'
-            headers['Referer'] = None
-            headers['Cookie'] = cookie.ths_cookie()
-            res = requests.request(method='get', url=api_url, headers=headers, proxies={})
+            headers["Host"] = "data.10jqka.com.cn"
+            headers["Referer"] = None
+            headers["Cookie"] = cookie.ths_cookie()
+            res = requests.request(method="get", url=api_url, headers=headers, proxies={})
             curr_page += 1
             # 2. 判断请求是否成功
             if res.status_code != 200:
                 continue
             text = res.text
-            if not ('解禁日期' in text or '解禁股' in text):
+            if not ("解禁日期" in text or "解禁股" in text):
                 break
-            soup = BeautifulSoup(text, 'html.parser')
+            soup = BeautifulSoup(text, "html.parser")
             # 3 .获取总的页数
             if total_pages == 1:
-                page_info = soup.find('span', {'class': 'page_info'})
+                page_info = soup.find("span", {"class": "page_info"})
                 if page_info:
                     total_pages = int(page_info.text.split("/")[1])
             # 4. 解析数据
             page_data = []
-            for idx, tr in enumerate(soup.find_all('tr')):
+            for idx, tr in enumerate(soup.find_all("tr")):
                 if idx != 0:
-                    tds = tr.find_all('td')
-                    page_data.append({'stock_code': tds[1].contents[0].text, 'short_name': tds[2].contents[0].text,
-                                      'lift_date': tds[3].contents[0].text, 'volume': tds[4].contents[0].text,
-                                      'ratio': tds[7].contents[0].text, 'price': tds[5].contents[0].text,
-                                      'amount': tds[6].contents[0].text})
+                    tds = tr.find_all("td")
+                    page_data.append(
+                        {
+                            "stock_code": tds[1].contents[0].text,
+                            "short_name": tds[2].contents[0].text,
+                            "lift_date": tds[3].contents[0].text,
+                            "volume": tds[4].contents[0].text,
+                            "ratio": tds[7].contents[0].text,
+                            "price": tds[5].contents[0].text,
+                            "amount": tds[6].contents[0].text,
+                        }
+                    )
             data.extend(page_data)
         # 5. 封装数据
         if not data:
@@ -82,16 +89,18 @@ class StockLifting(object):
         result_df = pd.DataFrame(data=data)
         data.clear()
         # 6. 单位换算
-        result_df['volume'] = result_df['volume'].apply(lambda x: str(float(x[:-1]) * 10000) if '万' in x else x)
-        result_df['volume'] = result_df['volume'].apply(
-            lambda x: round(float(x[:-1]) * 100000000) if '亿' in x else round(float(x)))
+        result_df["volume"] = result_df["volume"].apply(lambda x: str(float(x[:-1]) * 10000) if "万" in x else x)
+        result_df["volume"] = result_df["volume"].apply(
+            lambda x: round(float(x[:-1]) * 100000000) if "亿" in x else round(float(x))
+        )
 
         # convert amount to yuan
-        result_df['amount'] = result_df['amount'].apply(lambda x: str(float(x[:-1]) * 10000) if '万' in x else x)
-        result_df['amount'] = result_df['amount'].apply(
-            lambda x: round(float(x[:-1]) * 100000000) if '亿' in x else round(float(x)))
+        result_df["amount"] = result_df["amount"].apply(lambda x: str(float(x[:-1]) * 10000) if "万" in x else x)
+        result_df["amount"] = result_df["amount"].apply(
+            lambda x: round(float(x[:-1]) * 100000000) if "亿" in x else round(float(x))
+        )
         return result_df[self.__STOCK_LIFTING_COLUMN]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print(StockLifting().stock_lifting_last_month())
