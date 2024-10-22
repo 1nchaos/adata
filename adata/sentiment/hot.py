@@ -16,11 +16,12 @@ from adata.common.utils import requests
 from adata.sentiment.alist import AList
 
 
-class Hot(AList):
+class Hot(AList):  # 参考 pylint 改完之后实际上这个 Hot 和 AList 没有啥实例化的意义
     """热门榜单"""
 
     # 东方财富人气榜
-    def pop_rank_100_east(self):
+    @staticmethod
+    def pop_rank_100_east():
         """
         东方财富人气榜100
         http://guba.eastmoney.com/rank/
@@ -40,7 +41,6 @@ class Hot(AList):
         df = pd.DataFrame(res["data"])
 
         df["mark"] = ["0" + "." + item[2:] if "SZ" in item else "1" + "." + item[2:] for item in df["sc"]]
-        ",".join(df["mark"]) + "?v=08926209912590994"
         params = {
             "ut": "f057cbcbce2a86e2866ab8877db1d059",
             "fltt": "2",
@@ -66,7 +66,8 @@ class Hot(AList):
         rank_df["rank"] = range(1, len(rank_df) + 1)
         return rank_df[["rank", "stock_code", "short_name", "price", "change", "change_pct"]]
 
-    def hot_rank_100_ths(self):
+    @staticmethod
+    def hot_rank_100_ths():
         """
         同花顺热股100
         https://dq.10jqka.com.cn/fuyao/hot_list_data/out/hot_list/v1/stock?stock_type=a&type=hour&list_type=normal
@@ -96,7 +97,8 @@ class Hot(AList):
         rank_df = rank_df[["rank", "stock_code", "short_name", "change_pct", "hot_value", "pop_tag", "concept_tag"]]
         return rank_df
 
-    def hot_concept_20_ths(self, plate_type=1):
+    @staticmethod
+    def hot_concept_20_ths(plate_type=1):
         """
         同花热门概念板块
         :param plate_type: 1.概念板块，2.行业板块；默认：概念板块

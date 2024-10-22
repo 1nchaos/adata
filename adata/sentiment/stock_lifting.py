@@ -20,11 +20,8 @@ from adata.common.headers import ths_headers
 from adata.common.utils import cookie
 
 
-class StockLifting(object):
+class StockLifting:
     __STOCK_LIFTING_COLUMN = ["stock_code", "short_name", "lift_date", "volume", "amount", "ratio", "price"]
-
-    def __init__(self) -> None:
-        super().__init__()
 
     def stock_lifting_last_month(self):
         """
@@ -45,7 +42,7 @@ class StockLifting(object):
         total_pages = 1
         curr_page = 1
         while curr_page <= total_pages:
-            api_url = f"http://data.10jqka.com.cn/market/xsjj/field/enddate/order/desc/ajax/1/free/1/"
+            api_url = "http://data.10jqka.com.cn/market/xsjj/field/enddate/order/desc/ajax/1/free/1/"
             if curr_page > 1:
                 api_url = api_url + f"page/{curr_page}/free/1/"
             headers = copy.deepcopy(ths_headers.text_headers)

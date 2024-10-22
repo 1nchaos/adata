@@ -21,11 +21,8 @@ from adata.common import requests
 from adata.common.headers import east_headers
 
 
-class SecuritiesMargin(object):
+class SecuritiesMargin:
     __SECURITIES_MARGIN_COLUMN = ["trade_date", "rzye", "rqye", "rzrqye", "rzrqyecz"]
-
-    def __init__(self) -> None:
-        super().__init__()
 
     def securities_margin(self, start_date=None):
         """

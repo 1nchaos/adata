@@ -19,6 +19,7 @@ import math
 
 import pandas as pd
 
+import adata  # 函数内 import，挪过来
 from adata.common import requests
 from adata.common.base.base_ths import BaseThs
 from adata.common.exception.exception_msg import THS_IP_LIMIT_RES, THS_IP_LIMIT_MSG
@@ -41,9 +42,6 @@ class NorthFlow(BaseThs):
 
     __NORTH_FLOW_MIN_COLUMNS = ["trade_time", "net_hgt", "net_sgt", "net_tgt"]
     __NORTH_FLOW_CURRENT_COLUMNS = __NORTH_FLOW_MIN_COLUMNS
-
-    def __init__(self) -> None:
-        super().__init__()
 
     def north_flow(self, start_date=None):
         """
@@ -71,8 +69,7 @@ class NorthFlow(BaseThs):
         if start_date:
             start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
             date_min = datetime.datetime.strptime("2017-01-01", "%Y-%m-%d")
-            if start_date < date_min:
-                start_date = date_min
+            start_date = max(start_date, date_min)
         curr_page = 1
         data = []
         while curr_page < 18:
@@ -95,28 +92,29 @@ class NorthFlow(BaseThs):
             if not sgt_data:
                 break
             is_end = False
-            for i in range(len(sgt_data)):
+            # pylint 报的用 enumerate，所以这里保留一下 i 做示范
+            for i, (hgt_item, sgt_item) in enumerate(zip(hgt_data, sgt_data)):
                 if not start_date and i >= 30:
                     is_end = True
                     break
                 if start_date:
-                    date_min = datetime.datetime.strptime(hgt_data[i]["TRADE_DATE"], "%Y-%m-%d %H:%M:%S")
+                    date_min = datetime.datetime.strptime(hgt_item["TRADE_DATE"], "%Y-%m-%d %H:%M:%S")
                     if start_date > date_min:
                         is_end = True
                         break
 
                 data.append(
                     {
-                        "trade_date": hgt_data[i]["TRADE_DATE"],
-                        "net_hgt": math.ceil(hgt_data[i]["NET_DEAL_AMT"] * 1000000),
-                        "buy_hgt": math.ceil(hgt_data[i]["BUY_AMT"] * 1000000),
-                        "sell_hgt": math.ceil(hgt_data[i]["SELL_AMT"] * 1000000),
-                        "net_sgt": math.ceil(sgt_data[i]["NET_DEAL_AMT"] * 1000000),
-                        "buy_sgt": math.ceil(sgt_data[i]["BUY_AMT"] * 1000000),
-                        "sell_sgt": math.ceil(sgt_data[i]["SELL_AMT"] * 1000000),
-                        "net_tgt": math.ceil((hgt_data[i]["NET_DEAL_AMT"] + sgt_data[i]["NET_DEAL_AMT"]) * 1000000),
-                        "buy_tgt": math.ceil((hgt_data[i]["BUY_AMT"] + sgt_data[i]["BUY_AMT"]) * 1000000),
-                        "sell_tgt": math.ceil((hgt_data[i]["SELL_AMT"] + sgt_data[i]["SELL_AMT"]) * 1000000),
+                        "trade_date": hgt_item["TRADE_DATE"],
+                        "net_hgt": math.ceil(hgt_item["NET_DEAL_AMT"] * 1000000),
+                        "buy_hgt": math.ceil(hgt_item["BUY_AMT"] * 1000000),
+                        "sell_hgt": math.ceil(hgt_item["SELL_AMT"] * 1000000),
+                        "net_sgt": math.ceil(sgt_item["NET_DEAL_AMT"] * 1000000),
+                        "buy_sgt": math.ceil(sgt_item["BUY_AMT"] * 1000000),
+                        "sell_sgt": math.ceil(sgt_item["SELL_AMT"] * 1000000),
+                        "net_tgt": math.ceil((hgt_item["NET_DEAL_AMT"] + sgt_item["NET_DEAL_AMT"]) * 1000000),
+                        "buy_tgt": math.ceil((hgt_item["BUY_AMT"] + sgt_item["BUY_AMT"]) * 1000000),
+                        "sell_tgt": math.ceil((hgt_item["SELL_AMT"] + sgt_item["SELL_AMT"]) * 1000000),
                     }
                 )
 
@@ -149,7 +147,7 @@ class NorthFlow(BaseThs):
 
     def __north_flow_min_ths(self):
         # 1.接口 url
-        api_url = f" https://data.hexin.cn/market/hsgtApi/method/dayChart/"
+        api_url = "https://data.hexin.cn/market/hsgtApi/method/dayChart/"
         headers = copy.deepcopy(ths_headers.json_headers)
         headers["Host"] = "data.hexin.cn"
         res = requests.request("get", api_url, headers=headers, proxies={})
@@ -164,17 +162,16 @@ class NorthFlow(BaseThs):
         hgt_list = result_json["hgt"]
         sgt_list = result_json["sgt"]
         data = []
-        for i in range(len(time_list)):
+        for time_item, hgt_item, sgt_item in zip(time_list, hgt_list, sgt_list):
             row = [
-                time_list[i],
-                math.ceil(hgt_list[i] * 100000000),
-                math.ceil(sgt_list[i] * 100000000),
-                math.ceil((hgt_list[i] + sgt_list[i]) * 100000000),
+                time_item,
+                math.ceil(hgt_item * 100000000),
+                math.ceil(sgt_item * 100000000),
+                math.ceil((hgt_item + sgt_item) * 100000000),
             ]
             data.append(row)
         # 3. 封装数据
         result_df = pd.DataFrame(data=data, columns=self.__NORTH_FLOW_MIN_COLUMNS)
-        import adata
 
         trade_year = adata.stock.info.trade_calendar()
         # 获取当前日期
@@ -216,7 +213,7 @@ class NorthFlow(BaseThs):
                             math.ceil(float(row[3]) * 10000),
                         ]
                     )
-        except Exception as e:
+        except Exception:  # pylint: disable=broad-except
             print("north_flow_min_east is ERROR!!!")
             return pd.DataFrame(data=data, columns=self.__NORTH_FLOW_MIN_COLUMNS)
         result_df = pd.DataFrame(data=data, columns=self.__NORTH_FLOW_MIN_COLUMNS)
