@@ -278,9 +278,9 @@ print(res_df)
 
 > 对于项目有支持，包括但不仅限：内容贡献，bug提交，思想交流等等，对项目有影响的个人和机构
 
-| Simon                                 | [bigbigbigfish](https://github.com/bigbigbigfish) | [LuneZ99](https://github.com/LuneZ99)         | 匿名用户 | thue                                    | [Triones009](https://github.com/Triones009) | **[adaaaaaa](https://github.com/adaaaaaa)** | **[LeslieWuboy](https://github.com/LeslieWuboy)** | [yinzhengxin](https://github.com/yinzhengxin) |
-| ------------------------------------- | ------------------------------------------------- | --------------------------------------------- | -------- | --------------------------------------- | ------------------------------------------- | ------------------------------------------- | ------------------------------------------------- | --------------------------------------------- |
-| [yxm0513](https://github.com/yxm0513) | [hanxuanliang](https://github.com/hanxuanliang)   | [akihara-sam](https://github.com/akihara-sam) | Andy     | [baei2048](https://github.com/baei2048) | [zpsakura](https://github.com/zpsakura)     | [Yzx-1024](https://github.com/Yzx-1024)     |                                                   |                                               |
+| Simon                                 | [bigbigbigfish](https://github.com/bigbigbigfish) | [LuneZ99](https://github.com/LuneZ99)         | 匿名用户 | thue                                    | [Triones009](https://github.com/Triones009) | **[adaaaaaa](https://github.com/adaaaaaa)** | **[LeslieWuboy](https://github.com/LeslieWuboy)**       | [yinzhengxin](https://github.com/yinzhengxin) |
+| ------------------------------------- | ------------------------------------------------- | --------------------------------------------- | -------- | --------------------------------------- | ------------------------------------------- | ------------------------------------------- | ------------------------------------------------------- | --------------------------------------------- |
+| [yxm0513](https://github.com/yxm0513) | [hanxuanliang](https://github.com/hanxuanliang)   | [akihara-sam](https://github.com/akihara-sam) | Andy     | [baei2048](https://github.com/baei2048) | [zpsakura](https://github.com/zpsakura)     | [Yzx-1024](https://github.com/Yzx-1024)     | [Snowfall-in-June](https://github.com/Snowfall-in-June) |                                               |
 
 ----------------------------------------------------------------------
 
