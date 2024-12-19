@@ -7,12 +7,12 @@
 """
 import os
 
-from py_mini_racer import py_mini_racer
+from py_mini_racer import MiniRacer
 
 
 def ths_cookie(js_path="ths.js"):
     """获取同花顺cookie"""
-    js_code = py_mini_racer.MiniRacer()
+    js_code = MiniRacer()
     js_content = get_file_content_ths(file_path=js_path)
     js_code.eval(js_content)
     return 'v=' + js_code.call("v") + ";"
