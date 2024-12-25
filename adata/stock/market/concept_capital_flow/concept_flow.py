@@ -8,9 +8,10 @@ https://data.eastmoney.com/bkzj/gn.html
 @time: 2024/11/14
 @log: change log
 """
+from adata.stock.market.concept_capital_flow.capital_flow_east import CapitalFlowEast
 
 
-class ConceptCapitalFlow(object):
+class ConceptCapitalFlow(CapitalFlowEast):
     """概念资金流向"""
 
     def __init__(self) -> None:
