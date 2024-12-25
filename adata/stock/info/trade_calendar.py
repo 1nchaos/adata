@@ -67,5 +67,5 @@ class TradeCalendar(object):
 
 
 if __name__ == '__main__':
-    print(TradeCalendar().trade_calendar(year=2004))
-    print(TradeCalendar().trade_calendar())
+    print(TradeCalendar().trade_calendar(year=2025))
+    # print(TradeCalendar().trade_calendar())

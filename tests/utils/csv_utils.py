@@ -11,8 +11,8 @@ import adata
 
 
 def calendar_csv():
-    for i in range(20):
-        year = 2024 - i
+    for i in range(1):
+        year = 2025 - i
         df = adata.stock.info.trade_calendar(year=year)
         df.to_csv(f'{year}.csv', index=False)
 

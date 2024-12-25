@@ -82,6 +82,17 @@ class StockInfo(object):
         result_df = pd.DataFrame(data=data, columns=self.__INDUSTRY_COLUMNS)
         return result_df
 
+    def get_dynamic_core_index(self, stock_code='000001'):
+        """
+        获取股票动态的核心指标
+        https://quote.eastmoney.com/sz002611.html#
+        https://push2.eastmoney.com/api/qt/slist/get?fltt=1&invt=2&cb=jQuery351004702191620787355_1733192323676&fields=f12,f13,f14,f20,f58,f45,f132,f9,f152,f23,f49,f131,f137,f133,f134,f135,f129,f37,f1000,f3000,f2000&secid=0.002611&ut=fa5fd1943c7b386f172d6893dbfba10b&pn=1&np=1&spt=1&wbp2u=|0|0|0|web&_=1733192323677
+        :param stock_code: 股票代码
+        :return:
+        """
+        ## TODO
+        return
+
 
 if __name__ == '__main__':
     print(StockInfo().get_stock_shares(stock_code='300033', is_history=True))

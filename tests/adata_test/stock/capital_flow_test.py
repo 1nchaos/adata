@@ -38,6 +38,12 @@ class CapitalFlowTestCase(unittest.TestCase):
         print(df)
         self.assertEqual(True, len(df) > 200)
 
+    def test_all_capital_flow_east(self):
+        print("开始测试：all_capital_flow_east")
+        df = adata.stock.market.all_capital_flow_east(days_type=1)
+        print(df)
+        self.assertEqual(True, len(df) > 200)
+
 
 if __name__ == '__main__':
     unittest.main()
