@@ -141,21 +141,32 @@ class StockCode(object):
         https://quote.eastmoney.com/center/gridlist.html
         """
         url = "https://82.push2.eastmoney.com/api/qt/clist/get"
-        params = {
-            "pn": "1", "pz": "50000",
-            "po": "1", "np": "1",
-            "ut": "bd1d9ddb04089700cf9c27f6f7426281",
-            "fltt": "2", "invt": "2", "fid": "f3",
-            "fs": "m:0 t:6,m:0 t:80,m:1 t:2,m:1 t:23,m:0 t:81 s:2048",
-            "fields": "f12,f14",
-            "_": "1623833739532",
-        }
-        # 请求数据
-        r = requests.request(url=url, timeout=15, params=params)
-        data_json = r.json()
-        if not data_json["data"]["diff"]:
+        curr_page = 1
+        page_size = 200
+        data = []
+        while curr_page < 50:
+            params = {
+                "pn": curr_page, "pz": page_size,
+                "po": "1", "np": "1",
+                "ut": "bd1d9ddb04089700cf9c27f6f7426281",
+                "fltt": "2", "invt": "2", "fid": "f3",
+                "fs": "m:0 t:6,m:0 t:80,m:1 t:2,m:1 t:23,m:0 t:81 s:2048",
+                "fields": "f12,f14",
+                "_": "1623833739532",
+            }
+            # 请求数据
+            r = requests.request(url=url, timeout=15, params=params)
+            data_json = r.json()
+            p_data = data_json["data"]["diff"]
+            if not p_data:
+                break
+            data = data.append(p_data)
+            if len(p_data) < page_size:
+                break
+            curr_page += 1
+        if len(data) == 0:
             return pd.DataFrame()
-        df = pd.DataFrame(data=data_json["data"]["diff"])
+        df = pd.DataFrame(data=data)
         df.columns = ['stock_code', 'short_name']
         # 数据etl
         df['exchange'] = df['stock_code'].apply(lambda x: get_exchange_by_stock_code(x))
