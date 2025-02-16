@@ -34,7 +34,7 @@ class CapitalFlowTestCase(unittest.TestCase):
 
     def test_get_flow(self):
         print("开始测试：get_flow")
-        df = adata.stock.market.get_capital_flow(stock_code='000001')
+        df = adata.stock.market.get_capital_flow(stock_code='688403')
         print(df)
         self.assertEqual(True, len(df) > 200)
 

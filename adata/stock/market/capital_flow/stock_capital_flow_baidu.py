@@ -102,4 +102,4 @@ class StockCapitalFlowBaidu(StockCapitalFlowTemplate):
 
 if __name__ == '__main__':
     print(StockCapitalFlowBaidu().get_capital_flow_min(stock_code='300059'))
-    print(StockCapitalFlowBaidu().get_capital_flow(stock_code='300059', start_date='2024-01-01', end_date='2024-04-01'))
+    print(StockCapitalFlowBaidu().get_capital_flow(stock_code='688403', start_date='2024-01-01', end_date='2024-04-01'))
