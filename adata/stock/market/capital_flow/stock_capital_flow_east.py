@@ -75,9 +75,19 @@ class StockCapitalFlowEast(StockCapitalFlowTemplate):
         df = df.astype({'main_net_inflow': 'float64', 'sm_net_inflow': 'float64',
                         'mid_net_inflow': 'float64', 'lg_net_inflow': 'float64', 'max_net_inflow': 'float64'
                         })
+
+        # 4. 范围筛选
+        df['trade_date'] = pd.to_datetime(df['trade_date'])
+        if start_date is not None:
+            start_date = pd.to_datetime(start_date)
+            df = df[df['trade_date'] >= start_date]
+        if end_date is not None:
+            end_date = pd.to_datetime(end_date)
+            df = df[df['trade_date'] <= end_date]
+        df['trade_date'] = pd.to_datetime(df['trade_date']).dt.strftime('%Y-%m-%d')
         return df
 
 
 if __name__ == '__main__':
     print(StockCapitalFlowEast().get_capital_flow_min(stock_code='300059'))
-    print(StockCapitalFlowEast().get_capital_flow(stock_code='000001'))
+    print(StockCapitalFlowEast().get_capital_flow(stock_code='000001', start_date='2024-12-01'))

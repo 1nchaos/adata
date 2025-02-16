@@ -176,6 +176,7 @@ print(res_df)
 |                     | stock.market.get_market_index_current()        | 获取当前的指数行情                    | 实时行情                                                     |
 | 个股资金流          | stock.market.get_capital_flow_min()            | 获取单个股票的今日分时资金流向        | 最新实时数据                                                 |
 |                     | stock.market.get_capital_flow()                | 获取单个股票的资金流向                | 历史日度数据                                                 |
+| 概念资金流          | stock.market.all_capital_flow_east()           | 获取所有东财概念近N日资金流向         | 获取近1,5,10日资金流向<br />数据源：[东方财富](https://data.eastmoney.com/bkzj/gn.html) |
 
 **注：概念和指数从本质来看是一样的，所以相关的接口和返回结果是一致的，概念是各个厂商自定义的指数，指数是官方或者权威机构定义的，都是一揽子股票的组合。**
 
@@ -278,9 +279,9 @@ print(res_df)
 
 > 对于项目有支持，包括但不仅限：内容贡献，bug提交，思想交流等等，对项目有影响的个人和机构
 
-| Simon                                 | [bigbigbigfish](https://github.com/bigbigbigfish) | [LuneZ99](https://github.com/LuneZ99)         | 匿名用户 | thue                                    | [Triones009](https://github.com/Triones009) | **[adaaaaaa](https://github.com/adaaaaaa)** | **[LeslieWuboy](https://github.com/LeslieWuboy)** | [yinzhengxin](https://github.com/yinzhengxin) |
-| ------------------------------------- | ------------------------------------------------- | --------------------------------------------- | -------- | --------------------------------------- | ------------------------------------------- | ------------------------------------------- | ------------------------------------------------- | --------------------------------------------- |
-| [yxm0513](https://github.com/yxm0513) | [hanxuanliang](https://github.com/hanxuanliang)   | [akihara-sam](https://github.com/akihara-sam) | Andy     | [baei2048](https://github.com/baei2048) | [zpsakura](https://github.com/zpsakura)     | [Yzx-1024](https://github.com/Yzx-1024)     |                                                   |                                               |
+| Simon                                 | [bigbigbigfish](https://github.com/bigbigbigfish) | [LuneZ99](https://github.com/LuneZ99)         | 匿名用户 | thue                                    | [Triones009](https://github.com/Triones009) | **[adaaaaaa](https://github.com/adaaaaaa)** | **[LeslieWuboy](https://github.com/LeslieWuboy)**       | [yinzhengxin](https://github.com/yinzhengxin) |
+| ------------------------------------- | ------------------------------------------------- | --------------------------------------------- | -------- | --------------------------------------- | ------------------------------------------- | ------------------------------------------- | ------------------------------------------------------- | --------------------------------------------- |
+| [yxm0513](https://github.com/yxm0513) | [hanxuanliang](https://github.com/hanxuanliang)   | [akihara-sam](https://github.com/akihara-sam) | Andy     | [baei2048](https://github.com/baei2048) | [zpsakura](https://github.com/zpsakura)     | [Yzx-1024](https://github.com/Yzx-1024)     | [Snowfall-in-June](https://github.com/Snowfall-in-June) |                                               |
 
 ----------------------------------------------------------------------
 
