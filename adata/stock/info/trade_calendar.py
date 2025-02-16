@@ -17,7 +17,13 @@ class TradeCalendar(object):
     """
     交易日历
     """
-    __COLUMNS = ['trade_date', 'trade_status', 'day_week']
+
+    __COLUMNS = ["trade_date", "trade_status", "day_week"]
+    __DTYPES = {
+        "trade_date": str,
+        "trade_status": int,
+        "day_week": int,
+    }
 
     def __init__(self) -> None:
         super().__init__()
@@ -34,8 +40,13 @@ class TradeCalendar(object):
         if not year:
             year = datetime.datetime.now().year
         if year in years:
-            return pd.read_csv(get_csv_path(year), header=0)
-        return self.__calendar_szse(year=year)
+            return self._ensure_d_type(pd.read_csv(get_csv_path(year), header=0))
+        return self._ensure_d_type(self.__calendar_szse(year=year))
+
+    def _ensure_d_type(self, df: pd.DataFrame):
+        for col, d_type in self.__DTYPES.items():
+            df[col] = df[col].astype(d_type)
+        return df
 
     def __calendar_szse(self, year=None):
         """
