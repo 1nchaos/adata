@@ -160,7 +160,7 @@ class StockCode(object):
             p_data = data_json["data"]["diff"]
             if not p_data:
                 break
-            data = data.append(p_data)
+            data.extend(p_data)
             if len(p_data) < page_size:
                 break
             curr_page += 1
