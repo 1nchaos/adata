@@ -45,7 +45,7 @@ class StockCode(object):
         code = pd.read_csv(get_code_csv_path())[['stock_code', 'list_date2']]
         # 请求数据：优先东方财富，其次百度
         res_df = self.__market_rank_east()
-        if res_df.empty:
+        if res_df.empty or len(res_df) < 3000:
             res_df = self.__market_rank_baidu()
         east = self.__new_sub_east()
         if not east.empty:
@@ -142,9 +142,9 @@ class StockCode(object):
         """
         url = "https://82.push2.eastmoney.com/api/qt/clist/get"
         curr_page = 1
-        page_size = 200
+        page_size = 50
         data = []
-        while curr_page < 50:
+        while curr_page < 200:
             params = {
                 "pn": curr_page, "pz": page_size,
                 "po": "1", "np": "1",
