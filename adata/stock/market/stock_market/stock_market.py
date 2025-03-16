@@ -104,4 +104,4 @@ if __name__ == '__main__':
     # print(StockMarket().get_market_min(stock_code='000001'))
     # print(StockMarket().list_market_current(code_list=['000001', '600001', '000795', '872925']))
     print(StockMarket().get_market_five(stock_code='000001'))
-    # print(StockMarket().get_market_bar(stock_code='000001'))
+    print(StockMarket().get_market_bar(stock_code='000001'))

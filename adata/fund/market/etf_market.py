@@ -54,6 +54,6 @@ class ETFMarket(object):
 
 
 if __name__ == '__main__':
-    print(ETFMarket().get_market_etf(fund_code='512880', start_date='2024-01-01'))
-    print(ETFMarket().get_market_etf_min(fund_code='512880'))
+    print(ETFMarket().get_market_etf(fund_code='159529', start_date='2024-01-01'))
+    print(ETFMarket().get_market_etf_min(fund_code='159529'))
     print(ETFMarket().get_market_etf_current(fund_code='512880'))

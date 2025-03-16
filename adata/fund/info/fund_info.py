@@ -96,9 +96,9 @@ class FundInfo(BaseThs):
         """
         curr_page = 1
         data = []
-        while curr_page < 5:
+        while curr_page < 50:
             url = f"http://68.push2.eastmoney.com/api/qt/clist/get?cb=jQuery1124047482019788167995_1690884441114" \
-                  f"&pn={curr_page}&pz=500&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&wbp2u=|0|0|0|web" \
+                  f"&pn={curr_page}&pz=50&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&wbp2u=|0|0|0|web" \
                   f"&fid=f3&fs=b:MK0021,b:MK0022,b:MK0023,b:MK0024&fields=f12,f14,f2&_=1690884441121"
             text = requests.request('get', url, headers={}, proxies={}, wait_time=wait_time).text
             res_json = json.loads(text[text.index('{'):-2])

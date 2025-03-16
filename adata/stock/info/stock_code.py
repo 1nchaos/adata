@@ -43,10 +43,10 @@ class StockCode(object):
         """
         # 拼接股票上市日期
         code = pd.read_csv(get_code_csv_path())[['stock_code', 'list_date2']]
-        # 请求数据：优先东方财富，其次百度
-        res_df = self.__market_rank_east()
-        if res_df.empty:
-            res_df = self.__market_rank_baidu()
+        # 请求数据：优先百度，东方财富
+        res_df = self.__market_rank_baidu()
+        if res_df.empty or len(res_df) < 5000:
+            res_df = self.__market_rank_east()
         east = self.__new_sub_east()
         if not east.empty:
             res_df = pd.concat([east, res_df], axis=0, ignore_index=True)
@@ -109,7 +109,7 @@ class StockCode(object):
         https://datacenter-web.eastmoney.com/api/data/v1/get?sortColumns=APPLY_DATE,SECURITY_CODE&sortTypes=-1,-1&pageSize=50&pageNumber=1&reportName=RPTA_APP_IPOAPPLY&columns=SECURITY_CODE,SECURITY_NAME&quoteType=0&filter=(APPLY_DATE>'2010-01-01')&source=WEB&client=WEB
         """
         data = []
-        for i in range(100):
+        for i in range(20):
             url = f"https://datacenter-web.eastmoney.com/api/data/v1/get?" \
                   f"sortColumns=APPLY_DATE,SECURITY_CODE&sortTypes=-1,-1&pageSize=50&pageNumber={i + 1}&" \
                   f"reportName=RPTA_APP_IPOAPPLY&columns=SECURITY_CODE,SECURITY_NAME,TRADE_MARKET,LISTING_DATE&quoteType=0&" \
@@ -142,9 +142,9 @@ class StockCode(object):
         """
         url = "https://82.push2.eastmoney.com/api/qt/clist/get"
         curr_page = 1
-        page_size = 200
+        page_size = 50
         data = []
-        while curr_page < 50:
+        while curr_page < 150:
             params = {
                 "pn": curr_page, "pz": page_size,
                 "po": "1", "np": "1",

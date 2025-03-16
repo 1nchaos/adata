@@ -40,28 +40,33 @@ class CapitalFlowEast(object):
             5: 'f12,f14,f109,f164,f165,f166,f167,f168,f169,f170,f171,f172,f173,f257,f258',
             10: 'f12,f14,f160,f174,f175,f176,f177,f178,f179,f180,f181,f182,f183,f260,f261'
         }.get(days_type, 'f62')
-        url = f"https://push2.eastmoney.com/api/qt/clist/get?cb=jQuery112309367957412610306_1735123926723&fid={fid}&po=1&pz=1000&pn=1&np=1&fltt=2&invt=2&ut=b2884a393a59ad64002292a3e90d46a5&fs=m:90 t:3&fields={fields}"
-        res = requests.request(method='get', url=url, headers={})
-        text = res.text
-        text = text[text.index('(') + 1:-2]
-        data = json.loads(text)['data']
 
-        # 2. 解析数据
-        if not data:
-            return pd.DataFrame([], columns=self._FLOW_COLUMNS)
-        data = data['diff']
-        data_list = []
-        fields = fields.split(',')
-        for item in data:
-            dt = {}
-            for i in range(len(self._FLOW_COLUMNS)):
-                if item[fields[i]] == '-':
-                    continue
-                dt[self._FLOW_COLUMNS[i]] = item[fields[i]]
-            if len(dt) == len(self._FLOW_COLUMNS):
-                data_list.append(dt)
+        # 分页循环
+        curr_page = 1
+        res_data = []
+        while curr_page < 50:
+            url = f"https://push2.eastmoney.com/api/qt/clist/get?cb=jQuery112309367957412610306_1735123926723&fid={fid}&po=1&pz=50&pn={curr_page}&np=1&fltt=2&invt=2&fs=m:90 t:3&fields={fields}"
+            res = requests.request(method='get', url=url, headers={})
+            text = res.text
+            text = text[text.index('(') + 1:-2]
+            data = json.loads(text)['data']
+
+            # 2. 解析数据
+            if not data:
+                break
+            data = data['diff']
+            field_list = fields.split(',')
+            for item in data:
+                dt = {}
+                for i in range(len(self._FLOW_COLUMNS)):
+                    if item[field_list[i]] == '-':
+                        continue
+                    dt[self._FLOW_COLUMNS[i]] = item[field_list[i]]
+                if len(dt) == len(self._FLOW_COLUMNS):
+                    res_data.append(dt)
+            curr_page += 1
         # 3. 数据etl
-        df = pd.DataFrame(data_list, columns=self._FLOW_COLUMNS)
+        df = pd.DataFrame(res_data, columns=self._FLOW_COLUMNS)
         df = df.astype({'change_pct': 'float64', 'main_net_inflow': 'float64', 'sm_net_inflow': 'float64',
                         'mid_net_inflow': 'float64', 'lg_net_inflow': 'float64', 'max_net_inflow': 'float64',
                         'main_net_inflow_rate': 'float64', 'sm_net_inflow_rate': 'float64',
