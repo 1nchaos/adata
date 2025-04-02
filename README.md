@@ -224,6 +224,7 @@ print(res_df)
 |                          | sentiment.hot.hot_concept_20_ths()   | 同花顺热门概念板块20排行榜                 | 来源：[同花顺](https://dq.10jqka.com.cn/fuyao/hot_list_data/out/hot_list/v1/stock?stock_type=a&type=hour&list_type=normal) |
 |                          | sentiment.hot.list_a_list_daily()    | 龙虎榜单列表                               | 来源：[东方财富](https://data.eastmoney.com/stock/lhb/yyb/10033779.html) |
 |                          | sentiment.get_a_list_info()          | 单只股票龙虎榜信息详情                     | 来源：[东方财富](https://data.eastmoney.com/stock/lhb/yyb/10033779.html) |
+| **扫雷**                 | sentiment.mine.mine_clearance_tdx()  | 单只股票的扫雷避险信息                     | 来源：通达信                                                 |
 | 其它数据排期中           | TODO                                 | 若您有相关资源可以一起参与贡献             |                                                              |
 
 ## 三、[数据源](https://adata.30006124.xyz/dataSource.html)
@@ -282,7 +283,7 @@ print(res_df)
 | Simon                                     | [bigbigbigfish](https://github.com/bigbigbigfish) | [LuneZ99](https://github.com/LuneZ99)         | 匿名用户 | thue                                    | [Triones009](https://github.com/Triones009) |
 | ----------------------------------------- | ------------------------------------------------- | --------------------------------------------- | -------- | --------------------------------------- | ------------------------------------------- |
 | [yxm0513](https://github.com/yxm0513)     | [hanxuanliang](https://github.com/hanxuanliang)   | [akihara-sam](https://github.com/akihara-sam) | Andy     | [baei2048](https://github.com/baei2048) | [zpsakura](https://github.com/zpsakura)     |
-| [Lorry1123](https://github.com/Lorry1123) | 多维人格                                          |                                               |          |                                         |                                             |
+| [Lorry1123](https://github.com/Lorry1123) | 多维人格                                          | xmoney                                        |          |                                         |                                             |
 
 ----------------------------------------------------------------------
 
