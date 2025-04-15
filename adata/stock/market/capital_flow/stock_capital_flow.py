@@ -40,7 +40,7 @@ class StockCapitalFlow(object):
         :param stock_code: 股票代码
         :return: 资金流向-日度
         """
-        return self.baidu_capital_flow.get_capital_flow(stock_code, start_date=start_date, end_date=end_date)
+        return self.east_capital_flow.get_capital_flow(stock_code, start_date=start_date, end_date=end_date)
 
 
 if __name__ == '__main__':
