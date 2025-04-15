@@ -17,10 +17,11 @@ class MineClearance(object):
     __MINE_TDX_COLUMNS = [
         "stock_code",
         "short_name",
+        "score",
         "f_type",
         "s_type",
         "t_type",
-        "reason"
+        "reason",
     ]
 
     def mine_clearance_tdx(self, stock_code='600811'):
@@ -37,6 +38,8 @@ class MineClearance(object):
         name = res.get("name")
         data = res.get("data")
         data_list = []
+        score = 100
+        s_type_dict = {}
         for i in data:
             f_type = i.get("name")
             rows = i.get("rows")
@@ -51,7 +54,10 @@ class MineClearance(object):
                             "s_type": k.get("lx"),
                             "t_type": '',
                             "reason": k.get("trigyy"),
+                            "score": k.get("fs"),
                         })
+                        if k.get("trig") == 1:
+                            score = score - k.get('fs')
                     for j in com_lx:
                         if j.get("trigyy"):
                             data_list.append({
@@ -61,10 +67,21 @@ class MineClearance(object):
                                 "s_type": k.get("lx"),
                                 "t_type": j.get("lx"),
                                 "reason": j.get("trigyy"),
+                                "score": j.get("fs"),
                             })
-        return pd.DataFrame(data_list, columns=self.__MINE_TDX_COLUMNS)
+                            if j.get("trig") == 1 and not s_type_dict.get(k.get("lx")):
+                                score = score - j.get('fs')
+                                s_type_dict[k.get("lx")] = j.get("fs")
+        # 清洗数据
+        res = pd.DataFrame(data_list, columns=self.__MINE_TDX_COLUMNS)
+        score = score if score > 1 else 1
+        res["score"] = score
+        if len(res) == 0:
+            res = pd.DataFrame([{"stock_code": stock_code, "short_name": name, "score": score, "f_type": '暂无风险项', }],
+                               columns=self.__MINE_TDX_COLUMNS)
+        return res
 
 
 if __name__ == '__main__':
     mine_clearance = MineClearance()
-    print(mine_clearance.mine_clearance_tdx("600811"))
+    print(mine_clearance.mine_clearance_tdx("002423"))
