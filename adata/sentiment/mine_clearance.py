@@ -34,7 +34,8 @@ class MineClearance(object):
         try:
             res = requests.request(method="get", url=url, json={}).json()
         except:
-            return pd.DataFrame()
+            res = pd.DataFrame([{"stock_code": '', "short_name": '', "score": '', "f_type": '暂无数据', }],
+                               columns=self.__MINE_TDX_COLUMNS)
         name = res.get("name")
         data = res.get("data")
         data_list = []
@@ -77,11 +78,16 @@ class MineClearance(object):
         score = score if score > 1 else 1
         res["score"] = score
         if len(res) == 0:
-            res = pd.DataFrame([{"stock_code": stock_code, "short_name": name, "score": score, "f_type": '暂无风险项', }],
-                               columns=self.__MINE_TDX_COLUMNS)
+            if name.endswith("退"):
+                res = pd.DataFrame([{"stock_code": stock_code, "short_name": name, "score": -1, "f_type": '已退市', }],
+                                   columns=self.__MINE_TDX_COLUMNS)
+            else:
+                res = pd.DataFrame(
+                    [{"stock_code": stock_code, "short_name": name, "score": score, "f_type": '暂无风险项', }],
+                    columns=self.__MINE_TDX_COLUMNS)
         return res
 
 
 if __name__ == '__main__':
     mine_clearance = MineClearance()
-    print(mine_clearance.mine_clearance_tdx("002423"))
+    print(mine_clearance.mine_clearance_tdx("600074"))
