@@ -194,12 +194,12 @@ class StockConceptThs(StockConceptTemplate):
         # 2. 解析总数
         result_json = json.loads(text[text.index('{'):-1])
         total_count = float(result_json['block']['subcodeCount'])
-        if total_count < 2500:
+        if total_count < 3000:
             total_num = math.ceil(total_count / 15) * 15
             apis = [f"https://d.10jqka.com.cn/v2/blockrank/{index_code}/8/d{total_num}.js"]
         else:
-            apis = [f"https://d.10jqka.com.cn/v2/blockrank/{index_code}/8/a2500.js",
-                    f"https://d.10jqka.com.cn/v2/blockrank/{index_code}/8/d2500.js"]
+            apis = [f"https://d.10jqka.com.cn/v2/blockrank/{index_code}/8/a3000.js",
+                    f"https://d.10jqka.com.cn/v2/blockrank/{index_code}/8/d3000.js"]
         data_list = []
 
         # 3. 请求所有数据
