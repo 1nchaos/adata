@@ -295,7 +295,7 @@ print(res_df)
 ## 欢迎进行交流
 <p align="center">
   <a href="https://adata.30006124.xyz/wx.html" target="_blank">
-    <img width="180" src="./docs/ndh.jpg" alt="logo">
+    <img width="180" src="./docs/wx.jpg" alt="logo">
   </a>
   <a href="https://mp.weixin.qq.com/s/ZQMXgxIYKtfjiPQK-p-aXg" target="_blank">
     <img width="400" src="./docs/xyhcl-gzh.png" alt="logo">
