@@ -36,7 +36,7 @@ class StockCode(object):
     def __init__(self) -> None:
         super().__init__()
 
-    def all_code(self):
+    def all_code(self, wait_time=100):
         """
         获取所有股票的代码
         :return: 所有股票的代码信息：  ['stock_code', 'short_name', 'exchange', 'list_date']
@@ -44,10 +44,14 @@ class StockCode(object):
         # 拼接股票上市日期
         code = pd.read_csv(get_code_csv_path())[['stock_code', 'list_date2']]
         # 请求数据：优先百度，东方财富
-        res_df = self.__market_rank_baidu()
+        res_df = self.__market_rank_baidu(wait_time)
         if res_df.empty or len(res_df) < 5000:
-            res_df = self.__market_rank_east()
-        east = self.__new_sub_east()
+            res_df = self.__market_rank_east(wait_time)
+        if res_df.empty or len(res_df) < 5000:
+            res_df = self.market_rank_sina(wait_time)
+        if res_df.empty:
+            res_df = pd.read_csv(get_code_csv_path())
+        east = self.__new_sub_east(wait_time)
         if not east.empty:
             res_df = pd.concat([east, res_df], axis=0, ignore_index=True)
             res_df = res_df.drop_duplicates(subset=['stock_code'], keep='first')
@@ -60,7 +64,7 @@ class StockCode(object):
         df['short_name'] = df['short_name'].str.replace(' ', '')
         return df.sort_values('stock_code').reset_index(drop=True)[self.__CODE_COLUMNS]
 
-    def __market_rank_baidu(self):
+    def __market_rank_baidu(self, wait_time):
         """
         获取百度当前涨幅排名的代码
         web： https://gushitong.baidu.com/top/ab-increase-%E6%B6%A8%E5%B9%85%E6%A6%9C
@@ -78,7 +82,7 @@ class StockCode(object):
         for page_no in range(49):
             api_url = f"{api_url}&pn={page_no * max_page_size}&rn={max_page_size}"
             try:
-                res = requests.request(url=api_url, headers=baidu_headers.json_headers, proxies={})
+                res = requests.request(url=api_url, headers=baidu_headers.json_headers, proxies={}, wait_time=wait_time)
                 res_json = res.json()
                 if res.status_code != 200 or res_json['ResultCode'] != '0':
                     continue
@@ -102,19 +106,19 @@ class StockCode(object):
         return df[self.__CODE_COLUMNS]
 
     @handler_null
-    def __new_sub_east(self):
+    def __new_sub_east(self, wait_time):
         """
         东方财富新股申购列表
         https://data.eastmoney.com/xg/xg/default.html
         https://datacenter-web.eastmoney.com/api/data/v1/get?sortColumns=APPLY_DATE,SECURITY_CODE&sortTypes=-1,-1&pageSize=50&pageNumber=1&reportName=RPTA_APP_IPOAPPLY&columns=SECURITY_CODE,SECURITY_NAME&quoteType=0&filter=(APPLY_DATE>'2010-01-01')&source=WEB&client=WEB
         """
         data = []
-        for i in range(20):
+        for i in range(200):
             url = f"https://datacenter-web.eastmoney.com/api/data/v1/get?" \
                   f"sortColumns=APPLY_DATE,SECURITY_CODE&sortTypes=-1,-1&pageSize=50&pageNumber={i + 1}&" \
                   f"reportName=RPTA_APP_IPOAPPLY&columns=SECURITY_CODE,SECURITY_NAME,TRADE_MARKET,LISTING_DATE&quoteType=0&" \
                   f"filter=(APPLY_DATE>'2010-01-01')&source=WEB&client=WEB"
-            res_json = requests.request(method='get', url=url, headers={}, proxies={}).json()
+            res_json = requests.request(method='get', url=url, headers={}, proxies={}, wait_time=wait_time).json()
             res_data = res_json['result']['data']
             for _ in res_data:
                 exchange = str(_['TRADE_MARKET'])
@@ -134,40 +138,74 @@ class StockCode(object):
         result_df['list_date'] = pd.to_datetime(result_df['list_date']).dt.date
         return result_df
 
-    @handler_null
-    def __market_rank_east(self):
+    def __market_rank_east(self, wait_time):
         """
         东方财富新股申购列表
         https://quote.eastmoney.com/center/gridlist.html
         """
         url = "https://82.push2.eastmoney.com/api/qt/clist/get"
-        curr_page = 1
-        page_size = 50
         data = []
-        while curr_page < 150:
-            params = {
-                "pn": curr_page, "pz": page_size,
-                "po": "1", "np": "1",
-                "ut": "bd1d9ddb04089700cf9c27f6f7426281",
-                "fltt": "2", "invt": "2", "fid": "f3",
-                "fs": "m:0 t:6,m:0 t:80,m:1 t:2,m:1 t:23,m:0 t:81 s:2048",
-                "fields": "f12,f14",
-                "_": "1623833739532",
-            }
-            # 请求数据
-            r = requests.request(url=url, timeout=15, params=params)
-            data_json = r.json()
-            p_data = data_json["data"]["diff"]
-            if not p_data:
-                break
-            data.extend(p_data)
-            if len(p_data) < page_size:
-                break
-            curr_page += 1
+        try:
+            curr_page = 1
+            page_size = 50
+            while curr_page < 200:
+                params = {
+                    "pn": curr_page, "pz": page_size,
+                    "po": "1", "np": "1",
+                    "ut": "bd1d9ddb04089700cf9c27f6f7426281",
+                    "fltt": "2", "invt": "2", "fid": "f3",
+                    "fs": "m:0 t:6,m:0 t:80,m:1 t:2,m:1 t:23,m:0 t:81 s:2048",
+                    "fields": "f12,f14",
+                    "_": "1623833739532",
+                }
+                # 请求数据
+                r = requests.request(url=url, timeout=15, params=params, proxies={}, wait_time=wait_time)
+                data_json = r.json()
+                p_data = data_json["data"]["diff"]
+                if not p_data:
+                    break
+                data.extend(p_data)
+                if len(p_data) < page_size:
+                    break
+                curr_page += 1
+        except Exception as e:
+            print(e)
         if len(data) == 0:
             return pd.DataFrame()
         df = pd.DataFrame(data=data)
         df.columns = ['stock_code', 'short_name']
+        # 数据etl
+        df['exchange'] = df['stock_code'].apply(lambda x: get_exchange_by_stock_code(x))
+        df['list_date'] = np.nan
+        df.reset_index(inplace=True)
+        return df[self.__CODE_COLUMNS]
+
+    def market_rank_sina(self, wait_time=100):
+        """
+        新浪排行榜
+        https://vip.stock.finance.sina.com.cn/mkt/#stock_hs_up
+        """
+        data = []
+        try:
+            curr_page = 1
+            while curr_page < 200:
+                url = f"https://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHQNodeData?" \
+                      f"page={curr_page}&num=80&sort=changepercent&asc=0&node=hs_a&symbol=&_s_r_a=page"
+                # 请求数据
+                r = requests.request(url=url, method="get", params={}, proxies={}, wait_time=wait_time)
+                p_data = r.json()
+                if not p_data:
+                    break
+                data.extend(p_data)
+                if len(p_data) < 80:
+                    break
+                curr_page += 1
+        except Exception as e:
+            print(e)
+        if len(data) == 0:
+            return pd.DataFrame()
+        df = pd.DataFrame(data=data)
+        df = df[['code', 'name']].rename(columns={'code': 'stock_code', 'name': 'short_name'})
         # 数据etl
         df['exchange'] = df['stock_code'].apply(lambda x: get_exchange_by_stock_code(x))
         df['list_date'] = np.nan
