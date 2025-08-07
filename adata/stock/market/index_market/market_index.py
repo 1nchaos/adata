@@ -15,6 +15,7 @@ class StockMarketIndex(object):
     """
 
     def __init__(self) -> None:
+        super().__init__()
         self.ths_index = StockMarketIndexThs()
         self.east_index = StockMarketIndexEast()
         self.baidu_index = StockMarketIndexBaidu()
