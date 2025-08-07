@@ -130,5 +130,5 @@ class AList(BaseThs):
 
 
 if __name__ == "__main__":
-    print(AList().list_a_list_daily(report_date="2024-07-04"))
+    # print(AList().list_a_list_daily(report_date="2024-07-04"))
     print(AList().get_a_list_info(stock_code="600297", report_date="2024-07-12"))

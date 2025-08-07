@@ -15,6 +15,7 @@ import pandas as pd
 
 from adata.common import requests
 from adata.common.utils.code_utils import compile_exchange_by_stock_code
+from adata.stock.info.cache import get_all_concept_code_east_csv_path
 from adata.stock.info.concept.stock_concept_template import StockConceptTemplate
 
 
@@ -26,27 +27,34 @@ class StockConceptEast(StockConceptTemplate):
     def __init__(self) -> None:
         super().__init__()
 
-    def all_concept_code_east(self):
+    def all_concept_code_east(self, wait_time=None):
         """
         https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=1000&po=1&np=1&fields=f12%2Cf13%2Cf14%2Cf62&fid=f62&fs=m%3A90%2Bt%3A3
         :return: 概念[[name,index_code，concept_code]]
         """
-        curr_page = 1
-        page_size = 100
-        data = []
-        while curr_page < 50:
-            url = f"https://push2.eastmoney.com/api/qt/clist/get" \
-                  f"?pn={curr_page}&pz={page_size}&po=1&np=1&fields=f12%2Cf13%2Cf14%2Cf62&fid=f62&fs=m%3A90%2Bt%3A3"
-            res_json = requests.request('get', url, headers={}, proxies={}).json()
-            res_data = res_json['data']['diff']
-            if not res_data:
-                break
-            for _ in res_data:
-                data.append({'index_code': _['f12'], 'concept_code': _['f12'], 'name': _['f14'], 'source': '东方财富'})
-            if len(res_data) < page_size:
-                break
-            curr_page += 1
-        result_df = pd.DataFrame(data=data, columns=self._CONCEPT_CODE_COLUMNS)
+        # 1. 请求获取所有概念
+        try:
+            curr_page = 1
+            page_size = 100
+            data = []
+            while curr_page < 50:
+                url = f"https://push2.eastmoney.com/api/qt/clist/get" \
+                      f"?pn={curr_page}&pz={page_size}&po=1&np=1&fields=f12%2Cf13%2Cf14%2Cf62&fid=f62&fs=m%3A90%2Bt%3A3"
+                res_json = requests.request('get', url, headers={}, proxies={}, wait_time=wait_time).json()
+                res_data = res_json['data']['diff']
+                if not res_data:
+                    break
+                for _ in res_data:
+                    data.append({'index_code': _['f12'], 'concept_code': _['f12'], 'name': _['f14'], 'source': '东方财富'})
+                if len(res_data) < page_size:
+                    break
+                curr_page += 1
+            result_df = pd.DataFrame(data=data, columns=self._CONCEPT_CODE_COLUMNS)
+        except Exception as e:
+            result_df = pd.DataFrame(data=[], columns=self._CONCEPT_CODE_COLUMNS)
+        # 2. 读取缓存文件 结果拼接去重
+        csv_df = pd.read_csv(get_all_concept_code_east_csv_path())
+        result_df = pd.concat([result_df, csv_df], ignore_index=True).drop_duplicates(subset=['concept_code'])
         return result_df
 
     def concept_constituent_east(self, concept_code=None, wait_time=None):
@@ -142,6 +150,6 @@ class StockConceptEast(StockConceptTemplate):
 
 if __name__ == '__main__':
     print(StockConceptEast().all_concept_code_east())
-    print(StockConceptEast().concept_constituent_east(concept_code="BK0637"))
+    # print(StockConceptEast().concept_constituent_east(concept_code="BK0637"))
     # print(StockConceptEast().get_concept_east(stock_code="600020").to_string())
     # print(StockConceptEast().get_plate_east(stock_code="600020", plate_type=1).to_string())

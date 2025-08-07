@@ -27,5 +27,11 @@ def code_csv():
     print(code)
 
 
+def f2csv():
+    df = adata.stock.info.all_code()
+    df.to_csv(f'all_code.csv', index=False)
+
+
 if __name__ == '__main__':
-    calendar_csv()
+    # code_csv()
+    f2csv()
