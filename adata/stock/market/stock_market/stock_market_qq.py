@@ -33,12 +33,7 @@ class StockMarketQQ(StockMarketTemplate):
         """
         api_url = f"https://qt.gtimg.cn/r=0.5979076524724433&q="
         for code in code_list:
-            if code.startswith('0') or code.startswith('3'):
-                api_url += 's_sz' + code + ','
-            elif code.startswith('6') or code.startswith('9'):
-                api_url += 's_sh' + code + ','
-            elif code.startswith('4') or code.startswith('8'):
-                api_url += 's_bj' + code + ','
+            api_url += f's_{get_exchange_by_stock_code(code).lower()}{code},'
 
         # 1.请求接口
         res = requests.request('get', api_url, headers={})
@@ -87,12 +82,7 @@ class StockMarketQQ(StockMarketTemplate):
             return pd.DataFrame(data=[], columns=self._MARKET_FIVE_COLUMNS)
         api_url = f"https://web.sqt.gtimg.cn/q="
         for code in code_list:
-            if code.startswith('0') or code.startswith('3'):
-                api_url += 'sz' + code + ','
-            elif code.startswith('6') or code.startswith('9'):
-                api_url += 'sh' + code + ','
-            elif code.startswith('4') or code.startswith('8'):
-                api_url += 'bj' + code + ','
+            api_url += f'{get_exchange_by_stock_code(code).lower()}{code},'
 
         # 1.请求接口
         res = requests.request('get', api_url, headers={})
@@ -174,6 +164,7 @@ class StockMarketQQ(StockMarketTemplate):
 
 
 if __name__ == '__main__':
-    print(StockMarketQQ().list_market_current(code_list=['000001', '600001', '000795', '872925']))
+    print(StockMarketQQ().list_market_current(code_list=['000001', '600001', '000795', '872925', '920445']))
     print(StockMarketQQ().get_market_five(stock_code='000001'))
     print(StockMarketQQ().get_market_bar(stock_code='000001'))
+    print(StockMarketQQ().list_market_five(code_list=['000001', '872925', '920445']))

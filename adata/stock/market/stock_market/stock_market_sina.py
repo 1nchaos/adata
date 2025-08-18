@@ -12,7 +12,7 @@ import pandas as pd
 from adata.common.exception.handler import handler_null
 
 from adata.common.headers import sina_headers
-from adata.common.utils import requests
+from adata.common.utils import requests, code_utils
 from adata.stock.market.stock_market.stock_market_template import StockMarketTemplate
 
 
@@ -35,12 +35,7 @@ class StockMarketSina(StockMarketTemplate):
         # 0.进行参数拼接处理
         api_url = f"https://hq.sinajs.cn/list="
         for code in code_list:
-            if code.startswith('0') or code.startswith('3'):
-                api_url += 's_sz' + code + ','
-            elif code.startswith('6') or code.startswith('9'):
-                api_url += 's_sh' + code + ','
-            elif code.startswith('4') or code.startswith('8'):
-                api_url += 's_bj' + code + ','
+            api_url += f's_{code_utils.get_exchange_by_stock_code(code).lower()}{code},'
 
         # 1.请求接口
         res = requests.request('get', api_url, headers=sina_headers.c_headers)
@@ -72,4 +67,4 @@ class StockMarketSina(StockMarketTemplate):
 
 
 if __name__ == '__main__':
-    print(StockMarketSina().list_market_current(code_list=['000001', '600001', '000795', '872925']))
+    print(StockMarketSina().list_market_current(code_list=['000001', '600001', '000795', '872925', '920445']))
