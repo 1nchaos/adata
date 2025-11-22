@@ -57,7 +57,6 @@ class StockMarketEast(StockMarketTemplate):
         if not data_json["data"]:
             se_cid = 0 if se_cid == 1 else 1
             params["secid"] = f"{se_cid}.{stock_code}"
-            print(params)
             r = requests.request(method='get', url=url, params=params)
             data_json = r.json()
             if not data_json["data"]:
