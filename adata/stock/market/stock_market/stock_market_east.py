@@ -55,7 +55,14 @@ class StockMarketEast(StockMarketTemplate):
 
         # 3. 结果处理
         if not data_json["data"]:
-            return pd.DataFrame()
+            se_cid = 0 if se_cid == 1 else 1
+            params["secid"] = f"{se_cid}.{stock_code}"
+            print(params)
+            r = requests.request(method='get', url=url, params=params)
+            data_json = r.json()
+            if not data_json["data"]:
+                return pd.DataFrame()
+            
         lines = data_json["data"]["klines"]
         if not lines:
             return pd.DataFrame()
@@ -96,7 +103,11 @@ class StockMarketEast(StockMarketTemplate):
         res = requests.request(method='get', url=url, params=params).json()
         # 2. 结果处理
         if not res["data"]:
-            return pd.DataFrame()
+            se_cid = 0 if se_cid == 1 else 1
+            params["secid"] = f"{se_cid}.{stock_code}"
+            res = requests.request(method='get', url=url, params=params).json()
+            if not res["data"]:
+                return pd.DataFrame()
 
         # 3. 数据ETL
         pre_close = res["data"]["preClose"]
