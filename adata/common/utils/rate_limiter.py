@@ -244,7 +244,7 @@ def set_default_rate_limit(max_requests: int = 30, time_window: int = 60) -> Non
     """
     limiter = get_rate_limiter()
     limiter.set_default_config(max_requests=max_requests, time_window=time_window)
-
+    #
 
 def enable_rate_limiter() -> None:
     """
