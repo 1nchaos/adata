@@ -13,6 +13,12 @@ import time
 
 import requests
 
+try:
+    from adata.common.utils.rate_limiter import get_rate_limiter
+    _RATE_LIMIT_AVAILABLE = True
+except ImportError:
+    _RATE_LIMIT_AVAILABLE = False
+
 
 class SunProxy(object):
     _data = {}
@@ -42,9 +48,10 @@ class SunProxy(object):
 
 
 class SunRequests(object):
-    def __init__(self, sun_proxy: SunProxy = None) -> None:
+    def __init__(self, sun_proxy: SunProxy = None, enable_rate_limit=False) -> None:
         super().__init__()
         self.sun_proxy = sun_proxy
+        self.enable_rate_limit = enable_rate_limit
 
     def request(self, method='get', url=None, times=3, retry_wait_time=1588, proxies=None, wait_time=None, **kwargs):
         """
@@ -58,6 +65,16 @@ class SunRequests(object):
         :param kwargs: 其它 requests 参数，用法相同
         :return: res
         """
+        # 限流检查
+        if self.enable_rate_limit and _RATE_LIMIT_AVAILABLE and url:
+            limiter = get_rate_limiter()
+            wait_limit = limiter.acquire(url)
+            if wait_limit > 0:
+                domain = limiter._extract_domain(url)
+                limit, window = limiter.get_domain_limit(domain)
+                print("[RateLimit] 域名 %s 已达到 %d 次/%d 秒限制，等待 %.2f 秒..." % (domain, limit, window, wait_limit))
+                time.sleep(wait_limit)
+        
         # 1. 获取设置代理
         proxies = self.__get_proxies(proxies)
         # 2. 请求数据结果
@@ -87,10 +104,31 @@ class SunRequests(object):
                 .replace('\r', '').replace('\n', '').replace('\t', '')
         if is_proxy and ip:
             if ip.startswith('http'):
-                proxies = {'https': f"{ip}", 'http': f"{ip}"}
+                proxies = {'https': "%s" % ip, 'http': "%s" % ip}
             else:
-                proxies = {'https': f"http://{ip}", 'http': f"http://{ip}"}
+                proxies = {'https': "http://%s" % ip, 'http': "http://%s" % ip}
         return proxies
 
 
-sun_requests = SunRequests()
+_sun_requests = None
+_sun_requests_lock = threading.Lock()
+
+
+def get_sun_requests(enable_rate_limit=False):
+    """
+    获取 SunRequests 全局实例
+    :param enable_rate_limit: 是否启用限流，默认False
+    :return: SunRequests 实例
+    """
+    global _sun_requests
+    if _sun_requests is None:
+        with _sun_requests_lock:
+            if _sun_requests is None:
+                _sun_requests = SunRequests(enable_rate_limit=enable_rate_limit)
+    elif _sun_requests.enable_rate_limit != enable_rate_limit:
+        _sun_requests.enable_rate_limit = enable_rate_limit
+    return _sun_requests
+
+
+sun_requests = get_sun_requests()
+
