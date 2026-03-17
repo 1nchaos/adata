@@ -48,7 +48,7 @@ class SunProxy(object):
 
 
 class SunRequests(object):
-    def __init__(self, sun_proxy: SunProxy = None, enable_rate_limit=False) -&gt; None:
+    def __init__(self, sun_proxy: SunProxy = None, enable_rate_limit=False) -> None:
         super().__init__()
         self.sun_proxy = sun_proxy
         self.enable_rate_limit = enable_rate_limit
@@ -69,7 +69,7 @@ class SunRequests(object):
         if self.enable_rate_limit and _RATE_LIMIT_AVAILABLE and url:
             limiter = get_rate_limiter()
             wait_limit = limiter.acquire(url)
-            if wait_limit &gt; 0:
+            if wait_limit > 0:
                 domain = limiter._extract_domain(url)
                 limit, window = limiter.get_domain_limit(domain)
                 print("[RateLimit] 域名 %s 已达到 %d 次/%d 秒限制，等待 %.2f 秒..." % (domain, limit, window, wait_limit))
