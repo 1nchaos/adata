@@ -5,13 +5,15 @@
 @desc: adata 请求工具类
 @author: 1nchaos
 @time:2023/3/30
-@log: 封装请求次数
+@log: 封装请求次数，集成限流功能
 """
 
 import threading
 import time
 
 import requests
+
+from adata.common.utils.rate_limiter import get_rate_limiter
 
 
 class SunProxy(object):
@@ -45,6 +47,16 @@ class SunRequests(object):
     def __init__(self, sun_proxy: SunProxy = None) -> None:
         super().__init__()
         self.sun_proxy = sun_proxy
+        self._rate_limiter = get_rate_limiter()
+        self._rate_limit_enabled = True  # 默认启用限流
+
+    def enable_rate_limit(self):
+        """启用请求限流"""
+        self._rate_limit_enabled = True
+
+    def disable_rate_limit(self):
+        """禁用请求限流"""
+        self._rate_limit_enabled = False
 
     def request(self, method='get', url=None, times=3, retry_wait_time=1588, proxies=None, wait_time=None, **kwargs):
         """
@@ -58,9 +70,14 @@ class SunRequests(object):
         :param kwargs: 其它 requests 参数，用法相同
         :return: res
         """
-        # 1. 获取设置代理
+        # 1. 限流控制（在请求前进行频率限制检查）
+        if self._rate_limit_enabled and url:
+            self._rate_limiter.acquire(url)
+
+        # 2. 获取设置代理
         proxies = self.__get_proxies(proxies)
-        # 2. 请求数据结果
+
+        # 3. 请求数据结果
         res = None
         for i in range(times):
             if wait_time:
