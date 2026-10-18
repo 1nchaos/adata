@@ -22,3 +22,4 @@ if __name__ == "__main__":
     runner.run(suite)
     # 关闭文件流，不关的话生成的报告是空的
     fn.close()
+    exit(0)

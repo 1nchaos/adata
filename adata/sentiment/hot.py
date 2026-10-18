@@ -129,7 +129,7 @@ class Hot(AList):  # 参考 pylint 改完之后实际上这个 Hot 和 AList 没
 
 
 if __name__ == "__main__":
-    print(Hot().hot_rank_100_ths())
-    # print(Hot().pop_rank_100_east())
+    # print(Hot().hot_rank_100_ths())
+    print(Hot().pop_rank_100_east())
     # print(Hot().hot_concept_20_ths(plate_type=1))
     # print(Hot().hot_concept_20_ths(plate_type=2))
