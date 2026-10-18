@@ -50,19 +50,19 @@ class MarketTestCase(unittest.TestCase):
         self.assertEqual(True, len(df) > 20)
 
     def test_get_market_min(self):
-        print("开始测试：test_get_market_min")
+        print("开始测试：get_market_min")
         df = adata.stock.market.get_market_min(stock_code='000001')
         print(df)
         self.assertEqual(True, len(df) > 1)
 
     def test_list_market_current(self):
-        print("开始测试：test_get_market_min")
-        df = adata.stock.market.list_market_current(code_list=['000001', '600001', '000795', '872925'])
+        print("开始测试：list_market_current")
+        df = adata.stock.market.list_market_current(code_list=['000001', '000795'])
         print(df)
         self.assertEqual(True, len(df) > 2)
 
     def test_get_market_five(self):
-        print("开始测试：test_get_market_five")
+        print("开始测试：get_market_five")
         df = adata.stock.market.get_market_five(stock_code='000001')
         print(df)
         self.assertEqual(True, len(df) == 1)

@@ -50,16 +50,15 @@ class StockMarketQQ(StockMarketTemplate):
             if len(data_str) < 8:
                 continue
             code = data_str.split('~')
-            if len(code) == 11:
+            if len(code) >= 10:
                 data.append(code[1:8])
 
         # 4. 封装数据
         data_columns = ['short_name', 'stock_code', 'price', 'change', 'change_pct', 'volume', 'amount']
         result_df = pd.DataFrame(data=data, columns=data_columns)
         # 单位：手，万元
-        mask = result_df['stock_code'].str.startswith(('0', '3', '6', '9'))
-        result_df.loc[mask, 'volume'] = result_df['volume'].astype(int) * 100
-        result_df.loc[mask, 'amount'] = result_df['amount'].astype(float) * 10000
+        result_df['volume'] = result_df['volume'].astype(int) * 100
+        result_df['amount'] = result_df['amount'].astype(float) * 10000
         return result_df[self._MARKET_CURRENT_COLUMNS]
 
     @handler_null
@@ -164,7 +163,9 @@ class StockMarketQQ(StockMarketTemplate):
 
 
 if __name__ == '__main__':
-    print(StockMarketQQ().list_market_current(code_list=['000001', '600001', '000795', '872925', '920445']))
+    print(StockMarketQQ().list_market_current(code_list=['000001', '600001', '000795', '920445']))
     print(StockMarketQQ().get_market_five(stock_code='000001'))
     print(StockMarketQQ().get_market_bar(stock_code='000001'))
     print(StockMarketQQ().list_market_five(code_list=['000001', '872925', '920445']))
+    # 退出
+    exit()
