@@ -6,9 +6,10 @@
 """
 # -*- coding: utf-8 -*-
 
-import logging
+import logging  # noqa: F401  保留模块级 logging，兼容历史 adata.logging 用法
 
 from adata.__version__ import __version__
+from adata._logger import logger, set_logger
 from adata.bond import bond
 from adata.common.utils.sunrequests import SunProxy
 from adata.fund import fund
@@ -34,16 +35,5 @@ def proxy(is_proxy=False, ip: str = None, proxy_url: str = None):
 
 
 # set up logging
-logger = logging.getLogger("adata")
-
-
-def set_logger():
-    format_string = "%(asctime)s - %(levelname)s - %(message)s"
-    formatter = logging.Formatter(format_string, datefmt="%Y-%m-%dT%H:%M:%S")
-    handler = logging.StreamHandler()
-    handler.setFormatter(formatter)
-
-    logger.addHandler(handler)
-
-
+# logger 与 set_logger 的实现见 adata/_logger.py，此处保持对外接口不变
 set_logger()

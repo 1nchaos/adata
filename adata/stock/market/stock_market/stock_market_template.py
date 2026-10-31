@@ -6,6 +6,10 @@
 @log: change log
 """
 
+import pandas as pd
+
+from adata.common.utils.code_utils import get_exchange_by_stock_code
+
 
 class StockMarketTemplate(object):
     """
@@ -18,6 +22,36 @@ class StockMarketTemplate(object):
     _MARKET_FIVE_COLUMNS = ['stock_code', 'short_name', 's5', 'sv5', 's4', 'sv4', 's3', 'sv3', 's2', 'sv2', 's1', 'sv1',
                             'b1', 'bv1', 'b2', 'bv2', 'b3', 'bv3', 'b4', 'bv4', 'b5', 'bv5']
     _MARKET_BAR_COLUMNS = ['stock_code', 'trade_time', 'price', 'volume', 'bs_type']
+
+    @staticmethod
+    def _empty_df(columns=None):
+        """
+        构造带列名的空 DataFrame，统一各数据源的兜底返回
+        :param columns: 列名列表
+        :return: 空 DataFrame
+        """
+        return pd.DataFrame(data=[], columns=columns or [])
+
+    @staticmethod
+    def _is_res_ok(res):
+        """
+        判断数据源响应是否可用：有响应体且状态码为 200
+        :param res: requests 响应对象
+        :return: bool
+        """
+        return res is not None and res.status_code == 200 and len(res.text) > 0
+
+    @staticmethod
+    def _build_list_url(base_url, code_list, prefix='s_'):
+        """
+        拼接批量行情请求地址，格式：{base_url}{prefix}{exchange}{code},...
+        :param base_url: 数据源地址前缀
+        :param code_list: 股票代码列表
+        :param prefix: 代码前缀，如新浪、腾讯最新行情需带 s_，五档行情不需要
+        :return: 完整 url
+        """
+        return base_url + ''.join(
+            f'{prefix}{get_exchange_by_stock_code(code).lower()}{code},' for code in code_list or [])
 
     def get_market(self, stock_code: str = '000001', start_date='1990-01-01', end_date=None, k_type=1,
                    adjust_type: int = 1):

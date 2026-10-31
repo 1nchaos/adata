@@ -20,10 +20,13 @@ import math
 import pandas as pd
 
 import adata  # 函数内 import，挪过来
+from adata._logger import get_logger
 from adata.common import requests
 from adata.common.base.base_ths import BaseThs
 from adata.common.exception.exception_msg import THS_IP_LIMIT_RES, THS_IP_LIMIT_MSG
 from adata.common.headers import ths_headers
+
+logger = get_logger(__name__)
 
 
 class NorthFlow(BaseThs):
@@ -214,7 +217,7 @@ class NorthFlow(BaseThs):
                         ]
                     )
         except Exception:  # pylint: disable=broad-except
-            print("north_flow_min_east is ERROR!!!")
+            logger.warning("北向资金分时数据（东方财富）获取异常", exc_info=True)
             return pd.DataFrame(data=data, columns=self.__NORTH_FLOW_MIN_COLUMNS)
         result_df = pd.DataFrame(data=data, columns=self.__NORTH_FLOW_MIN_COLUMNS)
 

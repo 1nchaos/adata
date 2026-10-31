@@ -20,11 +20,14 @@ import time
 import numpy as np
 import pandas as pd
 
+from adata._logger import get_logger
 from adata.common import requests
 from adata.common.exception.handler import handler_null
 from adata.common.headers import baidu_headers
 from adata.common.utils.code_utils import get_exchange_by_stock_code
 from adata.stock.cache import get_code_csv_path
+
+logger = get_logger(__name__)
 
 
 class StockCode(object):
@@ -73,18 +76,22 @@ class StockCode(object):
         :return 代码列表：['stock_code','short_name','exchange']
         """
         # 1. 请求市场排名的 url
-        api_url = f"https://finance.pae.baidu.com/selfselect/getmarketrank" \
-                  f"?sort_type=1&sort_key=14&from_mid=1&group=pclist&type=ab&finClientType=pc"
+        base_url = "https://finance.pae.baidu.com/selfselect/getmarketrank" \
+                   "?sort_type=1&sort_key=14&from_mid=1&group=pclist&type=ab&finClientType=pc"
         max_page_size = 200
         data = []
 
         # 2. 一直翻页请求数据，股票目前数据5000,50页一共1w只,后续增加了可以再加
         for page_no in range(49):
-            api_url = f"{api_url}&pn={page_no * max_page_size}&rn={max_page_size}"
+            api_url = f"{base_url}&pn={page_no * max_page_size}&rn={max_page_size}"
             try:
                 res = requests.request(url=api_url, headers=baidu_headers.json_headers, proxies={}, wait_time=wait_time)
+                if res.status_code != 200:
+                    # 数据源不可用（如 IP 被限）时不再逐页尝试，交由后续数据源兜底
+                    logger.warning("百度股票排名接口不可用，跳过该数据源，status_code=%s", res.status_code)
+                    return pd.DataFrame(data=[], columns=self.__CODE_COLUMNS)
                 res_json = res.json()
-                if res.status_code != 200 or res_json['ResultCode'] != '0':
+                if res_json['ResultCode'] != '0':
                     continue
                 # 3. 解析数据
                 result = res_json['Result']['Result']
@@ -93,9 +100,9 @@ class StockCode(object):
                     break
                 code_list = result[0]['DisplayData']['resultData']['tplData']['result']['rank']
                 data.extend(code_list)
-            except Exception as e:
+            except Exception as e:  # pylint: disable=broad-except
                 time.sleep(2)
-                print(e)
+                logger.warning("百度股票排名翻页异常：%s", e)
                 continue
         if not data:
             return pd.DataFrame(data=[], columns=self.__CODE_COLUMNS)
@@ -119,7 +126,7 @@ class StockCode(object):
                   f"reportName=RPTA_APP_IPOAPPLY&columns=SECURITY_CODE,SECURITY_NAME,TRADE_MARKET,LISTING_DATE&quoteType=0&" \
                   f"filter=(APPLY_DATE>'2010-01-01')&source=WEB&client=WEB"
             res_json = requests.request(method='get', url=url, headers={}, proxies={}, wait_time=wait_time).json()
-            res_data = res_json['result']['data']
+            res_data = (res_json.get('result') or {}).get('data') or []
             for _ in res_data:
                 exchange = str(_['TRADE_MARKET'])
                 if exchange.startswith('上海'):
@@ -131,6 +138,9 @@ class StockCode(object):
                 if _['LISTING_DATE']:
                     data.append({'stock_code': _['SECURITY_CODE'], 'short_name': _['SECURITY_NAME'],
                                  'exchange': exchange, 'list_date': _['LISTING_DATE']})
+            # 无数据时结束翻页，避免 data[-1] 越界
+            if not data:
+                break
             # if pd.to_datetime(data[-1]['list_date']) < pd.to_datetime('2023-10-01'):
             if pd.to_datetime(data[-1]['list_date']) < pd.to_datetime('2020-01-01'):
                 break
@@ -168,8 +178,8 @@ class StockCode(object):
                 if len(p_data) < page_size:
                     break
                 curr_page += 1
-        except Exception as e:
-            print(e)
+        except Exception as e:  # pylint: disable=broad-except
+            logger.warning("东方财富股票排名获取异常：%s", e)
         if len(data) == 0:
             return pd.DataFrame()
         df = pd.DataFrame(data=data)
@@ -200,8 +210,8 @@ class StockCode(object):
                 if len(p_data) < 80:
                     break
                 curr_page += 1
-        except Exception as e:
-            print(e)
+        except Exception as e:  # pylint: disable=broad-except
+            logger.warning("新浪股票排名获取异常：%s", e)
         if len(data) == 0:
             return pd.DataFrame()
         df = pd.DataFrame(data=data)

@@ -9,8 +9,12 @@ http://page3.tdx.com.cn:7615/site/pcwebcall_static/bxb/bxb.html?code=600811&colo
 """
 
 import pandas as pd
+from requests import exceptions as requests_exceptions
 
+from adata._logger import get_logger
 from adata.common.utils import requests
+
+logger = get_logger(__name__)
 
 
 class MineClearance(object):
@@ -33,9 +37,13 @@ class MineClearance(object):
         url = f"http://page3.tdx.com.cn:7615/site/pcwebcall_static/bxb/json/{stock_code}.json"
         try:
             res = requests.request(method="get", url=url, json={}).json()
-        except:
-            res = pd.DataFrame([{"stock_code": '', "short_name": '', "score": '', "f_type": '暂无数据', }],
-                               columns=self.__MINE_TDX_COLUMNS)
+            if not isinstance(res, dict):
+                raise ValueError(f"返回结构非预期：{type(res).__name__}")
+        except (requests_exceptions.RequestException, ValueError, AttributeError):
+            # 该代码无扫雷数据或接口不可用时，直接返回“暂无数据”，不再做后续解析
+            logger.warning("通达信扫雷数据获取失败，stock_code=%s", stock_code, exc_info=True)
+            return pd.DataFrame([{"stock_code": stock_code, "short_name": '', "score": '', "f_type": '暂无数据', }],
+                                columns=self.__MINE_TDX_COLUMNS)
         name = res.get("name")
         data = res.get("data")
         data_list = []

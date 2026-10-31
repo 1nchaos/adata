@@ -11,9 +11,12 @@ https://eq.10jqka.com.cn/frontend/thsTopRank/index.html?fontzoom=no&client_useri
 """
 import pandas as pd
 
+from adata._logger import get_logger
 from adata.common.headers import ths_headers
 from adata.common.utils import requests
 from adata.sentiment.alist import AList
+
+logger = get_logger(__name__)
 
 
 class Hot(AList):  # 参考 pylint 改完之后实际上这个 Hot 和 AList 没有啥实例化的意义
@@ -79,16 +82,15 @@ class Hot(AList):  # 参考 pylint 改完之后实际上这个 Hot 和 AList 没
         headers["Host"] = "dq.10jqka.com.cn"
         res = requests.request(method="get", url=api_url, params={}, headers=headers)
         data = res.json()["data"]["stock_list"]
-        data_list = []
         for d in data:
             try:
                 if "tag" in d and "concept_tag" in d["tag"]:
                     d["concept_tag"] = ";".join(d["tag"]["concept_tag"])
                 if "popularity_tag" in d["tag"]:
                     d["pop_tag"] = d["tag"]["popularity_tag"].replace("\n", "")
-                data_list.append(d)
-            except:
-                pass
+            except (KeyError, TypeError, AttributeError):
+                # 单条热股字段缺失时保留原始数据，不影响整份榜单
+                logger.debug("同花顺热股字段解析异常，已跳过归一化", exc_info=True)
         rename = {
             "order": "rank",
             "rise_and_fall": "change_pct",
@@ -113,9 +115,6 @@ class Hot(AList):  # 参考 pylint 改完之后实际上这个 Hot 和 AList 没
         headers["Host"] = "dq.10jqka.com.cn"
         res = requests.request(method="get", url=api_url, params={}, headers=headers)
         data = res.json()["data"]["plate_list"]
-        data_list = []
-        for d in data:
-            data_list.append(d)
         rename = {
             "order": "rank",
             "rise_and_fall": "change_pct",

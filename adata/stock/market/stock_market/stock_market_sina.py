@@ -10,12 +10,13 @@ https://finance.sina.com.cn/stock/
 
 import pandas as pd
 
+from adata._logger import get_logger
 from adata.common.exception.handler import handler_null
 from adata.common.headers import sina_headers
 from adata.common.utils import requests, code_utils
 from adata.stock.market.stock_market.stock_market_template import StockMarketTemplate
 
-pd.set_option('display.float_format', lambda x: f'{x:,.2f}')
+logger = get_logger(__name__)
 
 
 class StockMarketSina(StockMarketTemplate):
@@ -35,15 +36,13 @@ class StockMarketSina(StockMarketTemplate):
         :return: 最新行情数据：代码,简称,当前价格(元),涨跌额(元),涨跌幅(%),成交量(股),成交额(元)
         """
         # 0.进行参数拼接处理
-        api_url = f"https://hq.sinajs.cn/list="
-        for code in code_list:
-            api_url += f's_{code_utils.get_exchange_by_stock_code(code).lower()}{code},'
+        api_url = self._build_list_url("https://hq.sinajs.cn/list=", code_list)
         # 1.请求接口
         res = requests.request('get', api_url, headers=sina_headers.c_headers)
 
         # 2. 判断结果是否正确
-        if len(res.text) < 1 or res.status_code != 200:
-            return pd.DataFrame(data=[], columns=self._MARKET_CURRENT_COLUMNS)
+        if not self._is_res_ok(res):
+            return self._empty_df(self._MARKET_CURRENT_COLUMNS)
         # 3.解析数据
 
         # 正常解析数据 var hq_str_s_bj872925="平安银行,14.840,0.480,3.343,374847,5483780.180";
@@ -71,8 +70,9 @@ class StockMarketSina(StockMarketTemplate):
                     mk['volume'] = int(float(f[4]) * 100)
                     mk['amount'] = float(f[5]) * 10000
                 data.append(mk)
-            except:
-                pass
+            except (ValueError, IndexError, KeyError):
+                # 单条行情格式异常时跳过，不影响其余股票；开启 adata 日志后可追溯
+                logger.debug("新浪行情解析异常，已跳过：%s", data_str, exc_info=True)
 
         # 4. 封装数据
         result_df = pd.DataFrame(data=data, columns=self._MARKET_CURRENT_COLUMNS)
@@ -80,5 +80,6 @@ class StockMarketSina(StockMarketTemplate):
 
 
 if __name__ == '__main__':
+    pd.set_option('display.float_format', lambda x: f'{x:,.2f}')
     print(StockMarketSina().list_market_current(code_list=['000001', '600905', '000795', '920445']))
     exit()

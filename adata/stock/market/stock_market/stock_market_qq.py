@@ -7,12 +7,18 @@ https://stockapp.finance.qq.com/mstats/#
 @time: 2023/6/19
 @log: change log
 """
+import ast
+
 import pandas as pd
+
+from adata._logger import get_logger
 from adata.common.exception.handler import handler_null
 
 from adata.common import requests
 from adata.common.utils.code_utils import get_exchange_by_stock_code
 from adata.stock.market.stock_market.stock_market_template import StockMarketTemplate
+
+logger = get_logger(__name__)
 
 
 class StockMarketQQ(StockMarketTemplate):
@@ -31,16 +37,14 @@ class StockMarketQQ(StockMarketTemplate):
         :param code_list: 股票代码
         :return: 当前最新的行情价格信息
         """
-        api_url = f"https://qt.gtimg.cn/r=0.5979076524724433&q="
-        for code in code_list:
-            api_url += f's_{get_exchange_by_stock_code(code).lower()}{code},'
+        api_url = self._build_list_url("https://qt.gtimg.cn/r=0.5979076524724433&q=", code_list)
 
         # 1.请求接口
         res = requests.request('get', api_url, headers={})
 
         # 2. 判断结果是否正确
-        if len(res.text) < 1 or res.status_code != 200:
-            return pd.DataFrame(data=[], columns=self._MARKET_CURRENT_COLUMNS)
+        if not self._is_res_ok(res):
+            return self._empty_df(self._MARKET_CURRENT_COLUMNS)
         # 3.解析数据
 
         # 正常解析数据 v_s_sz000936="51~华西股份~000936~12.60~1.15~10.04~69137~8711~~111.64~GP-A";
@@ -78,17 +82,15 @@ class StockMarketQQ(StockMarketTemplate):
         :return:
         """
         if code_list is None or len(code_list) == 0:
-            return pd.DataFrame(data=[], columns=self._MARKET_FIVE_COLUMNS)
-        api_url = f"https://web.sqt.gtimg.cn/q="
-        for code in code_list:
-            api_url += f'{get_exchange_by_stock_code(code).lower()}{code},'
+            return self._empty_df(self._MARKET_FIVE_COLUMNS)
+        api_url = self._build_list_url("https://web.sqt.gtimg.cn/q=", code_list, prefix='')
 
         # 1.请求接口
         res = requests.request('get', api_url, headers={})
 
         # 2. 判断结果是否正确
-        if len(res.text) < 1 or res.status_code != 200:
-            return pd.DataFrame(data=[], columns=self._MARKET_FIVE_COLUMNS)
+        if not self._is_res_ok(res):
+            return self._empty_df(self._MARKET_FIVE_COLUMNS)
         # 3.解析数据
 
         # 正常解析数据 _sh601666="1~平煤股份~601666~10.13~9.82~9.82~545608~302942~242666~10.12~1000~10.11~471~10.10~2083~10.09
@@ -143,14 +145,16 @@ class StockMarketQQ(StockMarketTemplate):
             }
             try:
                 text = requests.request(method='get', url=url, params=params).text
-                df = pd.DataFrame(eval(text[text.find("["):])[1].split("|")).iloc[:, 0].str.split("/", expand=True)
+                df = self.__parse_bar_text(text)
                 if df.empty:
                     break
-            except:
+            except (ValueError, SyntaxError, IndexError, AttributeError):
+                # 翻页到无数据时接口返回非预期内容，正常结束；开启 adata 日志后可追溯
+                logger.debug("腾讯分时成交第 %s 页解析结束", page, exc_info=True)
                 break
             res_df = pd.concat([res_df, df], ignore_index=True)
         if res_df.empty:
-            return pd.DataFrame(data=[], columns=self._MARKET_BAR_COLUMNS)
+            return self._empty_df(self._MARKET_BAR_COLUMNS)
 
         # 3. 数据etl
         # big_df = res_df.iloc[:, 1:].copy()
@@ -160,6 +164,33 @@ class StockMarketQQ(StockMarketTemplate):
         res_df["stock_code"] = stock_code
         res_df = res_df.astype({"trade_time": str, "price": float, "volume": int, "bs_type": str, })
         return res_df[self._MARKET_BAR_COLUMNS]
+
+    @staticmethod
+    def __parse_bar_text(text):
+        """
+        解析腾讯分时成交接口返回内容
+        返回体为 JS 字面量数组，先截取配平的数组片段，再用 ast.literal_eval 解析，
+        避免远端内容被当作代码执行
+        """
+        start = text.find("[")
+        if start < 0:
+            raise ValueError("返回内容中未找到数组结构")
+        depth = 0
+        end = -1
+        for idx in range(start, len(text)):
+            if text[idx] == "[":
+                depth += 1
+            elif text[idx] == "]":
+                depth -= 1
+                if depth == 0:
+                    end = idx + 1
+                    break
+        if end < 0:
+            raise ValueError("返回内容中的数组结构不完整")
+        payload = ast.literal_eval(text[start:end])
+        if not isinstance(payload, (list, tuple)) or len(payload) < 2 or not isinstance(payload[1], str):
+            raise ValueError("返回内容结构与预期不符")
+        return pd.DataFrame(payload[1].split("|")).iloc[:, 0].str.split("/", expand=True)
 
 
 if __name__ == '__main__':
